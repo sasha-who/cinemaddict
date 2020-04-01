@@ -1,7 +1,7 @@
 # Личный проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [Саша Смыгина](https://up.htmlacademy.ru/ecmascript/11/user/277207).
-* Наставник: `Неизвестно`.
+* Наставник: [Игорь Антонов](https://up.htmlacademy.ru/ecmascript/11/user/3162).
 
 ---
 
