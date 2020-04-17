@@ -1,3 +1,4 @@
+import {FILM_COUNT, EXTRA_FILM_COUNT} from "./const.js";
 import {createProfileTemplate} from "./components/profile.js";
 import {createMainNavigationTemplate} from "./components/main-navigation.js";
 import {createSortTemplate} from "./components/sort.js";
@@ -8,9 +9,6 @@ import {createTopRatedTemplate} from "./components/top-rated.js";
 import {createMostCommentedTemplate} from "./components/most-commented.js";
 import {createFilmsStatisticsTemplate} from "./components/films-statistics.js";
 import {createFilmDetailsTemplate} from "./components/film-details.js";
-
-const FILM_COUNT = 5;
-const EXTRA_FILM_COUNT = 2;
 
 const render = (template, container, position = `beforeend`) => {
   container.insertAdjacentHTML(position, template);
