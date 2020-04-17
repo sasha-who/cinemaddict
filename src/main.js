@@ -1,4 +1,5 @@
-import {FILM_COUNT, EXTRA_FILM_COUNT} from "./const.js";
+import {FILMS_COUNT, EXTRA_FILM_COUNT} from "./const.js";
+import {generateFilms} from "./mock/films.js";
 import {createProfileTemplate} from "./components/profile.js";
 import {createMainNavigationTemplate} from "./components/main-navigation.js";
 import {createSortTemplate} from "./components/sort.js";
@@ -9,6 +10,10 @@ import {createTopRatedTemplate} from "./components/top-rated.js";
 import {createMostCommentedTemplate} from "./components/most-commented.js";
 import {createFilmsStatisticsTemplate} from "./components/films-statistics.js";
 import {createFilmDetailsTemplate} from "./components/film-details.js";
+
+const MOCK_FILMS_COUNT = 20;
+
+const films = generateFilms(MOCK_FILMS_COUNT);
 
 const render = (template, container, position = `beforeend`) => {
   container.insertAdjacentHTML(position, template);
@@ -28,7 +33,7 @@ const filmsElement = mainElement.querySelector(`.films`);
 const filmsListElement = filmsElement.querySelector(`.films-list`);
 const filmsContainerElement = filmsListElement.querySelector(`.films-list__container`);
 
-for (let i = 0; i < FILM_COUNT; i++) {
+for (let i = 0; i < FILMS_COUNT; i++) {
   render(createFilmCardTemplate(), filmsContainerElement);
 }
 
