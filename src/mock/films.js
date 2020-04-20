@@ -20,7 +20,6 @@ import {
 import {MONTHS} from "../const.js";
 import {generateComments} from "./comments.js";
 
-const POSTER_PATH = `/public/images/posters`;
 const MIN_COMMENTS_COUNT = 0;
 const MAX_COMMENTS_COUNT = 5;
 const MIN_FILM_DURATION = 30;
@@ -60,7 +59,7 @@ const generateFilm = () => {
 
   return {
     name: getRandomArrayItem(FilmsNames),
-    poster: `${POSTER_PATH}/${getRandomArrayItem(Posters)}`,
+    poster: getRandomArrayItem(Posters),
     year: date.getFullYear(),
     duration: getFilmDuration(),
     genre: getRandomArrayItems(Genres).join(`, `),

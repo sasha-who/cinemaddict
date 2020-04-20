@@ -1,4 +1,4 @@
-import {FILMS_COUNT, EXTRA_FILM_COUNT} from "./const.js";
+import {INITIAL_FILMS_COUNT, EXTRA_FILM_COUNT} from "./const.js";
 import {generateFilms} from "./mock/films.js";
 import {createProfileTemplate} from "./components/profile.js";
 import {createMainNavigationTemplate} from "./components/main-navigation.js";
@@ -33,8 +33,8 @@ const filmsElement = mainElement.querySelector(`.films`);
 const filmsListElement = filmsElement.querySelector(`.films-list`);
 const filmsContainerElement = filmsListElement.querySelector(`.films-list__container`);
 
-for (let i = 0; i < FILMS_COUNT; i++) {
-  render(createFilmCardTemplate(), filmsContainerElement);
+for (let i = 0; i < INITIAL_FILMS_COUNT; i++) {
+  render(createFilmCardTemplate(films[i]), filmsContainerElement);
 }
 
 render(createShowMoreButtonTemplate(), filmsListElement);
