@@ -25,7 +25,7 @@ render(createProfileTemplate(films), headerElement);
 
 const mainElement = document.querySelector(`.main`);
 
-render(createMainNavigationTemplate(), mainElement);
+render(createMainNavigationTemplate(films), mainElement);
 render(createSortTemplate(), mainElement);
 render(createFilmsTemplate(), mainElement);
 

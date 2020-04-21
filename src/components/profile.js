@@ -2,7 +2,7 @@ import {getFilmsStatistic} from "../statistic.js";
 
 export const createProfileTemplate = (films) => {
   let rang;
-  const watchedFilms = getFilmsStatistic(films)[`isWatched`];
+  const watchedFilms = getFilmsStatistic(films).isWatched;
 
   switch (true) {
     case (watchedFilms === 0):
