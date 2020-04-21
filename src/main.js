@@ -52,5 +52,5 @@ render(createMostCommentedTemplate(), filmsElement);
 const footerElement = document.querySelector(`.footer`);
 const filmsStatisticsElement = footerElement.querySelector(`.footer__statistics`);
 
-render(createFilmsStatisticsTemplate(), filmsStatisticsElement);
+render(createFilmsStatisticsTemplate(films.length), filmsStatisticsElement);
 // render(createFilmDetailsTemplate(films[0]), footerElement, `afterend`);
