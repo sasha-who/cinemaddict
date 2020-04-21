@@ -41,18 +41,16 @@ render(createShowMoreButtonTemplate(), filmsListElement);
 render(createTopRatedTemplate(), filmsElement);
 render(createMostCommentedTemplate(), filmsElement);
 
-const extraFilmsListElements = filmsElement.querySelectorAll(`.films-list--extra .films-list__container`);
+// const extraFilmsListElements = filmsElement.querySelectorAll(`.films-list--extra .films-list__container`);
 
-extraFilmsListElements.forEach((item) => {
-  for (let i = 0; i < EXTRA_FILM_COUNT; i++) {
-    render(createFilmCardTemplate(), item);
-  }
-});
+// extraFilmsListElements.forEach((item) => {
+//   for (let i = 0; i < EXTRA_FILM_COUNT; i++) {
+//     render(createFilmCardTemplate(), item);
+//   }
+// });
 
 const footerElement = document.querySelector(`.footer`);
 const filmsStatisticsElement = footerElement.querySelector(`.footer__statistics`);
 
 render(createFilmsStatisticsTemplate(), filmsStatisticsElement);
-// render(createFilmDetailsTemplate(), footerElement, `afterend`);
-
-import "./mock/films.js";
+render(createFilmDetailsTemplate(films[0]), footerElement, `afterend`);
