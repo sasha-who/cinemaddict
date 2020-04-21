@@ -1,4 +1,4 @@
-import {INITIAL_FILMS_COUNT, EXTRA_FILM_COUNT} from "./const.js";
+import {INITIAL_FILMS_COUNT, ADDITIONAL_FILMS_COUNT, EXTRA_FILM_COUNT} from "./const.js";
 import {generateFilms} from "./mock/films.js";
 import {createProfileTemplate} from "./components/profile.js";
 import {createMainNavigationTemplate} from "./components/main-navigation.js";
@@ -11,7 +11,7 @@ import {createMostCommentedTemplate} from "./components/most-commented.js";
 import {createFilmsStatisticsTemplate} from "./components/films-statistics.js";
 import {createFilmDetailsTemplate} from "./components/film-details.js";
 
-const MOCK_FILMS_COUNT = 20;
+const MOCK_FILMS_COUNT = 13;
 
 const films = generateFilms(MOCK_FILMS_COUNT);
 
@@ -38,6 +38,25 @@ for (let i = 0; i < INITIAL_FILMS_COUNT; i++) {
 }
 
 render(createShowMoreButtonTemplate(), filmsListElement);
+
+const showMoreButtonElement = filmsListElement.querySelector(`.films-list__show-more`);
+
+let currentFilmsCount = INITIAL_FILMS_COUNT;
+
+showMoreButtonElement.addEventListener(`click`, () => {
+  const addedFilmsCount = currentFilmsCount + ADDITIONAL_FILMS_COUNT;
+
+  films.slice(currentFilmsCount, addedFilmsCount).forEach((item) => {
+    render(createFilmCardTemplate(item), filmsContainerElement);
+  });
+
+  currentFilmsCount = addedFilmsCount;
+
+  if (currentFilmsCount >= films.length) {
+    showMoreButtonElement.remove();
+  }
+});
+
 render(createTopRatedTemplate(), filmsElement);
 render(createMostCommentedTemplate(), filmsElement);
 
