@@ -21,7 +21,7 @@ const render = (template, container, position = `beforeend`) => {
 
 const headerElement = document.querySelector(`.header`);
 
-render(createProfileTemplate(), headerElement);
+render(createProfileTemplate(films), headerElement);
 
 const mainElement = document.querySelector(`.main`);
 
