@@ -16,3 +16,9 @@ export const MONTHS = [
   `November`,
   `December`
 ];
+
+export const FLAGS = [
+  `isInWatchlist`,
+  `isWatched`,
+  `isInFavorites`
+];

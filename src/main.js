@@ -53,4 +53,4 @@ const footerElement = document.querySelector(`.footer`);
 const filmsStatisticsElement = footerElement.querySelector(`.footer__statistics`);
 
 render(createFilmsStatisticsTemplate(), filmsStatisticsElement);
-render(createFilmDetailsTemplate(films[0]), footerElement, `afterend`);
+// render(createFilmDetailsTemplate(films[0]), footerElement, `afterend`);
