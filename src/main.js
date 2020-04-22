@@ -1,4 +1,4 @@
-import {INITIAL_FILMS_COUNT, ADDITIONAL_FILMS_COUNT, EXTRA_FILM_COUNT} from "./const.js";
+import {MOCK_FILMS_COUNT, INITIAL_FILMS_COUNT, ADDITIONAL_FILMS_COUNT} from "./const.js";
 import {generateFilms} from "./mock/films.js";
 import {createProfileTemplate} from "./components/profile.js";
 import {createMainNavigationTemplate} from "./components/main-navigation.js";
@@ -10,8 +10,6 @@ import {createTopRatedTemplate} from "./components/top-rated.js";
 import {createMostCommentedTemplate} from "./components/most-commented.js";
 import {createFilmsStatisticsTemplate} from "./components/films-statistics.js";
 import {createFilmDetailsTemplate} from "./components/film-details.js";
-
-const MOCK_FILMS_COUNT = 13;
 
 const films = generateFilms(MOCK_FILMS_COUNT);
 
@@ -57,19 +55,11 @@ showMoreButtonElement.addEventListener(`click`, () => {
   }
 });
 
-render(createTopRatedTemplate(), filmsElement);
-render(createMostCommentedTemplate(), filmsElement);
-
-// const extraFilmsListElements = filmsElement.querySelectorAll(`.films-list--extra .films-list__container`);
-
-// extraFilmsListElements.forEach((item) => {
-//   for (let i = 0; i < EXTRA_FILM_COUNT; i++) {
-//     render(createFilmCardTemplate(), item);
-//   }
-// });
+render(createTopRatedTemplate(films), filmsElement);
+render(createMostCommentedTemplate(films), filmsElement);
 
 const footerElement = document.querySelector(`.footer`);
 const filmsStatisticsElement = footerElement.querySelector(`.footer__statistics`);
 
 render(createFilmsStatisticsTemplate(films.length), filmsStatisticsElement);
-// render(createFilmDetailsTemplate(films[0]), footerElement, `afterend`);
+render(createFilmDetailsTemplate(films[0]), footerElement, `afterend`);
