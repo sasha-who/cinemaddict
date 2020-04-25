@@ -1,16 +1,16 @@
 import {MOCK_FILMS_COUNT, INITIAL_FILMS_COUNT, ADDITIONAL_FILMS_COUNT} from "./const.js";
 import {generate} from "./utils.js";
 import {generateFilm} from "./mock/film.js";
-import {createProfileTemplate} from "./components/profile.js";
-import {createMainNavigationTemplate} from "./components/main-navigation.js";
-import {createSortTemplate} from "./components/sort.js";
-import {createFilmsTemplate} from "./components/films.js";
-import {createFilmCardTemplate} from "./components/film-card.js";
-import {createShowMoreButtonTemplate} from "./components/show-more-button.js";
-import {createTopRatedTemplate} from "./components/top-rated.js";
-import {createMostCommentedTemplate} from "./components/most-commented.js";
-import {createFilmsStatisticsTemplate} from "./components/films-statistics.js";
-import {createFilmDetailsTemplate} from "./components/film-details.js";
+import ProfileComponent from "./components/profile.js";
+import MainNavigationComponent from "./components/main-navigation.js";
+import SortComponent from "./components/sort.js";
+import FilmsComponent from "./components/films.js";
+import FilmCardComponent from "./components/film-card.js";
+import ShowMoreButtonComponent from "./components/show-more-button.js";
+import TopRatedComponent from "./components/top-rated.js";
+import MostCommentedComponent from "./components/most-commented.js";
+import FilmsStatisticsComponent from "./components/films-statistics.js";
+import FilmDetailedCardComponent from "./components/film-details.js";
 
 const films = generate(MOCK_FILMS_COUNT, generateFilm);
 
