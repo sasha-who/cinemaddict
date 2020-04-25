@@ -1,5 +1,6 @@
 import {MOCK_FILMS_COUNT, INITIAL_FILMS_COUNT, ADDITIONAL_FILMS_COUNT} from "./const.js";
-import {generateFilms} from "./mock/films.js";
+import {generate} from "./utils.js";
+import {generateFilm} from "./mock/film.js";
 import {createProfileTemplate} from "./components/profile.js";
 import {createMainNavigationTemplate} from "./components/main-navigation.js";
 import {createSortTemplate} from "./components/sort.js";
@@ -11,7 +12,7 @@ import {createMostCommentedTemplate} from "./components/most-commented.js";
 import {createFilmsStatisticsTemplate} from "./components/films-statistics.js";
 import {createFilmDetailsTemplate} from "./components/film-details.js";
 
-const films = generateFilms(MOCK_FILMS_COUNT);
+const films = generate(MOCK_FILMS_COUNT, generateFilm);
 
 const render = (template, container, position = `beforeend`) => {
   container.insertAdjacentHTML(position, template);

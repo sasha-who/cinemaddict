@@ -1,24 +1,25 @@
+import {generateComment} from "./comment.js";
 import {
   getRandomIntegerNumber,
   getRandomArrayItem,
   shuffleArray,
   getRandomArrayItems,
-  castomizeDateFormat
+  castomizeDateFormat,
+  generate
 } from "../utils.js";
 
 import {
-  randomText,
-  FilmsNames,
-  Posters,
-  Genres,
-  Names,
-  Country,
-  AgeLimits,
+  randomTextElements,
+  FILMS_NAMES,
+  POSTERS,
+  GENRES,
+  NAMES,
+  COUNTRIES,
+  AGE_LIMITS,
   getRandomDate
 } from "./temporary-data.js";
 
 import {MONTHS} from "../const.js";
-import {generateComments} from "./comments.js";
 
 const MIN_COMMENTS_COUNT = 0;
 const MAX_COMMENTS_COUNT = 5;
@@ -47,45 +48,35 @@ const getFilmDuration = () => {
 };
 
 const getFilmDescription = () => {
-  const sentencesArray = randomText.split(`. `);
   const sentencesCount = getRandomIntegerNumber(MIN_DESCRIPTION_LENGTH, MAX_DESCRIPTION_LENGTH);
 
-  return `${shuffleArray(sentencesArray).slice(0, sentencesCount).join(`. `)}.`;
+  return `${shuffleArray(randomTextElements).slice(0, sentencesCount).join(` `)}`;
 };
 
-const generateFilm = () => {
+export const generateFilm = () => {
   const date = getRandomDate();
-  const comments = generateComments(getRandomIntegerNumber(MIN_COMMENTS_COUNT, MAX_COMMENTS_COUNT));
+  const commentsCount = getRandomIntegerNumber(MIN_COMMENTS_COUNT, MAX_COMMENTS_COUNT);
+  const comments = generate(commentsCount, generateComment);
 
   return {
-    name: getRandomArrayItem(FilmsNames),
-    poster: getRandomArrayItem(Posters),
+    name: getRandomArrayItem(FILMS_NAMES),
+    poster: getRandomArrayItem(POSTERS),
     year: date.getFullYear(),
     duration: getFilmDuration(),
-    genre: getRandomArrayItems(Genres).join(`, `),
+    genre: getRandomArrayItems(GENRES).join(`, `),
     description: getFilmDescription(),
     comments,
-    commentsCount: comments.length,
+    commentsCount,
     isInWatchlist: Math.random() > 0.5,
     isWatched: Math.random() > 0.5,
     isInFavorites: Math.random() > 0.5,
-    originalName: getRandomArrayItem(FilmsNames),
-    director: getRandomArrayItem(Names),
-    screenwriters: getRandomArrayItem(Names),
+    originalName: getRandomArrayItem(FILMS_NAMES),
+    director: getRandomArrayItem(NAMES),
+    screenwriters: getRandomArrayItem(NAMES),
     rating: getRandomIntegerNumber(MIN_RATING_VALUE, MAX_RATING_VALUE),
-    actors: getRandomArrayItems(Names).join(`, `),
+    actors: getRandomArrayItems(NAMES).join(`, `),
     releaseDate: formatFilmDate(date),
-    country: getRandomArrayItem(Country),
-    ageLimit: getRandomArrayItem(AgeLimits)
+    country: getRandomArrayItem(COUNTRIES),
+    ageLimit: getRandomArrayItem(AGE_LIMITS)
   };
-};
-
-export const generateFilms = (count) => {
-  const films = [];
-
-  for (let i = 0; i < count; i++) {
-    films.push(generateFilm());
-  }
-
-  return films;
 };

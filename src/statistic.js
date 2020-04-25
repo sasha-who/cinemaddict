@@ -5,10 +5,8 @@ const statistic = {};
 export const getFilmsStatistic = (films) => {
   FLAGS.forEach((flag) => {
     statistic[flag] = 0;
-  });
 
-  films.forEach((film) => {
-    FLAGS.forEach((flag) => {
+    films.forEach((film) => {
       if (film[flag]) {
         statistic[flag]++;
       }

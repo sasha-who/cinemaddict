@@ -5,28 +5,35 @@ export const getRandomIntegerNumber = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-export const getRandomArrayItem = (array) => {
-  const randomIndex = getRandomIntegerNumber(0, array.length - 1);
+export const getRandomArrayItem = (elements) => {
+  const randomIndex = getRandomIntegerNumber(0, elements.length - 1);
 
-  return array[randomIndex];
+  return elements[randomIndex];
 };
 
-export const shuffleArray = (array) => {
-  for (let i = array.length - 1; i > 0; i--) {
+export const shuffleArray = (elements) => {
+  const shuffledArray = elements.slice();
+
+  for (let i = shuffledArray.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
 
-    [array[i], array[j]] = [array[j], array[i]];
+    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
   }
 
-  return array;
+  return shuffledArray;
 };
 
-export const getRandomArrayItems = (array) => {
-  const shuffledArray = shuffleArray(array.slice());
+export const getRandomArrayItems = (elements) => shuffleArray(elements)
+  .slice(0, getRandomIntegerNumber(1, elements.length));
 
-  return shuffledArray.slice(0, getRandomIntegerNumber(0, array.length));
-};
+export const castomizeDateFormat = (value) => value.toString().padStart(2, `0`);
 
-export const castomizeDateFormat = (value) => {
-  return (value < 10) ? `0${value}` : value;
+export const generate = (count, generatorFunction) => {
+  const result = [];
+
+  for (let i = 0; i < count; i++) {
+    result.push(generatorFunction());
+  }
+
+  return result;
 };

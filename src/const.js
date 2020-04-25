@@ -24,3 +24,9 @@ export const FLAGS = [
   `isWatched`,
   `isInFavorites`
 ];
+
+export const Rang = {
+  NOVICE: `novice`,
+  FAN: `fan`,
+  MOVIE_BUFF: `movie buff`
+};

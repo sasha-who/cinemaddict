@@ -1,5 +1,5 @@
 const getCommentsMarkup = (commentsArray) => {
-  const commentMarkup = commentsArray.map((item) => {
+  const commentMarkupElements = commentsArray.map((item) => {
     const {content, emotion, author, date} = item;
 
     return (
@@ -19,7 +19,7 @@ const getCommentsMarkup = (commentsArray) => {
     );
   });
 
-  return commentMarkup.join(`\n`);
+  return commentMarkupElements.join(`\n`);
 };
 
 export const createFilmDetailsTemplate = (film) => {
@@ -45,9 +45,55 @@ export const createFilmDetailsTemplate = (film) => {
   } = film;
 
   const genresArray = genre.split(`, `);
-  const genresEnding = (genresArray.length === 1) ? `Genre` : `Genres`;
-  const getGenresMarkup = genresArray
+  const genresWithEnding = (genresArray.length === 1) ? `Genre` : `Genres`;
+  const genresMarkup = genresArray
     .map((item) => `<span class="film-details__genre">${item}</span>`)
+    .join(`\n`);
+
+  const filmsCharacteristics = [
+    {
+      name: `Director`,
+      value: director
+    },
+
+    {
+      name: `Writers`,
+      value: screenwriters
+    },
+
+    {
+      name: `Actors`,
+      value: actors
+    },
+
+    {
+      name: `Release Date`,
+      value: releaseDate
+    },
+
+    {
+      name: `Runtime`,
+      value: duration
+    },
+
+    {
+      name: `Country`,
+      value: country
+    },
+
+    {
+      name: genresWithEnding,
+      value: genresMarkup
+    }
+  ];
+
+  const filmsCharacteristicsMarkup = filmsCharacteristics
+    .map((item) => (
+      `<tr class="film-details__row">
+        <td class="film-details__term">${item.name}</td>
+        <td class="film-details__cell">${item.value}</td>
+      </tr>`
+    ))
     .join(`\n`);
 
   const checkControls = (flag) => flag ? `checked` : ``;
@@ -79,35 +125,7 @@ export const createFilmDetailsTemplate = (film) => {
               </div>
 
               <table class="film-details__table">
-                <tr class="film-details__row">
-                  <td class="film-details__term">Director</td>
-                  <td class="film-details__cell">${director}</td>
-                </tr>
-                <tr class="film-details__row">
-                  <td class="film-details__term">Writers</td>
-                  <td class="film-details__cell">${screenwriters}</td>
-                </tr>
-                <tr class="film-details__row">
-                  <td class="film-details__term">Actors</td>
-                  <td class="film-details__cell">${actors}</td>
-                </tr>
-                <tr class="film-details__row">
-                  <td class="film-details__term">Release Date</td>
-                  <td class="film-details__cell">${releaseDate}</td>
-                </tr>
-                <tr class="film-details__row">
-                  <td class="film-details__term">Runtime</td>
-                  <td class="film-details__cell">${duration}</td>
-                </tr>
-                <tr class="film-details__row">
-                  <td class="film-details__term">Country</td>
-                  <td class="film-details__cell">${country}</td>
-                </tr>
-                <tr class="film-details__row">
-                  <td class="film-details__term">${genresEnding}</td>
-                  <td class="film-details__cell">
-                    ${getGenresMarkup}</td>
-                </tr>
+                ${filmsCharacteristicsMarkup}
               </table>
 
               <p class="film-details__film-description">${description}</p>

@@ -18,6 +18,7 @@ export const createFilmCardTemplate = (film) => {
   const shortedDescription = (description.length > MAX_DESCRIPTION_LENGTH) ?
     `${description.slice(0, MAX_DESCRIPTION_LENGTH - 1)}...` :
     description;
+
   const checkControlsActiveClass = (flag) => flag ? `film-card__controls-item--active` : ``;
   const commentEnding = (commentsCount === 1) ? `comment` : `comments`;
 

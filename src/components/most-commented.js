@@ -3,34 +3,20 @@ import {shuffleArray} from "../utils.js";
 import {createFilmCardTemplate} from "./film-card";
 
 export const createMostCommentedTemplate = (films) => {
-  const filmsSortedByCommentsCount = films.sort((a, b) => {
-    if (a.commentsCount < b.commentsCount) {
-      return 1;
-    }
-
-    if (a.commentsCount > b.commentsCount) {
-      return -1;
-    }
-
-    return 0;
-  });
+  const filmsSortedByCommentsCount = films
+    .sort((a, b) => Math.sign(b.commentsCount - a.commentsCount));
 
   let resultedFilms = filmsSortedByCommentsCount.slice(0, EXTRA_FILM_COUNT);
 
-  let isEqual = true;
-
-  for (const film of films) {
-    if (film.commentsCount !== films[0].commentsCount) {
-      isEqual = false;
-      break;
-    }
-  }
+  const [firstFilm] = films;
+  const isEqual = films.every((item) => item.commentsCount === firstFilm.commentsCount);
 
   if (isEqual) {
     resultedFilms = shuffleArray(films).slice(0, EXTRA_FILM_COUNT);
   }
 
-  const isAnyCommentedFilm = (filmsSortedByCommentsCount[0].commentsCount > 0) ? true : false;
+  const [mostCommentedFilm] = filmsSortedByCommentsCount;
+  const isAnyCommentedFilm = mostCommentedFilm.commentsCount > 0;
 
   const getFilmsMarkup = () => {
     return resultedFilms.map((item) => createFilmCardTemplate(item)).join(`\n`);

@@ -1,3 +1,4 @@
+import {Rang} from "../const.js";
 import {getFilmsStatistic} from "../statistic.js";
 
 export const createProfileTemplate = (films) => {
@@ -5,21 +6,20 @@ export const createProfileTemplate = (films) => {
   const watchedFilms = getFilmsStatistic(films).isWatched;
 
   switch (true) {
-    case (watchedFilms === 0):
-      rang = ``;
-      break;
-
     case (watchedFilms >= 1 && watchedFilms <= 10):
-      rang = `novice`;
+      rang = Rang.NOVICE;
       break;
 
     case (watchedFilms >= 11 && watchedFilms <= 20):
-      rang = `fan`;
+      rang = Rang.FAN;
       break;
 
     case (watchedFilms >= 21):
-      rang = `movie buff`;
+      rang = Rang.MOVIE_BUFF;
       break;
+
+    default:
+      rang = ``;
   }
 
   return (
