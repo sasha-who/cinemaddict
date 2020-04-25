@@ -37,3 +37,11 @@ export const generate = (count, generatorFunction) => {
 
   return result;
 };
+
+export const createElement = (template) => {
+  const container = document.createElement(`div`);
+
+  container.innerHTML = template;
+
+  return container.firstChild;
+};
