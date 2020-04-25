@@ -30,3 +30,8 @@ export const Rang = {
   FAN: `fan`,
   MOVIE_BUFF: `movie buff`
 };
+
+export const RenderPosition = {
+  BEFOREEND: `beforeend`,
+  AFTERBEGIN: `afterbegin`
+};

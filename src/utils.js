@@ -1,3 +1,5 @@
+import {RenderPosition} from "./const.js";
+
 export const getRandomIntegerNumber = (min, max) => {
   min = Math.ceil(min);
   max = Math.floor(max);
@@ -44,4 +46,16 @@ export const createElement = (template) => {
   container.innerHTML = template;
 
   return container.firstChild;
+};
+
+export const render = (element, container, position) => {
+  switch (position) {
+    case RenderPosition.BEFOREEND:
+      container.append(element);
+      break;
+
+    case RenderPosition.AFTERBEGIN:
+      container.prepend(element);
+      break;
+  }
 };

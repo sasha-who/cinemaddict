@@ -1,4 +1,9 @@
-import {MOCK_FILMS_COUNT, INITIAL_FILMS_COUNT, ADDITIONAL_FILMS_COUNT} from "./const.js";
+import {
+  MOCK_FILMS_COUNT,
+  INITIAL_FILMS_COUNT,
+  ADDITIONAL_FILMS_COUNT,
+  RenderPosition
+} from "./const.js";
 import {generate} from "./utils.js";
 import {generateFilm} from "./mock/film.js";
 import ProfileComponent from "./components/profile.js";
@@ -13,10 +18,6 @@ import FilmsStatisticsComponent from "./components/films-statistics.js";
 import FilmDetailedCardComponent from "./components/film-details.js";
 
 const films = generate(MOCK_FILMS_COUNT, generateFilm);
-
-const render = (template, container, position = `beforeend`) => {
-  container.insertAdjacentHTML(position, template);
-};
 
 const headerElement = document.querySelector(`.header`);
 
