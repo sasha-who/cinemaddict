@@ -1,7 +1,8 @@
 import {
   MOCK_FILMS_COUNT,
   INITIAL_FILMS_COUNT,
-  ADDITIONAL_FILMS_COUNT
+  ADDITIONAL_FILMS_COUNT,
+  Keys
 } from "./const.js";
 import {generate, render, getSortedFilms} from "./utils.js";
 import {generateFilm} from "./mock/film.js";
@@ -20,12 +21,24 @@ const renderCard = (film, container) => {
   const filmCardComponent = new FilmCardComponent(film);
   const filmDetailedCardComponent = new FilmDetailedCardComponent(film);
 
+  const escapeKeydownHandler = (evt) => {
+    if (evt.key === Keys.ESCAPE) {
+      bodyElement.removeChild(filmDetailedCardComponent.getElement());
+
+      document.removeEventListener(`keydown`, escapeKeydownHandler);
+    }
+  };
+
   const cardClickHandler = () => {
     bodyElement.appendChild(filmDetailedCardComponent.getElement());
+
+    document.addEventListener(`keydown`, escapeKeydownHandler);
   };
 
   const closeClickHandler = () => {
     bodyElement.removeChild(filmDetailedCardComponent.getElement());
+
+    document.removeEventListener(`keydown`, escapeKeydownHandler);
   };
 
   const posterElement = filmCardComponent.getElement().querySelector(`.film-card__poster`);
