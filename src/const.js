@@ -33,5 +33,5 @@ export const Rang = {
 
 export const RenderPosition = {
   BEFOREEND: `beforeend`,
-  AFTERBEGIN: `afterbegin`
+  AFTEREND: `afterend`
 };

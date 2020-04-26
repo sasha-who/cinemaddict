@@ -48,7 +48,7 @@ export const createElement = (template) => {
   return container.firstChild;
 };
 
-export const render = (element, container, position) => {
+export const render = (element, container, position = RenderPosition.BEFOREEND) => {
   switch (position) {
     case RenderPosition.BEFOREEND:
       container.append(element);

@@ -1,6 +1,5 @@
 import {EXTRA_FILM_COUNT} from "../const.js";
 import {shuffleArray, createElement} from "../utils.js";
-import {createFilmCardTemplate} from "./film-card";
 
 export default class TopRated {
   constructor(films) {
@@ -8,9 +7,10 @@ export default class TopRated {
     this._element = null;
   }
 
-  getTemplate() {
+  getResultedFilms() {
     const filmsSortedByRating = this._films
-    .sort((a, b) => Math.sign(b.rating - a.rating));
+      .slice()
+      .sort((a, b) => Math.sign(b.rating - a.rating));
 
     let resultedFilms = filmsSortedByRating.slice(0, EXTRA_FILM_COUNT);
 
@@ -21,20 +21,18 @@ export default class TopRated {
       resultedFilms = shuffleArray(this._films).slice(0, EXTRA_FILM_COUNT);
     }
 
-    const [topRatedFilm] = filmsSortedByRating;
-    const isAnyRatedFilm = topRatedFilm.rating > 0;
+    return resultedFilms;
+  }
 
-    const getFilmsMarkup = () => {
-      return resultedFilms.map((item) => createFilmCardTemplate(item)).join(`\n`);
-    };
+  getTemplate() {
+    const [topRatedFilm] = this.getResultedFilms();
+    const isAnyRatedFilm = topRatedFilm.rating > 0;
 
     return (
       `${isAnyRatedFilm ? `<section class="films-list--extra">
         <h2 class="films-list__title">Top rated</h2>
 
-        <div class="films-list__container">
-          ${getFilmsMarkup()}
-        </div>
+        <div class="films-list__container"></div>
       </section>` : ``}`
     );
   }

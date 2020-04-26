@@ -1,6 +1,5 @@
 import {EXTRA_FILM_COUNT} from "../const.js";
 import {shuffleArray, createElement} from "../utils.js";
-import {createFilmCardTemplate} from "./film-card";
 
 export default class MostCommented {
   constructor(films) {
@@ -8,9 +7,10 @@ export default class MostCommented {
     this._element = null;
   }
 
-  getTemplate() {
+  getResultedFilms() {
     const filmsSortedByCommentsCount = this._films
-    .sort((a, b) => Math.sign(b.commentsCount - a.commentsCount));
+      .slice()
+      .sort((a, b) => Math.sign(b.commentsCount - a.commentsCount));
 
     let resultedFilms = filmsSortedByCommentsCount.slice(0, EXTRA_FILM_COUNT);
 
@@ -21,20 +21,18 @@ export default class MostCommented {
       resultedFilms = shuffleArray(this._films).slice(0, EXTRA_FILM_COUNT);
     }
 
-    const [mostCommentedFilm] = filmsSortedByCommentsCount;
-    const isAnyCommentedFilm = mostCommentedFilm.commentsCount > 0;
+    return resultedFilms;
+  }
 
-    const getFilmsMarkup = () => {
-      return resultedFilms.map((item) => createFilmCardTemplate(item)).join(`\n`);
-    };
+  getTemplate() {
+    const [mostCommentedFilm] = this.getResultedFilms();
+    const isAnyCommentedFilm = mostCommentedFilm.commentsCount > 0;
 
     return (
       `${isAnyCommentedFilm ? `<section class="films-list--extra">
       <h2 class="films-list__title">Most commented</h2>
 
-      <div class="films-list__container">
-        ${getFilmsMarkup()}
-      </div>
+      <div class="films-list__container"></div>
     </section>` : ``}`
     );
   }
