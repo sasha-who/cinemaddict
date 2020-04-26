@@ -1,5 +1,4 @@
-import {EXTRA_FILM_COUNT} from "../const.js";
-import {shuffleArray, createElement} from "../utils.js";
+import {createElement, getSortedFilms} from "../utils.js";
 
 export default class MostCommented {
   constructor(films) {
@@ -7,25 +6,8 @@ export default class MostCommented {
     this._element = null;
   }
 
-  getResultedFilms() {
-    const filmsSortedByCommentsCount = this._films
-      .slice()
-      .sort((a, b) => Math.sign(b.commentsCount - a.commentsCount));
-
-    let resultedFilms = filmsSortedByCommentsCount.slice(0, EXTRA_FILM_COUNT);
-
-    const [firstFilm] = this._films;
-    const isEqual = this._films.every((item) => item.commentsCount === firstFilm.commentsCount);
-
-    if (isEqual) {
-      resultedFilms = shuffleArray(this._films).slice(0, EXTRA_FILM_COUNT);
-    }
-
-    return resultedFilms;
-  }
-
   getTemplate() {
-    const [mostCommentedFilm] = this.getResultedFilms();
+    const [mostCommentedFilm] = getSortedFilms(this._films, `commentsCount`);
     const isAnyCommentedFilm = mostCommentedFilm.commentsCount > 0;
 
     return (

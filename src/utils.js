@@ -1,4 +1,4 @@
-import {RenderPosition} from "./const.js";
+import {EXTRA_FILM_COUNT, RenderPosition} from "./const.js";
 
 export const getRandomIntegerNumber = (min, max) => {
   min = Math.ceil(min);
@@ -58,4 +58,21 @@ export const render = (element, container, position = RenderPosition.BEFOREEND) 
       container.prepend(element);
       break;
   }
+};
+
+export const getSortedFilms = (films, property) => {
+  const sortedFilms = films
+    .slice()
+    .sort((a, b) => Math.sign(b[property] - a[property]));
+
+  let resultedFilms = sortedFilms.slice(0, EXTRA_FILM_COUNT);
+
+  const [firstFilm] = films;
+  const isEqual = films.every((item) => item[property] === firstFilm[property]);
+
+  if (isEqual) {
+    resultedFilms = shuffleArray(films).slice(0, EXTRA_FILM_COUNT);
+  }
+
+  return resultedFilms;
 };

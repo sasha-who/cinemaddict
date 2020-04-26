@@ -3,7 +3,7 @@ import {
   INITIAL_FILMS_COUNT,
   ADDITIONAL_FILMS_COUNT
 } from "./const.js";
-import {generate, render} from "./utils.js";
+import {generate, render, getSortedFilms} from "./utils.js";
 import {generateFilm} from "./mock/film.js";
 import ProfileComponent from "./components/profile.js";
 import MainNavigationComponent from "./components/main-navigation.js";
@@ -94,7 +94,7 @@ render(topRatedComponent.getElement(), filmsElement);
 const topRatedFilmsContainer = topRatedComponent.getElement()
   .querySelector(`.films-list__container`);
 
-const topRatedFilms = topRatedComponent.getResultedFilms();
+const topRatedFilms = getSortedFilms(films, `rating`);
 
 for (const film of topRatedFilms) {
   renderCard(film, topRatedFilmsContainer);
@@ -106,7 +106,7 @@ render(mostCommentedComponent.getElement(), filmsElement);
 const mostCommentedFilmsContainer = mostCommentedComponent.getElement()
   .querySelector(`.films-list__container`);
 
-const mostCommentedFilms = mostCommentedComponent.getResultedFilms();
+const mostCommentedFilms = getSortedFilms(films, `commentsCount`);
 
 for (const film of mostCommentedFilms) {
   renderCard(film, mostCommentedFilmsContainer);
