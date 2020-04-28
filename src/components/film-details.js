@@ -169,4 +169,10 @@ export default class FilmDetailedCard extends AbstractComponent {
       </section>`
     );
   }
+
+  setCloseButtonClickHandler(handler) {
+    this.getElement()
+    .querySelector(`.film-details__close-btn`)
+    .addEventListener(`click`, handler);
+  }
 }

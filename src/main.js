@@ -5,7 +5,7 @@ import {
   Keys
 } from "./const.js";
 import {generate, getSortedFilms} from "./utils.js";
-import {render, remove} from "./render.js";
+import {render, remove, appendChild, removeChild} from "./render.js";
 import {generateFilm} from "./mock/film.js";
 import ProfileComponent from "./components/profile.js";
 import MainNavigationComponent from "./components/main-navigation.js";
@@ -25,48 +25,39 @@ const renderCard = (film, container) => {
 
   const escapeKeydownHandler = (evt) => {
     if (evt.key === Keys.ESCAPE) {
-      bodyElement.removeChild(filmDetailedCardComponent.getElement());
+      removeChild(filmDetailedCardComponent, bodyElement);
 
       document.removeEventListener(`keydown`, escapeKeydownHandler);
     }
   };
 
   const cardClickHandler = () => {
-    bodyElement.appendChild(filmDetailedCardComponent.getElement());
+    appendChild(filmDetailedCardComponent, bodyElement);
 
     document.addEventListener(`keydown`, escapeKeydownHandler);
   };
 
-  const closeClickHandler = () => {
-    bodyElement.removeChild(filmDetailedCardComponent.getElement());
+  const closeButtonClickHandler = () => {
+    removeChild(filmDetailedCardComponent, bodyElement);
 
     document.removeEventListener(`keydown`, escapeKeydownHandler);
   };
 
-  const posterElement = filmCardComponent.getElement().querySelector(`.film-card__poster`);
-  const titleElement = filmCardComponent.getElement().querySelector(`.film-card__title`);
-  const commentsElement = filmCardComponent.getElement().querySelector(`.film-card__comments`);
-  const closeButton = filmDetailedCardComponent.getElement()
-    .querySelector(`.film-details__close-btn`);
+  filmCardComponent.setCardClickHandler(cardClickHandler);
+  filmDetailedCardComponent.setCloseButtonClickHandler(closeButtonClickHandler);
 
-  posterElement.addEventListener(`click`, cardClickHandler);
-  titleElement.addEventListener(`click`, cardClickHandler);
-  commentsElement.addEventListener(`click`, cardClickHandler);
-  closeButton.addEventListener(`click`, closeClickHandler);
-
-  render(filmCardComponent.getElement(), container);
+  render(filmCardComponent, container);
 };
 
 const renderAllFilms = (films) => {
   if (films.length === 0) {
-    const emptyFilmsComponent = new EmptyFilmsComponent();
-    render(emptyFilmsComponent.getElement(), mainElement);
+    render(new EmptyFilmsComponent(), mainElement);
 
     return;
   }
 
   const filmsComponent = new FilmsComponent();
-  render(filmsComponent.getElement(), mainElement);
+  render(filmsComponent, mainElement);
 
   const filmsElement = filmsComponent.getElement();
   const filmsListElement = filmsElement.querySelector(`.films-list`);
@@ -77,7 +68,7 @@ const renderAllFilms = (films) => {
   }
 
   const showMoreButtonComponent = new ShowMoreButtonComponent();
-  render(showMoreButtonComponent.getElement(), filmsListElement);
+  render(showMoreButtonComponent, filmsListElement);
 
   let currentFilmsCount = INITIAL_FILMS_COUNT;
 
@@ -91,12 +82,12 @@ const renderAllFilms = (films) => {
     currentFilmsCount = addedFilmsCount;
 
     if (currentFilmsCount >= films.length) {
-      remove(showMoreButtonComponent.getElement());
+      remove(showMoreButtonComponent);
     }
   });
 
   const topRatedComponent = new TopRatedComponent(films);
-  render(topRatedComponent.getElement(), filmsElement);
+  render(topRatedComponent, filmsElement);
 
   const topRatedFilmsContainer = topRatedComponent.getElement()
     .querySelector(`.films-list__container`);
@@ -108,7 +99,7 @@ const renderAllFilms = (films) => {
   }
 
   const mostCommentedComponent = new MostCommentedComponent(films);
-  render(mostCommentedComponent.getElement(), filmsElement);
+  render(mostCommentedComponent, filmsElement);
 
   const mostCommentedFilmsContainer = mostCommentedComponent.getElement()
     .querySelector(`.films-list__container`);
@@ -125,21 +116,17 @@ const films = generate(MOCK_FILMS_COUNT, generateFilm);
 const bodyElement = document.querySelector(`body`);
 const headerElement = bodyElement.querySelector(`.header`);
 
-const profileComponent = new ProfileComponent(films);
-render(profileComponent.getElement(), headerElement);
+render(new ProfileComponent(films), headerElement);
 
 const mainElement = bodyElement.querySelector(`.main`);
 
-const mainNavigationComponent = new MainNavigationComponent(films);
-render(mainNavigationComponent.getElement(), mainElement);
+render(new MainNavigationComponent(films), mainElement);
 
-const sortComponent = new SortComponent();
-render(sortComponent.getElement(), mainElement);
+render(new SortComponent(), mainElement);
 
 renderAllFilms(films);
 
 const footerElement = bodyElement.querySelector(`.footer`);
 const filmsStatisticsElement = footerElement.querySelector(`.footer__statistics`);
 
-const filmsStatisticsComponent = new FilmsStatisticsComponent(films.length);
-render(filmsStatisticsComponent.getElement(), filmsStatisticsElement);
+render(new FilmsStatisticsComponent(films.length), filmsStatisticsElement);
