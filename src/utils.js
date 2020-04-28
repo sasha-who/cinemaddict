@@ -1,4 +1,4 @@
-import {EXTRA_FILM_COUNT, RenderPosition} from "./const.js";
+import {EXTRA_FILM_COUNT} from "./const.js";
 
 export const getRandomIntegerNumber = (min, max) => {
   min = Math.ceil(min);
@@ -46,18 +46,6 @@ export const createElement = (template) => {
   container.innerHTML = template;
 
   return container.firstChild;
-};
-
-export const render = (element, container, position = RenderPosition.BEFOREEND) => {
-  switch (position) {
-    case RenderPosition.BEFOREEND:
-      container.append(element);
-      break;
-
-    case RenderPosition.AFTERBEGIN:
-      container.prepend(element);
-      break;
-  }
 };
 
 export const getSortedFilms = (films, property) => {

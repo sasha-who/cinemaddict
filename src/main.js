@@ -4,7 +4,8 @@ import {
   ADDITIONAL_FILMS_COUNT,
   Keys
 } from "./const.js";
-import {generate, render, getSortedFilms} from "./utils.js";
+import {generate, getSortedFilms} from "./utils.js";
+import {render} from "./render.js";
 import {generateFilm} from "./mock/film.js";
 import ProfileComponent from "./components/profile.js";
 import MainNavigationComponent from "./components/main-navigation.js";
