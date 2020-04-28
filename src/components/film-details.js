@@ -1,4 +1,4 @@
-import {createElement} from "../utils";
+import AbstractComponent from "./abstract-component";
 
 const getCommentsMarkup = (commentsArray) => {
   const commentMarkupElements = commentsArray.map((item) => {
@@ -24,10 +24,11 @@ const getCommentsMarkup = (commentsArray) => {
   return commentMarkupElements.join(`\n`);
 };
 
-export default class FilmDetailedCard {
+export default class FilmDetailedCard extends AbstractComponent {
   constructor(film) {
+    super();
+
     this._film = film;
-    this._element = null;
   }
 
   getTemplate() {
@@ -167,17 +168,5 @@ export default class FilmDetailedCard {
         </form>
       </section>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

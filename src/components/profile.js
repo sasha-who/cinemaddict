@@ -1,6 +1,6 @@
 import {Rang} from "../const.js";
-import {createElement} from "../utils";
 import {getFilmsStatistic} from "../statistic.js";
+import AbstractComponent from "./abstract-component.js";
 
 const getRang = (films) => {
   const watchedFilms = getFilmsStatistic(films).isWatched;
@@ -20,10 +20,11 @@ const getRang = (films) => {
   }
 };
 
-export default class Profile {
+export default class Profile extends AbstractComponent {
   constructor(films) {
+    super();
+
     this._films = films;
-    this._element = null;
   }
 
   getTemplate() {
@@ -33,17 +34,5 @@ export default class Profile {
         <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
       </section>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
