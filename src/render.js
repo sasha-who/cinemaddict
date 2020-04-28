@@ -11,3 +11,7 @@ export const render = (element, container, position = RenderPosition.BEFOREEND) 
       break;
   }
 };
+
+export const remove = (element) => {
+  element.remove();
+};

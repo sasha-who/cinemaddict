@@ -5,7 +5,7 @@ import {
   Keys
 } from "./const.js";
 import {generate, getSortedFilms} from "./utils.js";
-import {render} from "./render.js";
+import {render, remove} from "./render.js";
 import {generateFilm} from "./mock/film.js";
 import ProfileComponent from "./components/profile.js";
 import MainNavigationComponent from "./components/main-navigation.js";
@@ -91,7 +91,7 @@ const renderAllFilms = (films) => {
     currentFilmsCount = addedFilmsCount;
 
     if (currentFilmsCount >= films.length) {
-      showMoreButtonComponent.getElement().remove();
+      remove(showMoreButtonComponent.getElement());
     }
   });
 
