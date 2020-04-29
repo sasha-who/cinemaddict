@@ -70,7 +70,7 @@ export default class FilmsController {
 
     let currentFilmsCount = INITIAL_FILMS_COUNT;
 
-    this._showMoreButtonComponent.getElement().addEventListener(`click`, () => {
+    this._showMoreButtonComponent.setClickHandler(() => {
       const addedFilmsCount = currentFilmsCount + ADDITIONAL_FILMS_COUNT;
 
       films.slice(currentFilmsCount, addedFilmsCount).forEach((item) => {
