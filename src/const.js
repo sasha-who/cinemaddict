@@ -39,3 +39,9 @@ export const RenderPosition = {
 export const Keys = {
   ESCAPE: `Escape`
 };
+
+export const SortType = {
+  DEFAULT: `default`,
+  DATE: `date`,
+  RATING: `rating`
+};

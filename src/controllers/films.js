@@ -1,6 +1,7 @@
 import {INITIAL_FILMS_COUNT, ADDITIONAL_FILMS_COUNT, Keys} from "../const.js";
 import {getSortedFilms} from "../utils.js";
 import {render, remove, appendChild, removeChild} from "../render.js";
+import SortComponent from "../components/sort.js";
 import EmptyFilmsComponent from "../components/empty-films.js";
 import FilmsComponent from "../components/films.js";
 import FilmCardComponent from "../components/film-card.js";
@@ -44,12 +45,15 @@ const renderCard = (film, container) => {
 export default class FilmsController {
   constructor(container) {
     this._container = container;
+    this._sortComponent = new SortComponent();
     this._emptyFilmsComponent = new EmptyFilmsComponent();
     this._filmsComponent = new FilmsComponent();
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
   }
 
   render(films) {
+    render(this._sortComponent, this._container);
+
     if (films.length === 0) {
       render(this._emptyFilmsComponent, this._container);
 
