@@ -1,3 +1,5 @@
+import {MONTHS} from "../const.js";
+import {castomizeDateFormat} from "../utils.js";
 import AbstractComponent from "./abstract-component";
 
 const getCommentsMarkup = (commentsArray) => {
@@ -35,13 +37,13 @@ export default class FilmDetailedCard extends AbstractComponent {
     const {
       poster,
       name,
+      date,
       ageLimit,
       originalName,
       rating,
       director,
       screenwriters,
       actors,
-      releaseDate,
       duration,
       country,
       genre,
@@ -52,6 +54,16 @@ export default class FilmDetailedCard extends AbstractComponent {
       comments,
       commentsCount
     } = this._film;
+
+    const formatFilmDate = (filmDate) => {
+      const year = filmDate.getFullYear();
+      const month = MONTHS[filmDate.getMonth()];
+      const day = castomizeDateFormat(filmDate.getDate());
+
+      return `${day} ${month} ${year}`;
+    };
+
+    const releaseDate = formatFilmDate(date);
 
     const genresArray = genre.split(`, `);
     const genresWithEnding = (genresArray.length === 1) ? `Genre` : `Genres`;

@@ -20,23 +20,26 @@ export default class Sort extends AbstractComponent {
     );
   }
 
-  getSortType() {
-    return this._currentSortType;
-  }
-
-  setSortTypyChangeHandler(handler) {
+  setSortTypeChangeHandler(handler) {
     const sortingElements = this.getElement().querySelectorAll(`.sort__button`);
 
     for (const element of sortingElements) {
       element.addEventListener(`click`, (evt) => {
         evt.preventDefault();
 
-        const sortType = element.dataset.SortType;
+        const sortType = element.dataset.sortType;
 
         if (sortType === this._currentSortType) {
           return;
         }
 
+        for (const item of sortingElements) {
+          if (item.classList.contains(`sort__button--active`)) {
+            item.classList.remove(`sort__button--active`);
+          }
+        }
+
+        element.classList.add(`sort__button--active`);
         this._currentSortType = sortType;
         handler(this._currentSortType);
       });
