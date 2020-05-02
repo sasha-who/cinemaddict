@@ -1,46 +1,12 @@
-import {INITIAL_FILMS_COUNT, ADDITIONAL_FILMS_COUNT, Keys, SortType} from "../const.js";
+import {INITIAL_FILMS_COUNT, ADDITIONAL_FILMS_COUNT, SortType} from "../const.js";
 import {getSortedFilms} from "../utils.js";
-import {render, remove, appendChild, removeChild} from "../render.js";
+import {render, remove} from "../render.js";
 import SortComponent from "../components/sort.js";
 import EmptyFilmsComponent from "../components/empty-films.js";
 import FilmsComponent from "../components/films.js";
-import FilmCardComponent from "../components/film-card.js";
 import ShowMoreButtonComponent from "../components/show-more-button.js";
 import TopRatedComponent from "../components/top-rated.js";
 import MostCommentedComponent from "../components/most-commented.js";
-import FilmDetailedCardComponent from "../components/film-details.js";
-
-const bodyElement = document.querySelector(`body`);
-
-const renderCard = (film, container) => {
-  const filmCardComponent = new FilmCardComponent(film);
-  const filmDetailedCardComponent = new FilmDetailedCardComponent(film);
-
-  const escapeKeydownHandler = (evt) => {
-    if (evt.key === Keys.ESCAPE) {
-      removeChild(filmDetailedCardComponent, bodyElement);
-
-      document.removeEventListener(`keydown`, escapeKeydownHandler);
-    }
-  };
-
-  const cardClickHandler = () => {
-    appendChild(filmDetailedCardComponent, bodyElement);
-
-    document.addEventListener(`keydown`, escapeKeydownHandler);
-  };
-
-  const closeButtonClickHandler = () => {
-    removeChild(filmDetailedCardComponent, bodyElement);
-
-    document.removeEventListener(`keydown`, escapeKeydownHandler);
-  };
-
-  filmCardComponent.setCardClickHandler(cardClickHandler);
-  filmDetailedCardComponent.setCloseButtonClickHandler(closeButtonClickHandler);
-
-  render(filmCardComponent, container);
-};
 
 export default class FilmsController {
   constructor(container) {
@@ -64,6 +30,7 @@ export default class FilmsController {
     const filmsElement = this._filmsComponent.getElement();
     const filmsListElement = filmsElement.querySelector(`.films-list`);
     const filmsContainerElement = filmsListElement.querySelector(`.films-list__container`);
+    const bodyElement = document.querySelector(`body`);
 
     const renderFilms = (allFilms) => {
       for (let i = 0; i < INITIAL_FILMS_COUNT; i++) {
