@@ -10,62 +10,53 @@ import MostCommentedComponent from "../components/most-commented.js";
 
 export default class FilmsController {
   constructor(container) {
+    this._films = [];
+    this._currentFilmsCount = INITIAL_FILMS_COUNT;
     this._container = container;
     this._sortComponent = new SortComponent();
     this._emptyFilmsComponent = new EmptyFilmsComponent();
     this._filmsComponent = new FilmsComponent();
+    this._showMoreButtonComponent = new ShowMoreButtonComponent();
+    this._filmsElement = this._filmsComponent.getElement();
+    this._filmsListElement = this._filmsElement.querySelector(`.films-list`);
+    this._filmsContainerElement = this._filmsListElement.querySelector(`.films-list__container`);
+    // this._bodyElement = document.querySelector(`body`);
   }
 
-  render(films) {
+  _renderInitialCountFilms(films) {
+    for (let i = 0; i < INITIAL_FILMS_COUNT; i++) {
+      renderCard(films[i], this._filmsContainerElement);
+    }
+  }
+
+  _renderShowMoreButtonComponent(films) {
+    render(this._showMoreButtonComponent, this._filmsListElement);
+
+    this._showMoreButtonComponent.setClickHandler(() => {
+      const addedFilmsCount = this._currentFilmsCount + ADDITIONAL_FILMS_COUNT;
+
+      films.slice(this._currentFilmsCount, addedFilmsCount).forEach((item) => {
+        renderCard(item, this._filmsContainerElement);
+      });
+
+      this._currentFilmsCount = addedFilmsCount;
+
+      if (this._currentFilmsCount >= films.length) {
+        remove(this._showMoreButtonComponent);
+      }
+    });
+  }
+
+  _renderSortComponent() {
     render(this._sortComponent, this._container);
 
-    if (films.length === 0) {
-      render(this._emptyFilmsComponent, this._container);
-
-      return;
-    }
-
-    render(this._filmsComponent, this._container);
-
-    const filmsElement = this._filmsComponent.getElement();
-    const filmsListElement = filmsElement.querySelector(`.films-list`);
-    const filmsContainerElement = filmsListElement.querySelector(`.films-list__container`);
-    const bodyElement = document.querySelector(`body`);
-
-    const renderFilms = (allFilms) => {
-      for (let i = 0; i < INITIAL_FILMS_COUNT; i++) {
-        renderCard(allFilms[i], filmsContainerElement);
-      }
-
-      const showMoreButtonComponent = new ShowMoreButtonComponent();
-      render(showMoreButtonComponent, filmsListElement);
-
-      let currentFilmsCount = INITIAL_FILMS_COUNT;
-
-      showMoreButtonComponent.setClickHandler(() => {
-        const addedFilmsCount = currentFilmsCount + ADDITIONAL_FILMS_COUNT;
-
-        allFilms.slice(currentFilmsCount, addedFilmsCount).forEach((item) => {
-          renderCard(item, filmsContainerElement);
-        });
-
-        currentFilmsCount = addedFilmsCount;
-
-        if (currentFilmsCount >= allFilms.length) {
-          remove(showMoreButtonComponent);
-        }
-      });
-    };
-
-    renderFilms(films);
-
     this._sortComponent.setSortTypeChangeHandler((sortType) => {
-      const filmsSortedByDate = films.slice().sort((a, b) => b.date - a.date);
-      const filmsSortedByRating = films.slice().sort((a, b) => b.rating - a.rating);
+      const filmsSortedByDate = this._films.slice().sort((a, b) => b.date - a.date);
+      const filmsSortedByRating = this._films.slice().sort((a, b) => b.rating - a.rating);
 
-      filmsContainerElement.innerHTML = ``;
+      this._filmsContainerElement.innerHTML = ``;
 
-      const showMoreButton = filmsListElement.querySelector(`.films-list__show-more`);
+      const showMoreButton = this._filmsListElement.querySelector(`.films-list__show-more`);
 
       if (showMoreButton) {
         showMoreButton.remove();
@@ -73,41 +64,65 @@ export default class FilmsController {
 
       switch (sortType) {
         case SortType.DATE:
-          renderFilms(filmsSortedByDate);
+          this._renderInitialCountFilms(filmsSortedByDate);
+          this._renderShowMoreButtonComponent(filmsSortedByDate);
           break;
 
         case SortType.RATING:
-          renderFilms(filmsSortedByRating);
+          this._renderInitialCountFilms(filmsSortedByRating);
+          this._renderShowMoreButtonComponent(filmsSortedByRating);
           break;
 
         default:
-          renderFilms(films);
+          this._renderInitialCountFilms(this._films);
+          this._renderShowMoreButtonComponent(this._films);
           break;
       }
     });
+  }
 
-    const topRatedComponent = new TopRatedComponent(films);
-    render(topRatedComponent, filmsElement);
+  _topRatedComponent() {
+    const topRatedComponent = new TopRatedComponent(this._films);
+    render(topRatedComponent, this._filmsElement);
 
     const topRatedFilmsContainer = topRatedComponent.getElement()
       .querySelector(`.films-list__container`);
 
-    const topRatedFilms = getSortedFilms(films, `rating`);
+    const topRatedFilms = getSortedFilms(this._films, `rating`);
 
     for (const film of topRatedFilms) {
       renderCard(film, topRatedFilmsContainer);
     }
+  }
 
-    const mostCommentedComponent = new MostCommentedComponent(films);
-    render(mostCommentedComponent, filmsElement);
+  _mostCommentedComponent() {
+    const mostCommentedComponent = new MostCommentedComponent(this._films);
+    render(mostCommentedComponent, this._filmsElement);
 
     const mostCommentedFilmsContainer = mostCommentedComponent.getElement()
       .querySelector(`.films-list__container`);
 
-    const mostCommentedFilms = getSortedFilms(films, `commentsCount`);
+    const mostCommentedFilms = getSortedFilms(this._films, `commentsCount`);
 
     for (const film of mostCommentedFilms) {
       renderCard(film, mostCommentedFilmsContainer);
     }
+  }
+
+  render(films) {
+    this._films = films;
+    this._renderSortComponent();
+
+    if (this._films.length === 0) {
+      render(this._emptyFilmsComponent, this._container);
+
+      return;
+    }
+
+    render(this._filmsComponent, this._container);
+    this._renderInitialCountFilms(this._films);
+    this._renderShowMoreButtonComponent(this._films);
+    this._topRatedComponent();
+    this._mostCommentedComponent();
   }
 }
