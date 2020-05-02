@@ -20,6 +20,10 @@ export default class Sort extends AbstractComponent {
     );
   }
 
+  getSortType() {
+    return this._currentSortType;
+  }
+
   setSortTypeChangeHandler(handler) {
     const sortingElements = this.getElement().querySelectorAll(`.sort__button`);
 

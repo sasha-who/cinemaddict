@@ -8,6 +8,26 @@ import ShowMoreButtonComponent from "../components/show-more-button.js";
 import TopRatedComponent from "../components/top-rated.js";
 import MostCommentedComponent from "../components/most-commented.js";
 
+const getFilmsAfterSorting = (films, sortType) => {
+  let sortedFilms = [];
+
+  switch (sortType) {
+    case SortType.DATE:
+      sortedFilms = films.slice().sort((a, b) => b.date - a.date);
+      break;
+
+    case SortType.RATING:
+      sortedFilms = films.slice().sort((a, b) => b.rating - a.rating);
+      break;
+
+    default:
+      sortedFilms = films.slice();
+      break;
+  }
+
+  return sortedFilms;
+};
+
 export default class FilmsController {
   constructor(container) {
     this._films = [];
@@ -48,12 +68,7 @@ export default class FilmsController {
   }
 
   _renderSortComponent() {
-    render(this._sortComponent, this._container);
-
-    this._sortComponent.setSortTypeChangeHandler((sortType) => {
-      const filmsSortedByDate = this._films.slice().sort((a, b) => b.date - a.date);
-      const filmsSortedByRating = this._films.slice().sort((a, b) => b.rating - a.rating);
-
+    this._sortComponent.setSortTypeChangeHandler(() => {
       this._filmsContainerElement.innerHTML = ``;
 
       const showMoreButton = this._filmsListElement.querySelector(`.films-list__show-more`);
@@ -62,22 +77,9 @@ export default class FilmsController {
         showMoreButton.remove();
       }
 
-      switch (sortType) {
-        case SortType.DATE:
-          this._renderInitialCountFilms(filmsSortedByDate);
-          this._renderShowMoreButtonComponent(filmsSortedByDate);
-          break;
-
-        case SortType.RATING:
-          this._renderInitialCountFilms(filmsSortedByRating);
-          this._renderShowMoreButtonComponent(filmsSortedByRating);
-          break;
-
-        default:
-          this._renderInitialCountFilms(this._films);
-          this._renderShowMoreButtonComponent(this._films);
-          break;
-      }
+      const sortedFilms = getFilmsAfterSorting(this._films, this._sortComponent.getSortType());
+      this._renderInitialCountFilms(sortedFilms);
+      this._showMoreButtonComponent.render(sortedFilms);
     });
   }
 
