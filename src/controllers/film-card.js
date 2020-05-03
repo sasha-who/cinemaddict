@@ -8,6 +8,7 @@ export default class FilmCardController {
   constructor(container, onDataChange) {
     this._container = container;
     this._onDataChange = onDataChange;
+    this._film = null;
     this._filmDetailedCardComponent = null;
     this._filmCardComponent = null;
     this._bodyElement = document.querySelector(`body`);
@@ -26,62 +27,73 @@ export default class FilmCardController {
 
   _closeButtonClickHandler() {
     removeChild(this._filmDetailedCardComponent, this._bodyElement);
+    this._filmDetailedCardComponent.setCloseButtonClickHandler(this._closeButtonClickHandler);
 
     document.removeEventListener(`keydown`, this._escapeKeydownHandler);
   }
 
-  _cardClickHandler() {
-    appendChild(this._filmDetailedCardComponent, this._bodyElement);
+  _createFilmDetailedCardComponent(film) {
+    this._filmDetailedCardComponent = new FilmDetailedCardComponent(film);
     this._filmDetailedCardComponent.setCloseButtonClickHandler(this._closeButtonClickHandler);
+
+    const changeDetailedCardFlag = (evt, flag) => {
+      evt.target.classList.toggle(`film-card__controls-item--active`);
+
+      this._onDataChange(film, Object.assign({}, film, {
+        [flag]: !film[flag]
+      }));
+    };
+
+    this._filmDetailedCardComponent.setWatchlistButtonHandler((evt) => {
+      changeDetailedCardFlag(evt, `isInWatchlist`);
+    });
+
+    this._filmDetailedCardComponent.setWatchedButtonHandler((evt) => {
+      changeDetailedCardFlag(evt, `isWatched`);
+    });
+
+    this._filmDetailedCardComponent.setFavoriteButtonHandler((evt) => {
+      changeDetailedCardFlag(evt, `isInFavorites`);
+    });
+  }
+
+  _cardClickHandler() {
+    this._createFilmDetailedCardComponent(this._film);
+    appendChild(this._filmDetailedCardComponent, this._bodyElement);
 
     document.addEventListener(`keydown`, this._escapeKeydownHandler);
   }
 
   render(film) {
-    this._filmCardComponent = new FilmCardComponent(film);
-    this._filmDetailedCardComponent = new FilmDetailedCardComponent(film);
+    this._film = film;
+    this._filmCardComponent = new FilmCardComponent(this._film);
 
     this._filmCardComponent.setCardClickHandler(this._cardClickHandler);
-    this._filmDetailedCardComponent.setCloseButtonClickHandler(this._closeButtonClickHandler);
 
-    const changeCardFlag = (flag) => {
-      const newFilm = Object.assign({}, film, {
-        [flag]: !film[flag]
+    const changeCardFlag = (evt, flag) => {
+      evt.preventDefault();
+
+      evt.target.classList.toggle(`film-card__controls-item--active`);
+
+      const newFilm = Object.assign({}, this._film, {
+        [flag]: !this._film[flag]
       });
 
-      this._onDataChange(this, film, newFilm);
+      this._onDataChange(this._film, newFilm);
+      this._film = newFilm;
     };
 
     this._filmCardComponent.setWatchlistButtonHandler((evt) => {
-      evt.preventDefault();
-
-      changeCardFlag(`isInWatchlist`);
+      changeCardFlag(evt, `isInWatchlist`);
     });
 
     this._filmCardComponent.setWatchedButtonHandler((evt) => {
-      evt.preventDefault();
-
-      changeCardFlag(`isWatched`);
+      changeCardFlag(evt, `isWatched`);
     });
 
     this._filmCardComponent.setFavoriteButtonHandler((evt) => {
-      evt.preventDefault();
-
-      changeCardFlag(`isInFavorites`);
+      changeCardFlag(evt, `isInFavorites`);
     });
-
-    this._filmDetailedCardComponent.setWatchlistButtonHandler(() => {
-      changeCardFlag(`isInWatchlist`);
-    });
-
-    this._filmDetailedCardComponent.setWatchedButtonHandler(() => {
-      changeCardFlag(`isWatched`);
-    });
-
-    this._filmDetailedCardComponent.setFavoriteButtonHandler(() => {
-      changeCardFlag(`isInFavorites`);
-    });
-
     render(this._filmCardComponent, this._container);
   }
 }
