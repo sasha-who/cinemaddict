@@ -26,13 +26,13 @@ export default class FilmCardController {
 
   _closeButtonClickHandler() {
     removeChild(this._filmDetailedCardComponent, this._bodyElement);
-    this._filmDetailedCardComponent.setCloseButtonClickHandler(this._closeButtonClickHandler);
 
     document.removeEventListener(`keydown`, this._escapeKeydownHandler);
   }
 
   _cardClickHandler() {
     appendChild(this._filmDetailedCardComponent, this._bodyElement);
+    this._filmDetailedCardComponent.setCloseButtonClickHandler(this._closeButtonClickHandler);
 
     document.addEventListener(`keydown`, this._escapeKeydownHandler);
   }
