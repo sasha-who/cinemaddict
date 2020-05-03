@@ -35,3 +35,7 @@ export const RenderPosition = {
   BEFOREEND: `beforeend`,
   AFTEREND: `afterend`
 };
+
+export const Keys = {
+  ESCAPE: `Escape`
+};

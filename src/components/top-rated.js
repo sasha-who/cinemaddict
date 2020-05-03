@@ -1,5 +1,4 @@
-import {EXTRA_FILM_COUNT} from "../const.js";
-import {shuffleArray, createElement} from "../utils.js";
+import {createElement, getSortedFilms} from "../utils.js";
 
 export default class TopRated {
   constructor(films) {
@@ -7,25 +6,8 @@ export default class TopRated {
     this._element = null;
   }
 
-  getResultedFilms() {
-    const filmsSortedByRating = this._films
-      .slice()
-      .sort((a, b) => Math.sign(b.rating - a.rating));
-
-    let resultedFilms = filmsSortedByRating.slice(0, EXTRA_FILM_COUNT);
-
-    const [firstFilm] = this._films;
-    const isEqual = this._films.every((item) => item.rating === firstFilm.rating);
-
-    if (isEqual) {
-      resultedFilms = shuffleArray(this._films).slice(0, EXTRA_FILM_COUNT);
-    }
-
-    return resultedFilms;
-  }
-
   getTemplate() {
-    const [topRatedFilm] = this.getResultedFilms();
+    const [topRatedFilm] = getSortedFilms(this._films, `rating`);
     const isAnyRatedFilm = topRatedFilm.rating > 0;
 
     return (
