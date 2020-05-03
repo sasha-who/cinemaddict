@@ -9,24 +9,25 @@ export default class FilmCardController {
     this._container = container;
     this._filmDetailedCardComponent = null;
     this._filmCardComponent = null;
+    this._bodyElement = document.querySelector(`body`);
   }
 
   _escapeKeydownHandler(evt) {
     if (evt.key === Keys.ESCAPE) {
-      removeChild(this._filmDetailedCardComponent, this._container);
+      removeChild(this._filmDetailedCardComponent, this._bodyElement);
 
       document.removeEventListener(`keydown`, this._escapeKeydownHandler);
     }
   }
 
   _cardClickHandler() {
-    appendChild(this._filmDetailedCardComponent, this._container);
+    appendChild(this._filmDetailedCardComponent, this._bodyElement);
 
     document.addEventListener(`keydown`, this._escapeKeydownHandler);
   }
 
   _closeButtonClickHandler() {
-    removeChild(this._filmDetailedCardComponent, this._container);
+    removeChild(this._filmDetailedCardComponent, this._bodyElement);
 
     document.removeEventListener(`keydown`, this._escapeKeydownHandler);
   }
