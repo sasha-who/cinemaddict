@@ -10,6 +10,9 @@ export default class FilmCardController {
     this._filmDetailedCardComponent = null;
     this._filmCardComponent = null;
     this._bodyElement = document.querySelector(`body`);
+    this._escapeKeydownHandler = this._escapeKeydownHandler.bind(this);
+    this._cardClickHandler = this._cardClickHandler.bind(this);
+    this._closeButtonClickHandler = this._closeButtonClickHandler.bind(this);
   }
 
   _escapeKeydownHandler(evt) {
@@ -33,12 +36,12 @@ export default class FilmCardController {
   }
 
   render(film) {
-    const filmCardComponent = new FilmCardComponent(film);
-    const filmDetailedCardComponent = new FilmDetailedCardComponent(film);
+    this._filmCardComponent = new FilmCardComponent(film);
+    this._filmDetailedCardComponent = new FilmDetailedCardComponent(film);
 
-    filmCardComponent.setCardClickHandler(this._cardClickHandler);
-    filmDetailedCardComponent.setCloseButtonClickHandler(this._closeButtonClickHandler);
+    this._filmCardComponent.setCardClickHandler(this._cardClickHandler);
+    this._filmDetailedCardComponent.setCloseButtonClickHandler(this._closeButtonClickHandler);
 
-    render(filmCardComponent, this._container);
+    render(this._filmCardComponent, this._container);
   }
 }
