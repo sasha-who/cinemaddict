@@ -1,10 +1,11 @@
-import {createElement} from "../utils";
 import {getFilmsStatistic} from "../statistic.js";
+import AbstractComponent from "./abstract-component.js";
 
-export default class MainNavigation {
+export default class MainNavigation extends AbstractComponent {
   constructor(films) {
+    super();
+
     this._films = films;
-    this._element = null;
   }
 
   getTemplate() {
@@ -21,17 +22,5 @@ export default class MainNavigation {
         <a href="#stats" class="main-navigation__additional">Stats</a>
       </nav>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

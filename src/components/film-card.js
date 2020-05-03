@@ -1,10 +1,11 @@
 import {MAX_DESCRIPTION_LENGTH} from "../const.js";
-import {createElement} from "../utils.js";
+import AbstractComponent from "./abstract-component.js";
 
-export default class FilmCard {
+export default class FilmCard extends AbstractComponent {
   constructor(film) {
+    super();
+
     this._film = film;
-    this._element = null;
   }
 
   getTemplate() {
@@ -50,15 +51,17 @@ export default class FilmCard {
     );
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
+  setCardClickHandler(handler) {
+    this.getElement()
+    .querySelector(`.film-card__poster`)
+    .addEventListener(`click`, handler);
 
-    return this._element;
-  }
+    this.getElement()
+    .querySelector(`.film-card__title`)
+    .addEventListener(`click`, handler);
 
-  removeElement() {
-    this._element = null;
+    this.getElement()
+    .querySelector(`.film-card__comments`)
+    .addEventListener(`click`, handler);
   }
 }
