@@ -1,5 +1,5 @@
+import moment from "moment";
 import {MONTHS} from "../const.js";
-import {castomizeDateFormat} from "../utils.js";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 
 const getCommentsMarkup = (commentsArray) => {
@@ -62,16 +62,7 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
       commentsCount
     } = this._film;
 
-    const formatFilmDate = (filmDate) => {
-      const year = filmDate.getFullYear();
-      const month = MONTHS[filmDate.getMonth()];
-      const day = castomizeDateFormat(filmDate.getDate());
-
-      return `${day} ${month} ${year}`;
-    };
-
-    const releaseDate = formatFilmDate(date);
-
+    const releaseDate = moment(date).format(`DD MMMM YYYY`);
     const genresArray = genre.split(`, `);
     const genresWithEnding = (genresArray.length === 1) ? `Genre` : `Genres`;
     const genresMarkup = genresArray

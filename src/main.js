@@ -25,3 +25,16 @@ const footerElement = bodyElement.querySelector(`.footer`);
 const filmsStatisticsElement = footerElement.querySelector(`.footer__statistics`);
 
 render(new FilmsStatisticsComponent(films.length), filmsStatisticsElement);
+
+import moment from "moment";
+
+// Продолжительность фильма
+const date5 = moment.duration(1229, `minutes`);
+const date6 = `${date5.hours()}h ${date5.minutes()}m`;
+
+// Дата релиза фильма
+const date2 = new Date();
+const date3 = moment(date2).format(`DD MMMM YYYY`);
+
+// Дата комментария
+const date4 = moment(date2).format(`YYYY/MM/DD HH:mm`);
