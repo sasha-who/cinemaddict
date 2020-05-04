@@ -144,7 +144,7 @@ export default class FilmsController {
     this._showedFilmsControllers = this._showedFilmsControllers.concat(newFilms);
   }
 
-  _onDataChange(oldData, newData) {
+  _onDataChange(filmCardController, oldData, newData) {
     const index = this._films.findIndex((item) => item === oldData);
 
     if (index === -1) {
@@ -152,6 +152,7 @@ export default class FilmsController {
     }
 
     this._films = [].concat(this._films.slice(0, index), newData, this._films.slice(index + 1));
+    filmCardController.render(this._films[index]);
   }
 
   _onViewChange() {
