@@ -12,6 +12,7 @@ export default class FilmCardController {
     this._filmDetailedCardComponent = null;
     this._filmCardComponent = null;
     this._bodyElement = document.querySelector(`body`);
+    this._escapeKeydownHandler = this._escapeKeydownHandler.bind(this);
   }
 
   _onCardFlagChange(film) {
@@ -55,18 +56,22 @@ export default class FilmCardController {
     }
   }
 
+  _removePopup() {
+    removeChild(this._filmDetailedCardComponent, this._bodyElement);
+    this._mode = Mode.DEFAULT;
+
+    document.removeEventListener(`keydown`, this._escapeKeydownHandler);
+  }
+
+  _escapeKeydownHandler(evt) {
+    if (evt.key === Keys.ESCAPE) {
+      this._removePopup();
+    }
+  }
+
   render(film) {
-    const removePopup = () => {
-      removeChild(this._filmDetailedCardComponent, this._bodyElement);
-      this._mode = Mode.DEFAULT;
-
-      document.removeEventListener(`keydown`, escapeKeydownHandler);
-    };
-
-    const escapeKeydownHandler = (evt) => {
-      if (evt.key === Keys.ESCAPE) {
-        removePopup();
-      }
+    const closeButtonClickHandler = () => {
+      this._removePopup();
     };
 
     const cardClickHandler = () => {
@@ -75,8 +80,8 @@ export default class FilmCardController {
       this._mode = Mode.OPEN;
 
       this._onCardFlagChange(film);
-      this._filmDetailedCardComponent.setCloseButtonClickHandler(removePopup);
-      document.addEventListener(`keydown`, escapeKeydownHandler);
+      this._filmDetailedCardComponent.setCloseButtonClickHandler(closeButtonClickHandler);
+      document.addEventListener(`keydown`, this._escapeKeydownHandler);
     };
 
     const oldFilmCardComponent = this._filmCardComponent;
@@ -87,7 +92,7 @@ export default class FilmCardController {
 
     this._onCardFlagChange(film);
     this._filmCardComponent.setCardClickHandler(cardClickHandler);
-    this._filmDetailedCardComponent.setCloseButtonClickHandler(removePopup);
+    this._filmDetailedCardComponent.setCloseButtonClickHandler(closeButtonClickHandler);
 
     if (oldFilmCardComponent && oldFilmDetailedCardComponent) {
       replace(this._filmCardComponent, oldFilmCardComponent);
