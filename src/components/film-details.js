@@ -1,6 +1,6 @@
 import {MONTHS} from "../const.js";
 import {castomizeDateFormat} from "../utils.js";
-import AbstractComponent from "./abstract-component";
+import AbstractSmartComponent from "./abstract-smart-component.js";
 
 const getCommentsMarkup = (commentsArray) => {
   const commentMarkupElements = commentsArray.map((item) => {
@@ -26,11 +26,18 @@ const getCommentsMarkup = (commentsArray) => {
   return commentMarkupElements.join(`\n`);
 };
 
-export default class FilmDetailedCard extends AbstractComponent {
+export default class FilmDetailedCard extends AbstractSmartComponent {
   constructor(film) {
     super();
 
     this._film = film;
+    this._closeButtonClickHandler = null;
+    this._watchlistButtonHandler = null;
+    this._watchedButtonHandler = null;
+    this._favoriteButtonHandler = null;
+    this._emojiType = null;
+
+    this._onCommentEmojiChange();
   }
 
   getTemplate() {
@@ -92,6 +99,11 @@ export default class FilmDetailedCard extends AbstractComponent {
 
     const checkControls = (flag) => flag ? `checked` : ``;
 
+    const userEmojiTemplate = (this._emojiType !== null) ?
+      `<img src="./images/emoji/${this._emojiType}.png"
+      width="55" height="55" alt="emoji-${this._emojiType}">` :
+      ``;
+
     return (
       `<section class="film-details">
         <form class="film-details__inner" action="" method="get">
@@ -147,7 +159,9 @@ export default class FilmDetailedCard extends AbstractComponent {
               </ul>
 
               <div class="film-details__new-comment">
-                <div for="add-emoji" class="film-details__add-emoji-label"></div>
+                <div for="add-emoji" class="film-details__add-emoji-label">
+                  ${userEmojiTemplate}
+                </div>
 
                 <label class="film-details__comment-label">
                   <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
@@ -186,23 +200,56 @@ export default class FilmDetailedCard extends AbstractComponent {
     this.getElement()
     .querySelector(`.film-details__close-btn`)
     .addEventListener(`click`, handler);
+
+    this._closeButtonClickHandler = handler;
   }
 
   setWatchlistButtonHandler(handler) {
     this.getElement()
       .querySelector(`.film-details__control-label--watchlist`)
       .addEventListener(`click`, handler);
+
+    this._watchlistButtonHandler = handler;
   }
 
   setWatchedButtonHandler(handler) {
     this.getElement()
       .querySelector(`.film-details__control-label--watched`)
       .addEventListener(`click`, handler);
+
+    this._watchedButtonHandler = handler;
   }
 
   setFavoriteButtonHandler(handler) {
     this.getElement()
       .querySelector(`.film-details__control-label--favorite`)
       .addEventListener(`click`, handler);
+
+    this._favoriteButtonHandler = handler;
+  }
+
+  recoveryListeners() {
+    this.setCloseButtonClickHandler(this._closeButtonClickHandler);
+    this.setWatchlistButtonHandler(this._watchlistButtonHandler);
+    this.setWatchedButtonHandler(this._watchedButtonHandler);
+    this.setFavoriteButtonHandler(this._favoriteButtonHandler);
+    this._onCommentEmojiChange();
+  }
+
+  rerender() {
+    super.rerender();
+  }
+
+  _onCommentEmojiChange() {
+    const emojiLabels = this.getElement().querySelectorAll(`.film-details__emoji-label`);
+    const emojiInputs = this.getElement().querySelectorAll(`.film-details__emoji-item`);
+
+    emojiLabels.forEach((item, index) => {
+      item.addEventListener(`click`, () => {
+        this._emojiType = emojiInputs[index].value;
+
+        this.rerender();
+      });
+    });
   }
 }
