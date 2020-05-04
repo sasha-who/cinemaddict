@@ -1,5 +1,4 @@
 import moment from "moment";
-import {MONTHS} from "../const.js";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 
 const getCommentsMarkup = (commentsArray) => {
