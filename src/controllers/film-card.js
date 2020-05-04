@@ -1,35 +1,39 @@
-import {Keys} from "../const.js";
+import {Keys, Mode} from "../const.js";
 import {render, appendChild, removeChild} from "../render.js";
 import FilmCardComponent from "../components/film-card.js";
 import FilmDetailedCardComponent from "../components/film-details.js";
 
-
 export default class FilmCardController {
-  constructor(container, onDataChange) {
+  constructor(container, onDataChange, onViewChange) {
     this._container = container;
     this._onDataChange = onDataChange;
+    this._onViewChange = onViewChange;
+    this._mode = Mode.DEFAULT;
     this._film = null;
     this._filmDetailedCardComponent = null;
     this._filmCardComponent = null;
+    this._oldFilmDetailedCardComponent = null;
     this._bodyElement = document.querySelector(`body`);
     this._escapeKeydownHandler = this._escapeKeydownHandler.bind(this);
     this._cardClickHandler = this._cardClickHandler.bind(this);
     this._closeButtonClickHandler = this._closeButtonClickHandler.bind(this);
   }
 
+  _removePopup() {
+    removeChild(this._filmDetailedCardComponent, this._bodyElement);
+    this._mode = Mode.DEFAULT;
+
+    document.removeEventListener(`keydown`, this._escapeKeydownHandler);
+  }
+
   _escapeKeydownHandler(evt) {
     if (evt.key === Keys.ESCAPE) {
-      removeChild(this._filmDetailedCardComponent, this._bodyElement);
-
-      document.removeEventListener(`keydown`, this._escapeKeydownHandler);
+      this._removePopup();
     }
   }
 
   _closeButtonClickHandler() {
-    removeChild(this._filmDetailedCardComponent, this._bodyElement);
-    this._filmDetailedCardComponent.setCloseButtonClickHandler(this._closeButtonClickHandler);
-
-    document.removeEventListener(`keydown`, this._escapeKeydownHandler);
+    this._removePopup();
   }
 
   _createFilmDetailedCardComponent(film) {
@@ -58,10 +62,18 @@ export default class FilmCardController {
   }
 
   _cardClickHandler() {
+    this._onViewChange();
     this._createFilmDetailedCardComponent(this._film);
     appendChild(this._filmDetailedCardComponent, this._bodyElement);
+    this._mode = Mode.OPEN;
 
     document.addEventListener(`keydown`, this._escapeKeydownHandler);
+  }
+
+  setDefaultView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._removePopup();
+    }
   }
 
   render(film) {
@@ -94,6 +106,7 @@ export default class FilmCardController {
     this._filmCardComponent.setFavoriteButtonHandler((evt) => {
       changeCardFlag(evt, `isInFavorites`);
     });
+
     render(this._filmCardComponent, this._container);
   }
 }

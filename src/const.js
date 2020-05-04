@@ -45,3 +45,8 @@ export const SortType = {
   DATE: `date`,
   RATING: `rating`
 };
+
+export const Mode = {
+  DEFAULT: `default`,
+  OPEN: `open`
+};
