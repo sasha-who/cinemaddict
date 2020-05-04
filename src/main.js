@@ -4,7 +4,6 @@ import {render} from "./render.js";
 import {generateFilm} from "./mock/film.js";
 import ProfileComponent from "./components/profile.js";
 import MainNavigationComponent from "./components/main-navigation.js";
-import SortComponent from "./components/sort.js";
 import FilmsStatisticsComponent from "./components/films-statistics.js";
 import FilmsController from "./controllers/films.js";
 
@@ -18,8 +17,6 @@ render(new ProfileComponent(films), headerElement);
 const mainElement = bodyElement.querySelector(`.main`);
 
 render(new MainNavigationComponent(films), mainElement);
-
-render(new SortComponent(), mainElement);
 
 const filmsController = new FilmsController(mainElement);
 filmsController.render(films);

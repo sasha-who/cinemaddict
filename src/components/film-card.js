@@ -12,7 +12,7 @@ export default class FilmCard extends AbstractComponent {
     const {
       name,
       rating,
-      year,
+      date,
       duration,
       genre,
       poster,
@@ -22,6 +22,8 @@ export default class FilmCard extends AbstractComponent {
       isWatched,
       isInFavorites
     } = this._film;
+
+    const year = date.getFullYear();
 
     const shortedDescription = (description.length > MAX_DESCRIPTION_LENGTH) ?
       `${description.slice(0, MAX_DESCRIPTION_LENGTH - 1)}...` :
@@ -63,5 +65,23 @@ export default class FilmCard extends AbstractComponent {
     this.getElement()
     .querySelector(`.film-card__comments`)
     .addEventListener(`click`, handler);
+  }
+
+  setWatchlistButtonHandler(handler) {
+    this.getElement()
+      .querySelector(`.film-card__controls-item--add-to-watchlist`)
+      .addEventListener(`click`, handler);
+  }
+
+  setWatchedButtonHandler(handler) {
+    this.getElement()
+      .querySelector(`.film-card__controls-item--mark-as-watched`)
+      .addEventListener(`click`, handler);
+  }
+
+  setFavoriteButtonHandler(handler) {
+    this.getElement()
+      .querySelector(`.film-card__controls-item--favorite`)
+      .addEventListener(`click`, handler);
   }
 }

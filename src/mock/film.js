@@ -19,8 +19,6 @@ import {
   getRandomDate
 } from "./temporary-data.js";
 
-import {MONTHS} from "../const.js";
-
 const MIN_COMMENTS_COUNT = 0;
 const MAX_COMMENTS_COUNT = 5;
 const MIN_FILM_DURATION = 30;
@@ -30,14 +28,6 @@ const MIN_DESCRIPTION_LENGTH = 1;
 const MAX_DESCRIPTION_LENGTH = 5;
 const MIN_RATING_VALUE = 0;
 const MAX_RATING_VALUE = 10;
-
-const formatFilmDate = (date) => {
-  const year = date.getFullYear();
-  const month = MONTHS[date.getMonth()];
-  const day = castomizeDateFormat(date.getDate());
-
-  return `${day} ${month} ${year}`;
-};
 
 const getFilmDuration = () => {
   const duration = getRandomIntegerNumber(MIN_FILM_DURATION, MAX_FILM_DURATION);
@@ -54,14 +44,13 @@ const getFilmDescription = () => {
 };
 
 export const generateFilm = () => {
-  const date = getRandomDate();
   const commentsCount = getRandomIntegerNumber(MIN_COMMENTS_COUNT, MAX_COMMENTS_COUNT);
   const comments = generate(commentsCount, generateComment);
 
   return {
     name: getRandomArrayItem(FILMS_NAMES),
     poster: getRandomArrayItem(POSTERS),
-    year: date.getFullYear(),
+    date: getRandomDate(),
     duration: getFilmDuration(),
     genre: getRandomArrayItems(GENRES).join(`, `),
     description: getFilmDescription(),
@@ -75,7 +64,6 @@ export const generateFilm = () => {
     screenwriters: getRandomArrayItem(NAMES),
     rating: getRandomIntegerNumber(MIN_RATING_VALUE, MAX_RATING_VALUE),
     actors: getRandomArrayItems(NAMES).join(`, `),
-    releaseDate: formatFilmDate(date),
     country: getRandomArrayItem(COUNTRIES),
     ageLimit: getRandomArrayItem(AGE_LIMITS)
   };
