@@ -28,8 +28,6 @@ export const shuffleArray = (elements) => {
 export const getRandomArrayItems = (elements) => shuffleArray(elements)
   .slice(0, getRandomIntegerNumber(1, elements.length));
 
-export const castomizeDateFormat = (value) => value.toString().padStart(2, `0`);
-
 export const generate = (count, generatorFunction) => {
   const result = [];
 

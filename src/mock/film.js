@@ -1,10 +1,10 @@
+import moment from "moment";
 import {generateComment} from "./comment.js";
 import {
   getRandomIntegerNumber,
   getRandomArrayItem,
   shuffleArray,
   getRandomArrayItems,
-  castomizeDateFormat,
   generate
 } from "../utils.js";
 
@@ -23,18 +23,16 @@ const MIN_COMMENTS_COUNT = 0;
 const MAX_COMMENTS_COUNT = 5;
 const MIN_FILM_DURATION = 30;
 const MAX_FILM_DURATION = 240;
-const MINUTES_IN_HOUR = 60;
 const MIN_DESCRIPTION_LENGTH = 1;
 const MAX_DESCRIPTION_LENGTH = 5;
 const MIN_RATING_VALUE = 0;
 const MAX_RATING_VALUE = 10;
 
 const getFilmDuration = () => {
-  const duration = getRandomIntegerNumber(MIN_FILM_DURATION, MAX_FILM_DURATION);
-  const minutes = duration % MINUTES_IN_HOUR;
-  const hours = (duration - minutes) / MINUTES_IN_HOUR;
+  const randomNumber = getRandomIntegerNumber(MIN_FILM_DURATION, MAX_FILM_DURATION);
+  const duration = moment.duration(randomNumber, `minutes`);
 
-  return `${hours}h ${castomizeDateFormat(minutes)}m`;
+  return `${duration.hours()}h ${duration.minutes()}m`;
 };
 
 const getFilmDescription = () => {
