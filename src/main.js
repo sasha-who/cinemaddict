@@ -13,19 +13,19 @@ const films = generate(MOCK_FILMS_COUNT, generateFilm);
 const bodyElement = document.querySelector(`body`);
 const headerElement = bodyElement.querySelector(`.header`);
 
-render(new ProfileComponent(films), headerElement);
+const filmsModel = new FilmsModel();
+filmsModel.setFilms(films);
+
+render(new ProfileComponent(filmsModel), headerElement);
 
 const mainElement = bodyElement.querySelector(`.main`);
 
 render(new MainNavigationComponent(), mainElement);
 
-const filmsModel = new FilmsModel();
-filmsModel.setFilms(films);
-
 const filmsController = new FilmsController(mainElement, filmsModel);
-filmsController.render(films);
+filmsController.render();
 
 const footerElement = bodyElement.querySelector(`.footer`);
 const filmsStatisticsElement = footerElement.querySelector(`.footer__statistics`);
 
-render(new FilmsStatisticsComponent(films.length), filmsStatisticsElement);
+render(new FilmsStatisticsComponent(filmsModel), filmsStatisticsElement);

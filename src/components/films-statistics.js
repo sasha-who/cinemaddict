@@ -1,13 +1,15 @@
 import AbstractComponent from "./abstract-component";
 
 export default class FilmsStatistics extends AbstractComponent {
-  constructor(count) {
+  constructor(filmsModel) {
     super();
 
-    this._count = count;
+    this._filmsModel = filmsModel;
   }
 
   getTemplate() {
-    return `<p>${this._count} movies inside</p>`;
+    const filmsCount = this._filmsModel.getFilms().length;
+
+    return `<p>${filmsCount} movies inside</p>`;
   }
 }
