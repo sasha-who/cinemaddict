@@ -53,9 +53,9 @@ export const Mode = {
   OPEN: `open`
 };
 
-export const FilterType = {
-  ALL: `all`,
-  WATCHLIST: `watchlist`,
-  HISTORY: `history`,
-  FAVORITES: `favorites`
-};
+export const FilterTypes = [
+  {name: `All movies`, value: `all`},
+  {name: `Watchlist`, value: `watchlist`},
+  {name: `History`, value: `history`},
+  {name: `Favorites`, value: `favorites`}
+];

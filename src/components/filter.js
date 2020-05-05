@@ -1,26 +1,39 @@
-import {getFilmsStatistic} from "../statistic.js";
 import AbstractComponent from "./abstract-component.js";
 
+const getFilterNameByHref = (href) => {
+  return href.substring(1);
+};
+
+const createFilterMarkup = (filter) => {
+  const {name, value, checked} = filter;
+  const activeClass = checked ? `main-navigation__item--active` : ``;
+
+  return (
+    `<a href="#${value}" class="main-navigation__item ${activeClass}">${name}</a>`
+  );
+};
+
 export default class Filter extends AbstractComponent {
-  constructor(films) {
+  constructor(filters) {
     super();
 
-    this._films = films;
+    this._filters = filters;
   }
 
   getTemplate() {
-    const statistic = getFilmsStatistic(this._films);
+    const filtersMarkup = this._filters.map((filter) => createFilterMarkup(filter)).join(`\n`);
 
     return (
-      `<nav class="main-navigation">
-        <div class="main-navigation__items">
-          <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
-          <a href="#watchlist" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">${statistic.isInWatchlist}</span></a>
-          <a href="#history" class="main-navigation__item">History <span class="main-navigation__item-count">${statistic.isWatched}</span></a>
-          <a href="#favorites" class="main-navigation__item">Favorites <span class="main-navigation__item-count">${statistic.isInFavorites}</span></a>
-        </div>
-        <a href="#stats" class="main-navigation__additional">Stats</a>
-      </nav>`
+      `<div class="main-navigation__items">
+        ${filtersMarkup}
+      </div>`
     );
+  }
+
+  setFilterChangeHandler(handler) {
+    this.getElement().addEventListener(`change`, (evt) => {
+      const filterValue = getFilterNameByHref(evt.target.href);
+      handler(filterValue);
+    });
   }
 }
