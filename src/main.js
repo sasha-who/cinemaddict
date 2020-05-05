@@ -17,7 +17,7 @@ render(new ProfileComponent(films), headerElement);
 
 const mainElement = bodyElement.querySelector(`.main`);
 
-render(new MainNavigationComponent(films), mainElement);
+render(new MainNavigationComponent(), mainElement);
 
 const filmsModel = new FilmsModel();
 filmsModel.setFilms(films);
