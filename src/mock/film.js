@@ -7,7 +7,7 @@ import {
   shuffleArray,
   getRandomArrayItems,
   generate
-} from "../utils.js";
+} from "../utils/common.js";
 
 import {
   randomTextElements,

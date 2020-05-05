@@ -1,5 +1,5 @@
 import {Rang} from "../const.js";
-import {getFilmsStatistic} from "../statistic.js";
+import {getFilmsStatistic} from "../utils/statistic.js";
 import AbstractComponent from "./abstract-component.js";
 
 const getRang = (films) => {

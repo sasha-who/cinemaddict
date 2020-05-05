@@ -1,5 +1,5 @@
 import {MOCK_FILMS_COUNT} from "./const.js";
-import {generate} from "./utils.js";
+import {generate} from "./utils/common.js";
 import {render} from "./render.js";
 import {generateFilm} from "./mock/film.js";
 import ProfileComponent from "./components/profile.js";

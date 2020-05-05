@@ -1,4 +1,4 @@
-import {FLAGS} from "./const.js";
+import {FLAGS} from "../const.js";
 
 const statistic = {};
 
