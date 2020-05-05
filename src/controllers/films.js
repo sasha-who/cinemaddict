@@ -1,6 +1,6 @@
 import {INITIAL_FILMS_COUNT, ADDITIONAL_FILMS_COUNT, SortType} from "../const.js";
 import {getSortedFilms} from "../utils/common.js";
-import {render, remove} from "../render.js";
+import {render, remove} from "../utils/render.js";
 import SortComponent from "../components/sort.js";
 import EmptyFilmsComponent from "../components/empty-films.js";
 import FilmsComponent from "../components/films.js";

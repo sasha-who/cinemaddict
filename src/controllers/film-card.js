@@ -1,5 +1,5 @@
 import {Keys, Mode} from "../const.js";
-import {render, appendChild, removeChild, replace} from "../render.js";
+import {render, appendChild, removeChild, replace} from "../utils/render.js";
 import FilmCardComponent from "../components/film-card.js";
 import FilmDetailedCardComponent from "../components/film-details.js";
 

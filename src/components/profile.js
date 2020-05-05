@@ -3,16 +3,16 @@ import {getWatchedFilms} from "../utils/filter.js";
 import AbstractComponent from "./abstract-component.js";
 
 const getRang = (films) => {
-  const watchedFilms = getWatchedFilms(films);
+  const watchedFilmsCount = getWatchedFilms(films).length;
 
   switch (true) {
-    case (watchedFilms >= 1 && watchedFilms <= 10):
+    case (watchedFilmsCount >= 1 && watchedFilmsCount <= 10):
       return Rang.NOVICE;
 
-    case (watchedFilms >= 11 && watchedFilms <= 20):
+    case (watchedFilmsCount >= 11 && watchedFilmsCount <= 20):
       return Rang.FAN;
 
-    case (watchedFilms >= 21):
+    case (watchedFilmsCount >= 21):
       return Rang.MOVIE_BUFF;
 
     default:
