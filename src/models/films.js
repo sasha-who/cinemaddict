@@ -5,16 +5,16 @@ export default class Films {
     this._dataChangeHandlers = [];
   }
 
-  getTasks() {
+  getFilms() {
     return this._films;
   }
 
-  setTasks(films) {
+  setFilms(films) {
     this._films = Array.from(films);
     this._callHandlers(this._dataChangeHandlers);
   }
 
-  updateTask(id, film) {
+  updateFilm(id, film) {
     const index = this._films.findIndex((it) => it.id === id);
 
     if (index === -1) {

@@ -1,5 +1,6 @@
 import moment from "moment";
 import {generateComment} from "./comment.js";
+import {MIN_ID_VALUE, MAX_ID_VALUE} from "../const.js";
 import {
   getRandomIntegerNumber,
   getRandomArrayItem,
@@ -19,8 +20,6 @@ import {
   getRandomDate
 } from "./temporary-data.js";
 
-const MIN_ID_VALUE = 1;
-const MAX_ID_VALUE = 1000;
 const MIN_COMMENTS_COUNT = 0;
 const MAX_COMMENTS_COUNT = 5;
 const MIN_FILM_DURATION = 30;
