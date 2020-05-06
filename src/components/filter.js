@@ -5,11 +5,11 @@ const getFilterNameByHref = (href) => {
 };
 
 const createFilterMarkup = (filter) => {
-  const {name, value, checked} = filter;
+  const {name, value, count, checked} = filter;
   const activeClass = checked ? `main-navigation__item--active` : ``;
 
   return (
-    `<a href="#${value}" class="main-navigation__item ${activeClass}">${name}</a>`
+    `<a href="#${value}" class="main-navigation__item ${activeClass}">${name} <span class="main-navigation__item-count">${count}</span></a>`
   );
 };
 
