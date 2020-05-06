@@ -55,6 +55,8 @@ export default class FilmsController {
     this._filmsListElement = this._filmsElement.querySelector(`.films-list`);
     this._filmsContainerElement = this._filmsListElement.querySelector(`.films-list__container`);
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
+    this._onFilterChange = this._onFilterChange.bind(this);
+    this._filmsModel.setFilterChangeHandler(this._onFilterChange);
   }
 
   _renderShowMoreButtonComponent() {
@@ -160,6 +162,33 @@ export default class FilmsController {
     this._showedFilmsControllers.forEach((item) => item.setDefaultView());
   }
 
+  _onFilterChange() {
+    this._updateFilms(INITIAL_FILMS_COUNT);
+  }
+
+  _renderFilms(films) {
+    const newFilms = renderFilms(
+        films,
+        this._filmsContainerElement,
+        this._onDataChange,
+        this._onViewChange
+    );
+
+    this._showedFilmsControllers = this._showedFilmsControllers.concat(newFilms);
+    this._currentFilmsCount = this._showedFilmsControllers.length;
+  }
+
+  _removeFilms() {
+    this._showedFilmControllers.forEach((filmController) => filmController.destroy());
+    this._showedFilmControllers = [];
+  }
+
+  _updateFilms(count) {
+    this._removeFilms();
+    this._renderFilms(this._filmsModel.getFilms().slice(0, count));
+    this._renderShowMoreButtonComponent();
+  }
+
   render() {
     const films = this._filmsModel.getFilms();
     const mainElement = document.querySelector(`main`);
@@ -174,17 +203,7 @@ export default class FilmsController {
     }
 
     render(this._filmsComponent, this._container);
-
-    const initialFilms = films.slice(0, INITIAL_FILMS_COUNT);
-
-    const newFilms = renderFilms(
-        initialFilms,
-        this._filmsContainerElement,
-        this._onDataChange,
-        this._onViewChange
-    );
-
-    this._showedFilmsControllers = newFilms;
+    this._renderFilms(films.slice(0, INITIAL_FILMS_COUNT));
 
     this._renderShowMoreButtonComponent();
     this._renderTopRatedComponent();

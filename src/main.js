@@ -6,6 +6,7 @@ import ProfileComponent from "./components/profile.js";
 import MainNavigationComponent from "./components/main-navigation.js";
 import FilmsStatisticsComponent from "./components/films-statistics.js";
 import FilmsController from "./controllers/films.js";
+import FilterController from "./controllers/filter.js";
 import FilmsModel from "./models/films.js";
 
 const films = generate(MOCK_FILMS_COUNT, generateFilm);
@@ -20,7 +21,11 @@ render(new ProfileComponent(filmsModel), headerElement);
 
 const mainElement = bodyElement.querySelector(`.main`);
 
-render(new MainNavigationComponent(), mainElement);
+const mainNavigationComponent = new MainNavigationComponent();
+render(mainNavigationComponent, mainElement);
+
+const filterController = new FilterController(mainNavigationComponent.getElement(), filmsModel);
+filterController.render();
 
 const filmsController = new FilmsController(mainElement, filmsModel);
 filmsController.render();

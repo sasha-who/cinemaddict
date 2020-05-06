@@ -1,5 +1,5 @@
 import {Keys, Mode} from "../const.js";
-import {render, appendChild, removeChild, replace} from "../utils/render.js";
+import {render, appendChild, removeChild, replace, remove} from "../utils/render.js";
 import FilmCardComponent from "../components/film-card.js";
 import FilmDetailedCardComponent from "../components/film-details.js";
 
@@ -9,8 +9,8 @@ export default class FilmCardController {
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
     this._mode = Mode.DEFAULT;
-    this._filmDetailedCardComponent = null;
     this._filmCardComponent = null;
+    this._filmDetailedCardComponent = null;
     this._bodyElement = document.querySelector(`body`);
     this._escapeKeydownHandler = this._escapeKeydownHandler.bind(this);
   }
@@ -50,12 +50,6 @@ export default class FilmCardController {
     });
   }
 
-  setDefaultView() {
-    if (this._mode !== Mode.DEFAULT) {
-      this._removePopup();
-    }
-  }
-
   _removePopup() {
     removeChild(this._filmDetailedCardComponent, this._bodyElement);
     this._mode = Mode.DEFAULT;
@@ -67,6 +61,18 @@ export default class FilmCardController {
     if (evt.key === Keys.ESCAPE) {
       this._removePopup();
     }
+  }
+
+  setDefaultView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._removePopup();
+    }
+  }
+
+  destroy() {
+    remove(this._filmCardComponent);
+    remove(this._filmDetailedCardComponent);
+    document.removeEventListener(`keydown`, this.__escapeKeydownHandler);
   }
 
   render(film) {

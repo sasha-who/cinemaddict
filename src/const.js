@@ -35,7 +35,7 @@ export const Rang = {
 
 export const RenderPosition = {
   BEFOREEND: `beforeend`,
-  AFTEREND: `afterend`
+  AFTERBEGIN: `afterbegin`
 };
 
 export const Keys = {
