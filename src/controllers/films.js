@@ -43,7 +43,8 @@ export default class FilmsController {
   constructor(container, filmsModel) {
     this._container = container;
     this._filmsModel = filmsModel;
-    this._showedFilmsControllers = [];
+    this._showedBasicFilmsControllers = [];
+    this._showedAddFilmsControllers = [];
     this._onViewChange = this._onViewChange.bind(this);
     this._currentFilmsCount = INITIAL_FILMS_COUNT;
     this._onDataChange = this._onDataChange.bind(this);
@@ -78,7 +79,7 @@ export default class FilmsController {
           this._onViewChange
       );
 
-      this._showedFilmsControllers = this._showedFilmsControllers.concat(newFilms);
+      this._showedBasicFilmsControllers = this._showedBasicFilmsControllers.concat(newFilms);
       this._currentFilmsCount = addedFilmsCount;
 
       if (this._currentFilmsCount >= films.length) {
@@ -105,7 +106,7 @@ export default class FilmsController {
         this._onViewChange
     );
 
-    this._showedFilmsControllers = newFilms;
+    this._showedBasicFilmsControllers = newFilms;
 
     this._renderShowMoreButtonComponent();
   }
@@ -127,7 +128,7 @@ export default class FilmsController {
         this._onViewChange
     );
 
-    this._showedFilmsControllers = this._showedFilmsControllers.concat(newFilms);
+    this._showedAddFilmsControllers = this._showedAddFilmsControllers.concat(newFilms);
   }
 
   _renderMostCommentedComponent() {
@@ -147,7 +148,7 @@ export default class FilmsController {
         this._onViewChange
     );
 
-    this._showedFilmsControllers = this._showedFilmsControllers.concat(newFilms);
+    this._showedAddFilmsControllers = this._showedAddFilmsControllers.concat(newFilms);
   }
 
   _onDataChange(filmCardController, oldData, newData) {
@@ -159,7 +160,8 @@ export default class FilmsController {
   }
 
   _onViewChange() {
-    this._showedFilmsControllers.forEach((item) => item.setDefaultView());
+    this._showedBasicFilmsControllers.forEach((item) => item.setDefaultView());
+    this._showedAddFilmsControllers.forEach((item) => item.setDefaultView());
   }
 
   _onFilterChange() {
@@ -174,13 +176,13 @@ export default class FilmsController {
         this._onViewChange
     );
 
-    this._showedFilmsControllers = this._showedFilmsControllers.concat(newFilms);
-    this._currentFilmsCount = this._showedFilmsControllers.length;
+    this._showedBasicFilmsControllers = this._showedBasicFilmsControllers.concat(newFilms);
+    this._currentFilmsCount = this._showedBasicFilmsControllers.length;
   }
 
   _removeFilms() {
-    this._showedFilmControllers.forEach((filmController) => filmController.destroy());
-    this._showedFilmControllers = [];
+    this._showedBasicFilmsControllers.forEach((filmController) => filmController.destroy());
+    this._showedBasicFilmsControllers = [];
   }
 
   _updateFilms(count) {
