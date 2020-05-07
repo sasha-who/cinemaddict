@@ -166,6 +166,7 @@ export default class FilmsController {
 
   _onFilterChange() {
     this._updateFilms(INITIAL_FILMS_COUNT);
+    this._sortComponent.resetSortType();
   }
 
   _renderFilms(films) {
