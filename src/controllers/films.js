@@ -90,8 +90,7 @@ export default class FilmsController {
 
   _onSortTypeChange() {
     this._currentFilmsCount = INITIAL_FILMS_COUNT;
-
-    this._filmsContainerElement.innerHTML = ``;
+    this._removeFilms();
 
     const sortedFilms = getFilmsAfterSorting(
         this._filmsModel.getFilms(),
@@ -99,15 +98,7 @@ export default class FilmsController {
     )
       .slice(0, INITIAL_FILMS_COUNT);
 
-    const newFilms = renderFilms(
-        sortedFilms,
-        this._filmsContainerElement,
-        this._onDataChange,
-        this._onViewChange
-    );
-
-    this._showedBasicFilmsControllers = newFilms;
-
+    this._renderFilms(sortedFilms);
     this._renderShowMoreButtonComponent();
   }
 
