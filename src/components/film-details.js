@@ -1,30 +1,6 @@
 import moment from "moment";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 
-const getCommentsMarkup = (commentsArray) => {
-  const commentMarkupElements = commentsArray.map((item) => {
-    const {content, emotion, author, date} = item;
-
-    return (
-      `<li class="film-details__comment">
-        <span class="film-details__comment-emoji">
-          <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
-        </span>
-        <div>
-          <p class="film-details__comment-text">${content}</p>
-          <p class="film-details__comment-info">
-            <span class="film-details__comment-author">${author}</span>
-            <span class="film-details__comment-day">${date}</span>
-            <button class="film-details__comment-delete">Delete</button>
-          </p>
-        </div>
-      </li>`
-    );
-  });
-
-  return commentMarkupElements.join(`\n`);
-};
-
 export default class FilmDetailedCard extends AbstractSmartComponent {
   constructor(film) {
     super();
@@ -57,7 +33,6 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
       isInWatchlist,
       isWatched,
       isInFavorites,
-      comments,
       commentsCount
     } = this._film;
 
@@ -144,9 +119,7 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
             <section class="film-details__comments-wrap">
               <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentsCount}</span></h3>
 
-              <ul class="film-details__comments-list">
-                ${getCommentsMarkup(comments)}
-              </ul>
+              <ul class="film-details__comments-list"></ul>
 
               <div class="film-details__new-comment">
                 <div for="add-emoji" class="film-details__add-emoji-label">

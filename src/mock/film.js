@@ -1,12 +1,10 @@
 import moment from "moment";
-import {generateComment} from "./comment.js";
 import {MIN_ID_VALUE, MAX_ID_VALUE} from "../const.js";
 import {
   getRandomIntegerNumber,
   getRandomArrayItem,
   shuffleArray,
-  getRandomArrayItems,
-  generate
+  getRandomArrayItems
 } from "../utils/common.js";
 
 import {
@@ -20,14 +18,14 @@ import {
   getRandomDate
 } from "./temporary-data.js";
 
-const MIN_COMMENTS_COUNT = 0;
-const MAX_COMMENTS_COUNT = 5;
 const MIN_FILM_DURATION = 30;
 const MAX_FILM_DURATION = 240;
 const MIN_DESCRIPTION_LENGTH = 1;
 const MAX_DESCRIPTION_LENGTH = 5;
 const MIN_RATING_VALUE = 0;
 const MAX_RATING_VALUE = 10;
+const MIN_COMMENTS_COUNT = 0;
+const MAX_COMMENTS_COUNT = 5;
 
 const getFilmDuration = () => {
   const randomNumber = getRandomIntegerNumber(MIN_FILM_DURATION, MAX_FILM_DURATION);
@@ -43,19 +41,15 @@ const getFilmDescription = () => {
 };
 
 export const generateFilm = () => {
-  const commentsCount = getRandomIntegerNumber(MIN_COMMENTS_COUNT, MAX_COMMENTS_COUNT);
-  const comments = generate(commentsCount, generateComment);
-
   return {
     id: getRandomIntegerNumber(MIN_ID_VALUE, MAX_ID_VALUE),
     name: getRandomArrayItem(FILMS_NAMES),
     poster: getRandomArrayItem(POSTERS),
     date: getRandomDate(),
     duration: getFilmDuration(),
+    commentsCount: getRandomIntegerNumber(MIN_COMMENTS_COUNT, MAX_COMMENTS_COUNT),
     genre: getRandomArrayItems(GENRES).join(`, `),
     description: getFilmDescription(),
-    comments,
-    commentsCount,
     isInWatchlist: Math.random() > 0.5,
     isWatched: Math.random() > 0.5,
     isInFavorites: Math.random() > 0.5,
