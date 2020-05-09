@@ -1,5 +1,5 @@
 import moment from "moment";
-import {MIN_ID_VALUE, MAX_ID_VALUE} from "../const.js";
+import {MIN_ID_VALUE, MAX_ID_VALUE, NAMES} from "../const.js";
 import {
   getRandomIntegerNumber,
   getRandomArrayItem,
@@ -12,7 +12,6 @@ import {
   FILMS_NAMES,
   POSTERS,
   GENRES,
-  NAMES,
   COUNTRIES,
   AGE_LIMITS,
   getRandomDate

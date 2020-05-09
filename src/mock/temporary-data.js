@@ -15,15 +15,6 @@ export const randomTextElements = [
   `In rutrum ac purus sit amet tempus`
 ];
 
-export const NAMES = [
-  `John Smith`,
-  `Chuck Taylor`,
-  `Harry Wilson`,
-  `Jane Brown`,
-  `Lily Evans`,
-  `James Miller`
-];
-
 export const EMOTIONS = [
   `smile`,
   `sleeping`,

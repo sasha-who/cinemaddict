@@ -19,6 +19,7 @@ export default class FilmCardController {
     this._filmDetailedCardComponent = null;
     this._bodyElement = document.querySelector(`body`);
     this._escapeKeydownHandler = this._escapeKeydownHandler.bind(this);
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._commentsModel = new CommentsModel();
     this._comments = generate(this._film.commentsCount, generateComment);
     this._commentsModel.setComments(this._comments);
@@ -62,6 +63,8 @@ export default class FilmCardController {
   _onCommentsChange(film, oldComment, newComment) {
     if (newComment === null) {
       this._commentsModel.removeComment(oldComment.id);
+    } else if (oldComment === null) {
+      this._commentsModel.addComment(newComment);
     }
 
     const newFilm = Object.assign({}, film, {
@@ -81,6 +84,14 @@ export default class FilmCardController {
   _escapeKeydownHandler(evt) {
     if (evt.key === Keys.ESCAPE) {
       this._removePopup();
+    }
+  }
+
+  _formSubmitHandler() {
+    const data = this._filmDetailedCardComponent.getFormData();
+
+    if (data.content && data.emotion) {
+      this._onCommentsChange(this._film, null, data);
     }
   }
 
@@ -139,6 +150,7 @@ export default class FilmCardController {
 
     const oldFilmDetailedCardComponent = this._filmDetailedCardComponent;
     this._filmDetailedCardComponent = new FilmDetailedCardComponent(film);
+    this._filmDetailedCardComponent.setFormSubmitHandler(this._formSubmitHandler);
 
     renderComments();
     this._onCardFlagChange(film);

@@ -1,3 +1,5 @@
+import {MIN_ID_VALUE, MAX_ID_VALUE, NAMES, Keys} from "../const.js";
+import {getRandomIntegerNumber, getRandomArrayItem} from "../utils/common.js";
 import moment from "moment";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 
@@ -10,7 +12,9 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
     this._watchlistButtonHandler = null;
     this._watchedButtonHandler = null;
     this._favoriteButtonHandler = null;
+    this._formSubmitHandler = null;
     this._emojiType = null;
+    this._formElement = this.getElement().querySelector(`.film-details__inner`);
 
     this._onCommentEmojiChange();
   }
@@ -191,11 +195,36 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
     this._favoriteButtonHandler = handler;
   }
 
+  setFormSubmitHandler(handler) {
+    this._formElement.addEventListener(`keydown`, (evt) => {
+      if (event.ctrlKey && evt.code === Keys.ENTER) {
+        handler();
+      }
+    });
+  }
+
+  getFormData() {
+    const formData = new FormData(this._formElement);
+
+    return this._parseFormData(formData);
+  }
+
+  _parseFormData(formData) {
+    return {
+      id: getRandomIntegerNumber(MIN_ID_VALUE, MAX_ID_VALUE),
+      content: formData.get(`comment`),
+      emotion: formData.get(`comment-emoji`),
+      author: getRandomArrayItem(NAMES),
+      date: moment(new Date()).format(`YYYY/MM/DD HH:mm`)
+    };
+  }
+
   recoveryListeners() {
     this.setCloseButtonClickHandler(this._closeButtonClickHandler);
     this.setWatchlistButtonHandler(this._watchlistButtonHandler);
     this.setWatchedButtonHandler(this._watchedButtonHandler);
     this.setFavoriteButtonHandler(this._favoriteButtonHandler);
+    this.setFormSubmitHandler(this._formSubmitHandler);
     this._onCommentEmojiChange();
   }
 

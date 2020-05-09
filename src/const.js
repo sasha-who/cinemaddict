@@ -39,7 +39,8 @@ export const RenderPosition = {
 };
 
 export const Keys = {
-  ESCAPE: `Escape`
+  ESCAPE: `Escape`,
+  ENTER: `Enter`
 };
 
 export const SortType = {
@@ -65,4 +66,13 @@ export const Filters = [
   {name: `Watchlist`, value: `watchlist`},
   {name: `History`, value: `history`},
   {name: `Favorites`, value: `favorites`}
+];
+
+export const NAMES = [
+  `John Smith`,
+  `Chuck Taylor`,
+  `Harry Wilson`,
+  `Jane Brown`,
+  `Lily Evans`,
+  `James Miller`
 ];

@@ -1,7 +1,7 @@
 import moment from "moment";
-import {MIN_ID_VALUE, MAX_ID_VALUE} from "../const.js";
+import {MIN_ID_VALUE, MAX_ID_VALUE, NAMES} from "../const.js";
 import {getRandomArrayItem, getRandomIntegerNumber} from "../utils/common.js";
-import {getRandomDate, randomTextElements, EMOTIONS, NAMES} from "./temporary-data.js";
+import {getRandomDate, randomTextElements, EMOTIONS} from "./temporary-data.js";
 
 export const generateComment = () => {
   const date = getRandomDate();
