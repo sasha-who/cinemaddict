@@ -3,16 +3,42 @@ import {getRandomIntegerNumber, getRandomArrayItem} from "../utils/common.js";
 import moment from "moment";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 
+const getCommentsMarkup = (comments) => {
+  const commentMarkupElements = comments.map((item) => {
+    const {content, emotion, author, date} = item;
+
+    return (
+      `<li class="film-details__comment">
+        <span class="film-details__comment-emoji">
+          <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
+        </span>
+        <div>
+          <p class="film-details__comment-text">${content}</p>
+          <p class="film-details__comment-info">
+            <span class="film-details__comment-author">${author}</span>
+            <span class="film-details__comment-day">${date}</span>
+            <button class="film-details__comment-delete">Delete</button>
+          </p>
+        </div>
+      </li>`
+    );
+  });
+
+  return commentMarkupElements.join(`\n`);
+};
+
 export default class FilmDetailedCard extends AbstractSmartComponent {
-  constructor(film) {
+  constructor(film, comments) {
     super();
 
     this._film = film;
+    this._comments = comments;
     this._closeButtonClickHandler = null;
     this._watchlistButtonHandler = null;
     this._watchedButtonHandler = null;
     this._favoriteButtonHandler = null;
     this._formSubmitHandler = null;
+    this._commentsDelButtonClickHandler = null;
     this._emojiType = null;
     this._formElement = this.getElement().querySelector(`.film-details__inner`);
 
@@ -123,7 +149,9 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
             <section class="film-details__comments-wrap">
               <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentsCount}</span></h3>
 
-              <ul class="film-details__comments-list"></ul>
+              <ul class="film-details__comments-list">
+                ${getCommentsMarkup(this._comments)}
+              </ul>
 
               <div class="film-details__new-comment">
                 <div for="add-emoji" class="film-details__add-emoji-label">
@@ -195,12 +223,31 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
     this._favoriteButtonHandler = handler;
   }
 
+  setCommentsDelButtonClickHandler(handler) {
+    const buttonsElements = this.getElement().querySelectorAll(`.film-details__comment-delete`);
+
+    for (const button of buttonsElements) {
+      button.addEventListener(`click`, (evt) => {
+        evt.preventDefault();
+
+        handler(evt);
+      });
+    }
+
+    this._commentsDelButtonClickHandler = handler;
+  }
+
   setFormSubmitHandler(handler) {
-    this._formElement.addEventListener(`keydown`, (evt) => {
+    const formSubmitHandler = (evt) => {
       if (event.ctrlKey && evt.code === Keys.ENTER) {
         handler();
+
+        this._formElement.removeEventListener(`keydown`, formSubmitHandler);
       }
-    });
+    };
+
+    this._formElement.addEventListener(`keydown`, formSubmitHandler);
+    this._formSubmitHandler = handler;
   }
 
   getFormData() {
@@ -213,7 +260,7 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
     return {
       id: getRandomIntegerNumber(MIN_ID_VALUE, MAX_ID_VALUE),
       content: formData.get(`comment`),
-      emotion: formData.get(`comment-emoji`),
+      emotion: this._emojiType,
       author: getRandomArrayItem(NAMES),
       date: moment(new Date()).format(`YYYY/MM/DD HH:mm`)
     };
@@ -224,6 +271,7 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
     this.setWatchlistButtonHandler(this._watchlistButtonHandler);
     this.setWatchedButtonHandler(this._watchedButtonHandler);
     this.setFavoriteButtonHandler(this._favoriteButtonHandler);
+    this.setCommentsDelButtonClickHandler(this._commentsDelButtonClickHandler);
     this.setFormSubmitHandler(this._formSubmitHandler);
     this._onCommentEmojiChange();
   }

@@ -4,7 +4,6 @@ import {render, appendChild, removeChild, replace, remove} from "../utils/render
 import {generateComment} from "../mock/comment.js";
 import FilmCardComponent from "../components/film-card.js";
 import FilmDetailedCardComponent from "../components/film-details.js";
-import CommentComponent from "../components/comment.js";
 import CommentsModel from "../models/comments.js";
 
 export default class FilmCardController {
@@ -20,6 +19,7 @@ export default class FilmCardController {
     this._bodyElement = document.querySelector(`body`);
     this._escapeKeydownHandler = this._escapeKeydownHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._commentsDelButtonClickHandler = this._commentsDelButtonClickHandler.bind(this);
     this._commentsModel = new CommentsModel();
     this._comments = generate(this._film.commentsCount, generateComment);
     this._commentsModel.setComments(this._comments);
@@ -90,7 +90,7 @@ export default class FilmCardController {
   _formSubmitHandler() {
     const data = this._filmDetailedCardComponent.getFormData();
 
-    if (data.content && data.emotion) {
+    if (data.content) {
       this._onCommentsChange(this._film, null, data);
     }
   }
@@ -107,36 +107,22 @@ export default class FilmCardController {
     document.removeEventListener(`keydown`, this.__escapeKeydownHandler);
   }
 
+  _commentsDelButtonClickHandler(evt) {
+    const buttons = this._filmDetailedCardComponent.getElement()
+      .querySelectorAll(`.film-details__comment-delete`);
+
+    const commentIndex = Array.from(buttons).indexOf(evt.target);
+    const deletedComment = this._commentsModel.getComments()[commentIndex];
+    this._onCommentsChange(this._film, deletedComment, null);
+    this._comments = this._commentsModel.getComments();
+  }
+
   render(film) {
-    const removeComments = () => {
-      const commentListElement = this._filmDetailedCardComponent.getElement()
-      .querySelector(`.film-details__comments-list`);
-
-      commentListElement.innerHTML = ``;
-    };
-
-    const renderComments = () => {
-      const commentListElement = this._filmDetailedCardComponent.getElement()
-      .querySelector(`.film-details__comments-list`);
-
-      for (const comment of this._commentsModel.getComments()) {
-        const commentComponent = new CommentComponent(comment);
-        render(commentComponent, commentListElement);
-        commentComponent.setCloseButtonClickHandler(() => {
-          this._onCommentsChange(film, comment, null);
-          this._comments = this._commentsModel.getComments();
-        });
-      }
-    };
-
     const closeButtonClickHandler = () => {
       this._removePopup();
-      removeComments();
     };
 
     const cardClickHandler = () => {
-      removeComments();
-      renderComments();
       this._onViewChange();
       appendChild(this._filmDetailedCardComponent, this._bodyElement);
       this._mode = Mode.OPEN;
@@ -149,10 +135,14 @@ export default class FilmCardController {
     this._filmCardComponent = new FilmCardComponent(film);
 
     const oldFilmDetailedCardComponent = this._filmDetailedCardComponent;
-    this._filmDetailedCardComponent = new FilmDetailedCardComponent(film);
+    this._filmDetailedCardComponent = new FilmDetailedCardComponent(
+        film,
+        this._commentsModel.getComments()
+    );
     this._filmDetailedCardComponent.setFormSubmitHandler(this._formSubmitHandler);
+    this._filmDetailedCardComponent
+      .setCommentsDelButtonClickHandler(this._commentsDelButtonClickHandler);
 
-    renderComments();
     this._onCardFlagChange(film);
     this._filmCardComponent.setCardClickHandler(cardClickHandler);
     this._filmDetailedCardComponent.setCloseButtonClickHandler(closeButtonClickHandler);
