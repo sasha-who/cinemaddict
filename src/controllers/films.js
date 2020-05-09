@@ -11,7 +11,7 @@ import FilmCardController from "../controllers/film-card.js";
 
 const renderFilms = (films, container, onDataChange, onViewChange) => {
   return films.map((film) => {
-    const filmController = new FilmCardController(container, onDataChange, onViewChange);
+    const filmController = new FilmCardController(film, container, onDataChange, onViewChange);
 
     filmController.render(film);
 

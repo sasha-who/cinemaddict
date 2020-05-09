@@ -26,4 +26,14 @@ export default class Comment extends AbstractComponent {
       </li>`
     );
   }
+
+  setCloseButtonClickHandler(handler) {
+    this.getElement()
+      .querySelector(`.film-details__comment-delete`)
+      .addEventListener(`click`, (evt) => {
+        evt.preventDefault();
+
+        handler();
+      });
+  }
 }
