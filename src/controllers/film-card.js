@@ -18,6 +18,8 @@ export default class FilmCardController {
     this._filmDetailedCardComponent = null;
     this._bodyElement = document.querySelector(`body`);
     this._escapeKeydownHandler = this._escapeKeydownHandler.bind(this);
+    this._closeButtonClickHandler = this._closeButtonClickHandler.bind(this);
+    this._cardClickHandler = this._cardClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._commentsDelButtonClickHandler = this._commentsDelButtonClickHandler.bind(this);
     this._commentsModel = new CommentsModel();
@@ -87,10 +89,23 @@ export default class FilmCardController {
     }
   }
 
+  _closeButtonClickHandler() {
+    this._removePopup();
+  }
+
+  _cardClickHandler() {
+    this._onViewChange();
+    appendChild(this._filmDetailedCardComponent, this._bodyElement);
+    this._mode = Mode.OPEN;
+    this._setPopupListeners();
+
+    document.addEventListener(`keydown`, this._escapeKeydownHandler);
+  }
+
   _formSubmitHandler() {
     const data = this._filmDetailedCardComponent.getFormData();
 
-    if (data.content) {
+    if (data.content && data.emotion) {
       this._onCommentsChange(this._film, null, data);
     }
   }
@@ -117,35 +132,28 @@ export default class FilmCardController {
     this._comments = this._commentsModel.getComments();
   }
 
+  _setPopupListeners() {
+    this._filmDetailedCardComponent.setCloseButtonClickHandler(this._closeButtonClickHandler);
+    this._filmDetailedCardComponent.setFormSubmitHandler(this._formSubmitHandler);
+    this._filmDetailedCardComponent
+      .setCommentsDelButtonClickHandler(this._commentsDelButtonClickHandler);
+    this._onCardFlagChange(this._film);
+    this._filmDetailedCardComponent.setCommentEmojiChange();
+  }
+
   render(film) {
-    const closeButtonClickHandler = () => {
-      this._removePopup();
-    };
-
-    const cardClickHandler = () => {
-      this._onViewChange();
-      appendChild(this._filmDetailedCardComponent, this._bodyElement);
-      this._mode = Mode.OPEN;
-
-      this._filmDetailedCardComponent.setCloseButtonClickHandler(closeButtonClickHandler);
-      document.addEventListener(`keydown`, this._escapeKeydownHandler);
-    };
-
     const oldFilmCardComponent = this._filmCardComponent;
     this._filmCardComponent = new FilmCardComponent(film);
+    this._filmCardComponent.setCardClickHandler(this._cardClickHandler);
 
     const oldFilmDetailedCardComponent = this._filmDetailedCardComponent;
     this._filmDetailedCardComponent = new FilmDetailedCardComponent(
         film,
         this._commentsModel.getComments()
     );
-    this._filmDetailedCardComponent.setFormSubmitHandler(this._formSubmitHandler);
-    this._filmDetailedCardComponent
-      .setCommentsDelButtonClickHandler(this._commentsDelButtonClickHandler);
 
+    this._setPopupListeners();
     this._onCardFlagChange(film);
-    this._filmCardComponent.setCardClickHandler(cardClickHandler);
-    this._filmDetailedCardComponent.setCloseButtonClickHandler(closeButtonClickHandler);
 
     if (oldFilmCardComponent && oldFilmDetailedCardComponent) {
       replace(this._filmCardComponent, oldFilmCardComponent);

@@ -41,9 +41,8 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
     this._formSubmitHandler = null;
     this._commentsDelButtonClickHandler = null;
     this._emojiType = null;
-    this._formElement = this.getElement().querySelector(`.film-details__inner`);
 
-    this._onCommentEmojiChange();
+    // this._onCommentEmojiChange();
   }
 
   getTemplate() {
@@ -239,20 +238,23 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
   }
 
   setFormSubmitHandler(handler) {
+    const form = this.getElement().querySelector(`.film-details__inner`);
+
     const formSubmitHandler = (evt) => {
       if (event.ctrlKey && evt.code === Keys.ENTER) {
         handler();
 
-        this._formElement.removeEventListener(`keydown`, formSubmitHandler);
+        form.removeEventListener(`keydown`, formSubmitHandler);
       }
     };
 
-    this._formElement.addEventListener(`keydown`, formSubmitHandler);
+    form.addEventListener(`keydown`, formSubmitHandler);
     this._formSubmitHandler = handler;
   }
 
   getFormData() {
-    const formData = new FormData(this._formElement);
+    const form = this.getElement().querySelector(`.film-details__inner`);
+    const formData = new FormData(form);
 
     return this._parseFormData(formData);
   }
@@ -292,5 +294,9 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
         this.rerender();
       });
     });
+  }
+
+  setCommentEmojiChange() {
+    this._onCommentEmojiChange();
   }
 }
