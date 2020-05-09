@@ -1,5 +1,6 @@
 import {MIN_ID_VALUE, MAX_ID_VALUE, NAMES, Keys} from "../const.js";
 import {getRandomIntegerNumber, getRandomArrayItem} from "../utils/common.js";
+import {encode} from "he";
 import moment from "moment";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 
@@ -259,7 +260,7 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
   _parseFormData(formData) {
     return {
       id: getRandomIntegerNumber(MIN_ID_VALUE, MAX_ID_VALUE),
-      content: formData.get(`comment`),
+      content: encode(formData.get(`comment`)),
       emotion: this._emojiType,
       author: getRandomArrayItem(NAMES),
       date: moment(new Date()).format(`YYYY/MM/DD HH:mm`)
