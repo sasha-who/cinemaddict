@@ -41,8 +41,6 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
     this._formSubmitHandler = null;
     this._commentsDelButtonClickHandler = null;
     this._emojiType = null;
-
-    // this._onCommentEmojiChange();
   }
 
   getTemplate() {
@@ -240,15 +238,12 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
   setFormSubmitHandler(handler) {
     const form = this.getElement().querySelector(`.film-details__inner`);
 
-    const formSubmitHandler = (evt) => {
+    form.addEventListener(`keydown`, (evt) => {
       if (event.ctrlKey && evt.code === Keys.ENTER) {
         handler();
-
-        form.removeEventListener(`keydown`, formSubmitHandler);
       }
-    };
+    });
 
-    form.addEventListener(`keydown`, formSubmitHandler);
     this._formSubmitHandler = handler;
   }
 
