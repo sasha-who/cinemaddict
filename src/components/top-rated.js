@@ -1,4 +1,4 @@
-import {getSortedFilms} from "../utils.js";
+import {getSortedFilms} from "../utils/common.js";
 import AbstractComponent from "./abstract-component.js";
 
 export default class TopRated extends AbstractComponent {

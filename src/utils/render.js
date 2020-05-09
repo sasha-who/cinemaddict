@@ -1,4 +1,4 @@
-import {RenderPosition} from "./const.js";
+import {RenderPosition} from "../const.js";
 
 export const render = (component, container, position = RenderPosition.BEFOREEND) => {
   switch (position) {

@@ -1,4 +1,4 @@
-import {getRandomIntegerNumber} from "../utils.js";
+import {getRandomIntegerNumber} from "../utils/common.js";
 
 const DATE_GAP = 20;
 
@@ -13,15 +13,6 @@ export const randomTextElements = [
   `Sed sed nisi sed augue convallis suscipit in sed felis.`,
   `Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus.`,
   `In rutrum ac purus sit amet tempus`
-];
-
-export const NAMES = [
-  `John Smith`,
-  `Chuck Taylor`,
-  `Harry Wilson`,
-  `Jane Brown`,
-  `Lily Evans`,
-  `James Miller`
 ];
 
 export const EMOTIONS = [

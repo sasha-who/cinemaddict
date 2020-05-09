@@ -1,4 +1,4 @@
-import {EXTRA_FILM_COUNT} from "./const.js";
+import {EXTRA_FILM_COUNT} from "../const.js";
 
 export const getRandomIntegerNumber = (min, max) => {
   min = Math.ceil(min);

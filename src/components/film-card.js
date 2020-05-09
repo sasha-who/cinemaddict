@@ -17,10 +17,10 @@ export default class FilmCard extends AbstractComponent {
       genre,
       poster,
       description,
-      commentsCount,
       isInWatchlist,
       isWatched,
-      isInFavorites
+      isInFavorites,
+      commentsCount
     } = this._film;
 
     const year = date.getFullYear();

@@ -3,6 +3,8 @@ export const INITIAL_FILMS_COUNT = 5;
 export const ADDITIONAL_FILMS_COUNT = 5;
 export const EXTRA_FILM_COUNT = 2;
 export const MAX_DESCRIPTION_LENGTH = 140;
+export const MIN_ID_VALUE = 1;
+export const MAX_ID_VALUE = 1000;
 
 export const MONTHS = [
   `January`,
@@ -33,11 +35,12 @@ export const Rang = {
 
 export const RenderPosition = {
   BEFOREEND: `beforeend`,
-  AFTEREND: `afterend`
+  AFTERBEGIN: `afterbegin`
 };
 
 export const Keys = {
-  ESCAPE: `Escape`
+  ESCAPE: `Escape`,
+  ENTER: `Enter`
 };
 
 export const SortType = {
@@ -50,3 +53,26 @@ export const Mode = {
   DEFAULT: `default`,
   OPEN: `open`
 };
+
+export const FilterType = {
+  ALL: `all`,
+  WATCHLIST: `watchlist`,
+  HISTORY: `history`,
+  FAVORITES: `favorites`
+};
+
+export const Filters = [
+  {name: `All movies`, value: `all`},
+  {name: `Watchlist`, value: `watchlist`},
+  {name: `History`, value: `history`},
+  {name: `Favorites`, value: `favorites`}
+];
+
+export const NAMES = [
+  `John Smith`,
+  `Chuck Taylor`,
+  `Harry Wilson`,
+  `Jane Brown`,
+  `Lily Evans`,
+  `James Miller`
+];

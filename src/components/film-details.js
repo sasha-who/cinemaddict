@@ -1,8 +1,11 @@
+import {MIN_ID_VALUE, MAX_ID_VALUE, NAMES, Keys} from "../const.js";
+import {getRandomIntegerNumber, getRandomArrayItem} from "../utils/common.js";
+import {encode} from "he";
 import moment from "moment";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 
-const getCommentsMarkup = (commentsArray) => {
-  const commentMarkupElements = commentsArray.map((item) => {
+const getCommentsMarkup = (comments) => {
+  const commentMarkupElements = comments.map((item) => {
     const {content, emotion, author, date} = item;
 
     return (
@@ -26,17 +29,18 @@ const getCommentsMarkup = (commentsArray) => {
 };
 
 export default class FilmDetailedCard extends AbstractSmartComponent {
-  constructor(film) {
+  constructor(film, comments) {
     super();
 
     this._film = film;
+    this._comments = comments;
     this._closeButtonClickHandler = null;
     this._watchlistButtonHandler = null;
     this._watchedButtonHandler = null;
     this._favoriteButtonHandler = null;
+    this._formSubmitHandler = null;
+    this._commentsDelButtonClickHandler = null;
     this._emojiType = null;
-
-    this._onCommentEmojiChange();
   }
 
   getTemplate() {
@@ -57,7 +61,6 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
       isInWatchlist,
       isWatched,
       isInFavorites,
-      comments,
       commentsCount
     } = this._film;
 
@@ -145,7 +148,7 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
               <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentsCount}</span></h3>
 
               <ul class="film-details__comments-list">
-                ${getCommentsMarkup(comments)}
+                ${getCommentsMarkup(this._comments)}
               </ul>
 
               <div class="film-details__new-comment">
@@ -218,11 +221,56 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
     this._favoriteButtonHandler = handler;
   }
 
+  setCommentsDelButtonClickHandler(handler) {
+    const buttonsElements = this.getElement().querySelectorAll(`.film-details__comment-delete`);
+
+    for (const button of buttonsElements) {
+      button.addEventListener(`click`, (evt) => {
+        evt.preventDefault();
+
+        handler(evt);
+      });
+    }
+
+    this._commentsDelButtonClickHandler = handler;
+  }
+
+  setFormSubmitHandler(handler) {
+    const form = this.getElement().querySelector(`.film-details__inner`);
+
+    form.addEventListener(`keydown`, (evt) => {
+      if (event.ctrlKey && evt.code === Keys.ENTER) {
+        handler();
+      }
+    });
+
+    this._formSubmitHandler = handler;
+  }
+
+  getFormData() {
+    const form = this.getElement().querySelector(`.film-details__inner`);
+    const formData = new FormData(form);
+
+    return this._parseFormData(formData);
+  }
+
+  _parseFormData(formData) {
+    return {
+      id: getRandomIntegerNumber(MIN_ID_VALUE, MAX_ID_VALUE),
+      content: encode(formData.get(`comment`)),
+      emotion: this._emojiType,
+      author: getRandomArrayItem(NAMES),
+      date: moment(new Date()).format(`YYYY/MM/DD HH:mm`)
+    };
+  }
+
   recoveryListeners() {
     this.setCloseButtonClickHandler(this._closeButtonClickHandler);
     this.setWatchlistButtonHandler(this._watchlistButtonHandler);
     this.setWatchedButtonHandler(this._watchedButtonHandler);
     this.setFavoriteButtonHandler(this._favoriteButtonHandler);
+    this.setCommentsDelButtonClickHandler(this._commentsDelButtonClickHandler);
+    this.setFormSubmitHandler(this._formSubmitHandler);
     this._onCommentEmojiChange();
   }
 
@@ -241,5 +289,9 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
         this.rerender();
       });
     });
+  }
+
+  setCommentEmojiChange() {
+    this._onCommentEmojiChange();
   }
 }
