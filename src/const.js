@@ -6,6 +6,7 @@ export const MAX_DESCRIPTION_LENGTH = 140;
 export const MIN_ID_VALUE = 1;
 export const MAX_ID_VALUE = 1000;
 export const HIDDEN_CLASS = `visually-hidden`;
+export const STATISTIC_HREF = `stats`;
 
 export const MONTHS = [
   `January`,

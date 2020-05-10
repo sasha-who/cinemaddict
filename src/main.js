@@ -1,4 +1,4 @@
-import {MOCK_FILMS_COUNT} from "./const.js";
+import {MOCK_FILMS_COUNT, STATISTIC_HREF} from "./const.js";
 import {generate} from "./utils/common.js";
 import {render} from "./utils/render.js";
 import {generateFilm} from "./mock/film.js";
@@ -24,13 +24,29 @@ const mainElement = bodyElement.querySelector(`.main`);
 
 const mainNavigationComponent = new MainNavigationComponent();
 render(mainNavigationComponent, mainElement);
-render(new StatisticComponent(), mainElement);
+
+const statisticComponent = new StatisticComponent();
+render(statisticComponent, mainElement);
+statisticComponent.hide();
 
 const filterController = new FilterController(mainNavigationComponent.getElement(), filmsModel);
 filterController.render();
 
 const filmsController = new FilmsController(mainElement, filmsModel);
 filmsController.render();
+
+mainNavigationComponent.setOnViewChange((menuItem) => {
+  switch (menuItem) {
+    case STATISTIC_HREF:
+      statisticComponent.show();
+      filmsController.hide();
+      break;
+
+    default:
+      statisticComponent.hide();
+      filmsController.show();
+  }
+});
 
 const footerElement = bodyElement.querySelector(`.footer`);
 const filmsStatisticsElement = footerElement.querySelector(`.footer__statistics`);

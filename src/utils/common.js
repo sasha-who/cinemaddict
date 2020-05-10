@@ -62,3 +62,9 @@ export const getSortedFilms = (films, property) => {
 
   return resultedFilms;
 };
+
+export const getElementNameByHref = (href) => {
+  const position = href.indexOf(`#`) + 1;
+
+  return href.substring(position);
+};
