@@ -18,16 +18,17 @@ const headerElement = bodyElement.querySelector(`.header`);
 const filmsModel = new FilmsModel();
 filmsModel.setFilms(films);
 
-render(new ProfileComponent(filmsModel), headerElement);
+const profileComponent = new ProfileComponent(filmsModel);
+render(profileComponent, headerElement);
 
 const mainElement = bodyElement.querySelector(`.main`);
 
 const mainNavigationComponent = new MainNavigationComponent();
 render(mainNavigationComponent, mainElement);
 
-const statisticComponent = new StatisticComponent();
+const statisticComponent = new StatisticComponent(filmsModel);
 render(statisticComponent, mainElement);
-statisticComponent.hide();
+// statisticComponent.hide();
 
 const filterController = new FilterController(mainNavigationComponent.getElement(), filmsModel);
 filterController.render();
@@ -45,6 +46,7 @@ mainNavigationComponent.setOnViewChange((menuItem) => {
     default:
       statisticComponent.hide();
       filmsController.show();
+      break;
   }
 });
 

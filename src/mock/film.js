@@ -1,5 +1,4 @@
-import moment from "moment";
-import {MIN_ID_VALUE, MAX_ID_VALUE, NAMES} from "../const.js";
+import {MIN_ID_VALUE, MAX_ID_VALUE, NAMES, GENRES} from "../const.js";
 import {
   getRandomIntegerNumber,
   getRandomArrayItem,
@@ -11,7 +10,6 @@ import {
   randomTextElements,
   FILMS_NAMES,
   POSTERS,
-  GENRES,
   COUNTRIES,
   AGE_LIMITS,
   getRandomDate
@@ -26,13 +24,6 @@ const MAX_RATING_VALUE = 10;
 const MIN_COMMENTS_COUNT = 0;
 const MAX_COMMENTS_COUNT = 5;
 
-const getFilmDuration = () => {
-  const randomNumber = getRandomIntegerNumber(MIN_FILM_DURATION, MAX_FILM_DURATION);
-  const duration = moment.duration(randomNumber, `minutes`);
-
-  return `${duration.hours()}h ${duration.minutes()}m`;
-};
-
 const getFilmDescription = () => {
   const sentencesCount = getRandomIntegerNumber(MIN_DESCRIPTION_LENGTH, MAX_DESCRIPTION_LENGTH);
 
@@ -45,9 +36,9 @@ export const generateFilm = () => {
     name: getRandomArrayItem(FILMS_NAMES),
     poster: getRandomArrayItem(POSTERS),
     date: getRandomDate(),
-    duration: getFilmDuration(),
+    duration: getRandomIntegerNumber(MIN_FILM_DURATION, MAX_FILM_DURATION),
     commentsCount: getRandomIntegerNumber(MIN_COMMENTS_COUNT, MAX_COMMENTS_COUNT),
-    genre: getRandomArrayItems(GENRES).join(`, `),
+    genres: getRandomArrayItems(GENRES),
     description: getFilmDescription(),
     isInWatchlist: Math.random() > 0.5,
     isWatched: Math.random() > 0.5,

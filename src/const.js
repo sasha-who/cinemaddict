@@ -7,6 +7,7 @@ export const MIN_ID_VALUE = 1;
 export const MAX_ID_VALUE = 1000;
 export const HIDDEN_CLASS = `visually-hidden`;
 export const STATISTIC_HREF = `stats`;
+export const MINUTES_IN_HOUR = 60;
 
 export const MONTHS = [
   `January`,
@@ -77,4 +78,12 @@ export const NAMES = [
   `Jane Brown`,
   `Lily Evans`,
   `James Miller`
+];
+
+export const GENRES = [
+  `comedy`,
+  `drama`,
+  `melodrama`,
+  `horror`,
+  `thriller`
 ];

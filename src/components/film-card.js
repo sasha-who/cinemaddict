@@ -1,4 +1,5 @@
 import {MAX_DESCRIPTION_LENGTH} from "../const.js";
+import {formatFilmDuration} from "../utils/common.js";
 import AbstractComponent from "./abstract-component.js";
 
 export default class FilmCard extends AbstractComponent {
@@ -14,7 +15,7 @@ export default class FilmCard extends AbstractComponent {
       rating,
       date,
       duration,
-      genre,
+      genres,
       poster,
       description,
       isInWatchlist,
@@ -31,6 +32,7 @@ export default class FilmCard extends AbstractComponent {
 
     const checkControlsActiveClass = (flag) => flag ? `film-card__controls-item--active` : ``;
     const commentEnding = (commentsCount === 1) ? `comment` : `comments`;
+    const genresList = genres.join(`, `);
 
     return (
       `<article class="film-card">
@@ -38,8 +40,8 @@ export default class FilmCard extends AbstractComponent {
         <p class="film-card__rating">${rating}</p>
         <p class="film-card__info">
           <span class="film-card__year">${year}</span>
-          <span class="film-card__duration">${duration}</span>
-          <span class="film-card__genre">${genre}</span>
+          <span class="film-card__duration">${formatFilmDuration(duration)}</span>
+          <span class="film-card__genre">${genresList}</span>
         </p>
         <img src="./images/posters/${poster}" alt="${name}" class="film-card__poster">
         <p class="film-card__description">${shortedDescription}</p>

@@ -1,4 +1,7 @@
 import {EXTRA_FILM_COUNT} from "../const.js";
+import {Rang} from "../const.js";
+import {getWatchedFilms} from "../utils/filter.js";
+import moment from "moment";
 
 export const getRandomIntegerNumber = (min, max) => {
   min = Math.ceil(min);
@@ -67,4 +70,28 @@ export const getElementNameByHref = (href) => {
   const position = href.indexOf(`#`) + 1;
 
   return href.substring(position);
+};
+
+export const getUserRang = (films) => {
+  const watchedFilmsCount = getWatchedFilms(films).length;
+
+  switch (true) {
+    case (watchedFilmsCount >= 1 && watchedFilmsCount <= 10):
+      return Rang.NOVICE;
+
+    case (watchedFilmsCount >= 11 && watchedFilmsCount <= 20):
+      return Rang.FAN;
+
+    case (watchedFilmsCount >= 21):
+      return Rang.MOVIE_BUFF;
+
+    default:
+      return ``;
+  }
+};
+
+export const formatFilmDuration = (duration) => {
+  const durationInMinutes = moment.duration(duration, `minutes`);
+
+  return `${durationInMinutes.hours()}h ${durationInMinutes.minutes()}m`;
 };
