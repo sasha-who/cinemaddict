@@ -5,6 +5,7 @@ import {generateFilm} from "./mock/film.js";
 import ProfileComponent from "./components/profile.js";
 import MainNavigationComponent from "./components/main-navigation.js";
 import FilmsStatisticsComponent from "./components/films-statistics.js";
+import StatisticComponent from "./components/statistics.js";
 import FilmsController from "./controllers/films.js";
 import FilterController from "./controllers/filter.js";
 import FilmsModel from "./models/films.js";
@@ -23,6 +24,7 @@ const mainElement = bodyElement.querySelector(`.main`);
 
 const mainNavigationComponent = new MainNavigationComponent();
 render(mainNavigationComponent, mainElement);
+render(new StatisticComponent(), mainElement);
 
 const filterController = new FilterController(mainNavigationComponent.getElement(), filmsModel);
 filterController.render();
