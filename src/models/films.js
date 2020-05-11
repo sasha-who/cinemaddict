@@ -34,8 +34,7 @@ export default class Films {
       return false;
     }
 
-    this._films = [].concat(this._films.slice(0, index), film, this._films.slice(index + 1));
-
+    this._films[index] = Object.assign({}, film);
     this._callHandlers(this._dataChangeHandlers);
 
     return true;

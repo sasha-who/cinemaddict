@@ -1,4 +1,4 @@
-import {MIN_ID_VALUE, MAX_ID_VALUE, NAMES, Keys} from "../const.js";
+import {MIN_ID_VALUE, MAX_ID_VALUE, RELEASE_DATE_FORMAT, NAMES, Keys} from "../const.js";
 import {getRandomIntegerNumber, getRandomArrayItem, formatFilmDuration} from "../utils/common.js";
 import {encode} from "he";
 import moment from "moment";
@@ -64,7 +64,7 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
       commentsCount
     } = this._film;
 
-    const releaseDate = moment(date).format(`DD MMMM YYYY`);
+    const releaseDate = moment(date).format(RELEASE_DATE_FORMAT);
     const genresWithEnding = (genres.length === 1) ? `Genre` : `Genres`;
     const genresMarkup = genres
       .map((item) => `<span class="film-details__genre">${item}</span>`)

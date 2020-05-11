@@ -28,7 +28,7 @@ render(mainNavigationComponent, mainElement);
 
 const statisticComponent = new StatisticComponent(filmsModel);
 render(statisticComponent, mainElement);
-// statisticComponent.hide();
+statisticComponent.hide();
 
 const filterController = new FilterController(mainNavigationComponent.getElement(), filmsModel);
 filterController.render();
