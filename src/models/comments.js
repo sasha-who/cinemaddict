@@ -21,8 +21,7 @@ export default class Comments {
       return false;
     }
 
-    this._comments = [].concat(this._comments.slice(0, index), this._comments.slice(index + 1));
-
+    this._comments = this._comments.filter((item) => item.id !== id);
     this._callHandlers(this._dataChangeHandlers);
 
     return true;

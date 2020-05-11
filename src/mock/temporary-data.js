@@ -42,14 +42,6 @@ export const POSTERS = [
   `the-man-with-the-golden-arm.jpg`
 ];
 
-export const GENRES = [
-  `comedy`,
-  `drama`,
-  `melodrama`,
-  `horror`,
-  `thriller`
-];
-
 export const COUNTRIES = [
   `United Kingdom`,
   `Scotland`,

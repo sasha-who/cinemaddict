@@ -1,24 +1,5 @@
-import {Rang} from "../const.js";
-import {getWatchedFilms} from "../utils/filter.js";
 import AbstractComponent from "./abstract-component.js";
-
-const getRang = (films) => {
-  const watchedFilmsCount = getWatchedFilms(films).length;
-
-  switch (true) {
-    case (watchedFilmsCount >= 1 && watchedFilmsCount <= 10):
-      return Rang.NOVICE;
-
-    case (watchedFilmsCount >= 11 && watchedFilmsCount <= 20):
-      return Rang.FAN;
-
-    case (watchedFilmsCount >= 21):
-      return Rang.MOVIE_BUFF;
-
-    default:
-      return ``;
-  }
-};
+import {getUserRang} from "../utils/common.js";
 
 export default class Profile extends AbstractComponent {
   constructor(filmsModel) {
@@ -32,7 +13,7 @@ export default class Profile extends AbstractComponent {
 
     return (
       `<section class="header__profile profile">
-        <p class="profile__rating">${getRang(films)}</p>
+        <p class="profile__rating">${getUserRang(films)}</p>
         <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
       </section>`
     );

@@ -203,4 +203,14 @@ export default class FilmsController {
     this._renderTopRatedComponent();
     this._renderMostCommentedComponent();
   }
+
+  show() {
+    this._sortComponent.show();
+    this._filmsComponent.show();
+  }
+
+  hide() {
+    this._sortComponent.hide();
+    this._filmsComponent.hide();
+  }
 }

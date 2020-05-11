@@ -126,7 +126,7 @@ export default class FilmCardController {
     const buttons = this._filmDetailedCardComponent.getElement()
       .querySelectorAll(`.film-details__comment-delete`);
 
-    const commentIndex = Array.from(buttons).indexOf(evt.target);
+    const commentIndex = Array.from(buttons).findIndex((item) => item === evt.target);
     const deletedComment = this._commentsModel.getComments()[commentIndex];
     this._onCommentsChange(this._film, deletedComment, null);
     this._comments = this._commentsModel.getComments();

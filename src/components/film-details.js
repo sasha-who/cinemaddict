@@ -1,5 +1,5 @@
-import {MIN_ID_VALUE, MAX_ID_VALUE, NAMES, Keys} from "../const.js";
-import {getRandomIntegerNumber, getRandomArrayItem} from "../utils/common.js";
+import {MIN_ID_VALUE, MAX_ID_VALUE, RELEASE_DATE_FORMAT, NAMES, Keys} from "../const.js";
+import {getRandomIntegerNumber, getRandomArrayItem, formatFilmDuration} from "../utils/common.js";
 import {encode} from "he";
 import moment from "moment";
 import AbstractSmartComponent from "./abstract-smart-component.js";
@@ -56,7 +56,7 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
       actors,
       duration,
       country,
-      genre,
+      genres,
       description,
       isInWatchlist,
       isWatched,
@@ -64,10 +64,9 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
       commentsCount
     } = this._film;
 
-    const releaseDate = moment(date).format(`DD MMMM YYYY`);
-    const genresArray = genre.split(`, `);
-    const genresWithEnding = (genresArray.length === 1) ? `Genre` : `Genres`;
-    const genresMarkup = genresArray
+    const releaseDate = moment(date).format(RELEASE_DATE_FORMAT);
+    const genresWithEnding = (genres.length === 1) ? `Genre` : `Genres`;
+    const genresMarkup = genres
       .map((item) => `<span class="film-details__genre">${item}</span>`)
       .join(`\n`);
 
@@ -76,7 +75,7 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
       {name: `Writers`, value: screenwriters},
       {name: `Actors`, value: actors},
       {name: `Release Date`, value: releaseDate},
-      {name: `Runtime`, value: duration},
+      {name: `Runtime`, value: formatFilmDuration(duration)},
       {name: `Country`, value: country},
       {name: genresWithEnding, value: genresMarkup}
     ];

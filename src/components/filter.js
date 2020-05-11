@@ -1,9 +1,5 @@
+import {getElementNameByHref} from "../utils/common.js";
 import AbstractComponent from "./abstract-component.js";
-
-const getFilterNameByHref = (href) => {
-  const position = href.indexOf(`#`) + 1;
-  return href.substring(position);
-};
 
 const createFilterMarkup = (filter) => {
   const {name, value, count, checked} = filter;
@@ -33,7 +29,7 @@ export default class Filter extends AbstractComponent {
 
   setFilterChangeHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
-      const filterValue = getFilterNameByHref(evt.target.href);
+      const filterValue = getElementNameByHref(evt.target.href);
       handler(filterValue);
     });
   }
