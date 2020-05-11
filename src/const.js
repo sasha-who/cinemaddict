@@ -1,4 +1,3 @@
-export const MOCK_FILMS_COUNT = 20;
 export const INITIAL_FILMS_COUNT = 5;
 export const ADDITIONAL_FILMS_COUNT = 5;
 export const EXTRA_FILM_COUNT = 2;
