@@ -1,5 +1,5 @@
 import API from "./api.js";
-import {STATISTIC_HREF} from "./const.js";
+import {STATISTIC_HREF, AUTHORIZATION} from "./const.js";
 import {render} from "./utils/render.js";
 import ProfileComponent from "./components/profile.js";
 import MainNavigationComponent from "./components/main-navigation.js";
@@ -15,7 +15,7 @@ const mainElement = bodyElement.querySelector(`.main`);
 const footerElement = bodyElement.querySelector(`.footer`);
 const filmsStatisticsElement = footerElement.querySelector(`.footer__statistics`);
 
-const api = new API();
+const api = new API(AUTHORIZATION);
 const filmsModel = new FilmsModel();
 
 const mainNavigationComponent = new MainNavigationComponent();
