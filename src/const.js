@@ -89,3 +89,8 @@ export const GENRES = [
   `horror`,
   `thriller`
 ];
+
+export const Status = {
+  SUCCESS: `200`,
+  REDIRECT: `300`
+};
