@@ -9,9 +9,9 @@ import TopRatedComponent from "../components/top-rated.js";
 import MostCommentedComponent from "../components/most-commented.js";
 import FilmCardController from "../controllers/film-card.js";
 
-const renderFilms = (films, container, onDataChange, onViewChange) => {
+const renderFilms = (api, films, container, onDataChange, onViewChange) => {
   return films.map((film) => {
-    const filmController = new FilmCardController(film, container, onDataChange, onViewChange);
+    const filmController = new FilmCardController(api, film, container, onDataChange, onViewChange);
 
     filmController.render(film);
 
@@ -40,7 +40,8 @@ const getFilmsAfterSorting = (films, sortType) => {
 };
 
 export default class FilmsController {
-  constructor(container, filmsModel) {
+  constructor(api, container, filmsModel) {
+    this._api = api;
     this._container = container;
     this._filmsModel = filmsModel;
     this._showedBasicFilmsControllers = [];
@@ -162,6 +163,7 @@ export default class FilmsController {
 
   _renderFilms(films) {
     const newFilms = renderFilms(
+        this._api,
         films,
         this._filmsContainerElement,
         this._onDataChange,

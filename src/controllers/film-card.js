@@ -6,7 +6,8 @@ import FilmDetailedCardComponent from "../components/film-details.js";
 import CommentsModel from "../models/comments.js";
 
 export default class FilmCardController {
-  constructor(film, container, onDataChange, onViewChange) {
+  constructor(api, film, container, onDataChange, onViewChange) {
+    this._api = api;
     this._film = film;
     this._container = container;
     this._onDataChange = onDataChange;
@@ -145,9 +146,9 @@ export default class FilmCardController {
 
     const oldFilmDetailedCardComponent = this._filmDetailedCardComponent;
 
-    const api = new API(AUTHORIZATION);
+    // const api = new API(AUTHORIZATION);
 
-    api.getComments(film.id)
+    this._api.getComments(film.id)
       .then((comments) => {
         this._commentsModel.setComments(comments);
 

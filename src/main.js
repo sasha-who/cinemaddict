@@ -33,7 +33,7 @@ api.getFilms()
     const filterController = new FilterController(mainNavigationComponent.getElement(), filmsModel);
     filterController.render();
 
-    const filmsController = new FilmsController(mainElement, filmsModel);
+    const filmsController = new FilmsController(api, mainElement, filmsModel);
     filmsController.render();
 
     render(new FilmsStatisticsComponent(filmsModel), filmsStatisticsElement);
