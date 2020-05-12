@@ -43,11 +43,11 @@ export const generateFilm = () => {
     isInWatchlist: Math.random() > 0.5,
     isWatched: Math.random() > 0.5,
     isInFavorites: Math.random() > 0.5,
-    originalName: getRandomArrayItem(FILMS_NAMES),
+    originalName: getRandomArrayItems(FILMS_NAMES),
     director: getRandomArrayItem(NAMES),
     screenwriters: getRandomArrayItem(NAMES),
     rating: getRandomIntegerNumber(MIN_RATING_VALUE, MAX_RATING_VALUE),
-    actors: getRandomArrayItems(NAMES).join(`, `),
+    actors: getRandomArrayItems(NAMES),
     country: getRandomArrayItem(COUNTRIES),
     ageLimit: getRandomArrayItem(AGE_LIMITS)
   };
