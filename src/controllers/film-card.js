@@ -1,7 +1,6 @@
-import {Keys, Mode} from "../const.js";
-import {generate} from "../utils/common.js";
+import API from "../api.js";
+import {AUTHORIZATION, Keys, Mode} from "../const.js";
 import {render, appendChild, removeChild, replace, remove} from "../utils/render.js";
-import {generateComment} from "../mock/comment.js";
 import FilmCardComponent from "../components/film-card.js";
 import FilmDetailedCardComponent from "../components/film-details.js";
 import CommentsModel from "../models/comments.js";
@@ -23,8 +22,6 @@ export default class FilmCardController {
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._commentsDelButtonClickHandler = this._commentsDelButtonClickHandler.bind(this);
     this._commentsModel = new CommentsModel();
-    this._comments = generate(this._film.commentsCount, generateComment);
-    this._commentsModel.setComments(this._comments);
   }
 
   _onCardFlagChange(film) {
@@ -147,19 +144,27 @@ export default class FilmCardController {
     this._filmCardComponent.setCardClickHandler(this._cardClickHandler);
 
     const oldFilmDetailedCardComponent = this._filmDetailedCardComponent;
-    this._filmDetailedCardComponent = new FilmDetailedCardComponent(
-        film,
-        this._commentsModel.getComments()
-    );
 
-    this._setPopupListeners();
-    this._onCardFlagChange(film);
+    const api = new API(AUTHORIZATION);
 
-    if (oldFilmCardComponent && oldFilmDetailedCardComponent) {
-      replace(this._filmCardComponent, oldFilmCardComponent);
-      replace(this._filmDetailedCardComponent, oldFilmDetailedCardComponent);
-    } else {
-      render(this._filmCardComponent, this._container);
-    }
+    api.getComments(film.id)
+      .then((comments) => {
+        this._commentsModel.setComments(comments);
+
+        this._filmDetailedCardComponent = new FilmDetailedCardComponent(
+            film,
+            this._commentsModel.getComments()
+        );
+
+        this._setPopupListeners();
+        this._onCardFlagChange(film);
+
+        if (oldFilmCardComponent && oldFilmDetailedCardComponent) {
+          replace(this._filmCardComponent, oldFilmCardComponent);
+          replace(this._filmDetailedCardComponent, oldFilmDetailedCardComponent);
+        } else {
+          render(this._filmCardComponent, this._container);
+        }
+      });
   }
 }

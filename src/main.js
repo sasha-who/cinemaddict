@@ -51,5 +51,4 @@ api.getFilms()
           break;
       }
     });
-  }
-);
+  });
