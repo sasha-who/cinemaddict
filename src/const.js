@@ -82,14 +82,6 @@ export const NAMES = [
   `James Miller`
 ];
 
-export const GENRES = [
-  `comedy`,
-  `drama`,
-  `melodrama`,
-  `horror`,
-  `thriller`
-];
-
 export const Status = {
   SUCCESS: `200`,
   REDIRECT: `300`

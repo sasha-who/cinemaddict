@@ -21,6 +21,9 @@ export default class Film {
     this.actors = data[`film_info`][`actors`];
     this.country = data[`film_info`][`release`][`release_country`];
     this.ageLimit = data[`film_info`][`age_rating`];
+    this.watchingDate = data[`user_details`][`watching_date`] ?
+      new Date(data[`user_details`][`watching_date`]) :
+      null;
   }
 
   toRAW() {
@@ -47,7 +50,7 @@ export default class Film {
       "user_details": {
         "watchlist": this.isInWatchlist,
         "already_watched": this.isWatched,
-        "watching_date": null,
+        "watching_date": this.watchingDate ? this.watchingDate.toISOString() : null,
         "favorite": this.isInFavorites
       }
     };
