@@ -38,15 +38,16 @@ export default class API {
   updateFilm(id, data) {
     const headers = new Headers();
     headers.append(`Authorization`, this._authorization);
+    headers.append(`Content-Type`, `application/json`);
 
-    return fetch(`https://11.ecmascript.pages.academy/cinemaddict/comments/${id}`,
+    return fetch(`https://11.ecmascript.pages.academy/cinemaddict/movies/${id}`,
         {
           method: `PUT`,
-          body: JSON.stringify(data),
+          body: JSON.stringify(data.toRAW()),
           headers,
         })
         .then(checkStatus)
         .then((response) => response.json())
-        .then(Film.parseFilms);
+        .then(Film.parseFilm);
   }
 }

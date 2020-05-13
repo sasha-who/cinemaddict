@@ -13,7 +13,7 @@ const renderFilms = (api, films, container, onDataChange, onViewChange) => {
   return films.map((film) => {
     const filmController = new FilmCardController(api, film, container, onDataChange, onViewChange);
 
-    filmController.render(film);
+    filmController.initRender(film);
 
     return filmController;
   });
@@ -58,6 +58,7 @@ export default class FilmsController {
     this._filmsContainerElement = this._filmsListElement.querySelector(`.films-list__container`);
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
+
     this._filmsModel.setFilterChangeHandler(this._onFilterChange);
   }
 
@@ -74,6 +75,7 @@ export default class FilmsController {
         .slice(this._currentFilmsCount, addedFilmsCount);
 
       const newFilms = renderFilms(
+          this._api,
           sortedFilms,
           this._filmsContainerElement,
           this._onDataChange,
@@ -114,6 +116,7 @@ export default class FilmsController {
     const topRatedFilms = getSortedFilms(films, `rating`);
 
     const newFilms = renderFilms(
+        this._api,
         topRatedFilms,
         topRatedFilmsContainer,
         this._onDataChange,
@@ -134,6 +137,7 @@ export default class FilmsController {
     const mostCommentedFilms = getSortedFilms(films, `commentsCount`);
 
     const newFilms = renderFilms(
+        this._api,
         mostCommentedFilms,
         mostCommentedFilmsContainer,
         this._onDataChange,

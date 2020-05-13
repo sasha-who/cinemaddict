@@ -1,9 +1,9 @@
-import API from "../api.js";
-import {AUTHORIZATION, Keys, Mode} from "../const.js";
+import {Keys, Mode} from "../const.js";
 import {render, appendChild, removeChild, replace, remove} from "../utils/render.js";
+import FilmModel from "../models/film.js";
+import CommentsModel from "../models/comments.js";
 import FilmCardComponent from "../components/film-card.js";
 import FilmDetailedCardComponent from "../components/film-details.js";
-import CommentsModel from "../models/comments.js";
 
 export default class FilmCardController {
   constructor(api, film, container, onDataChange, onViewChange) {
@@ -22,28 +22,31 @@ export default class FilmCardController {
     this._cardClickHandler = this._cardClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._commentsDelButtonClickHandler = this._commentsDelButtonClickHandler.bind(this);
+
     this._commentsModel = new CommentsModel();
   }
 
   _onCardFlagChange(film) {
     const changeCardFlag = (flag) => {
-      const newFilm = Object.assign({}, film, {
-        [flag]: !film[flag]
-      });
+      const newFilm = FilmModel.clone(film);
 
+      newFilm[flag] = !newFilm[flag];
       this._onDataChange(this, film, newFilm);
       this._film = newFilm;
     };
 
-    this._filmCardComponent.setWatchlistButtonHandler(() => {
+    this._filmCardComponent.setWatchlistButtonHandler((evt) => {
+      evt.preventDefault();
       changeCardFlag(`isInWatchlist`);
     });
 
-    this._filmCardComponent.setWatchedButtonHandler(() => {
+    this._filmCardComponent.setWatchedButtonHandler((evt) => {
+      evt.preventDefault();
       changeCardFlag(`isWatched`);
     });
 
-    this._filmCardComponent.setFavoriteButtonHandler(() => {
+    this._filmCardComponent.setFavoriteButtonHandler((evt) => {
+      evt.preventDefault();
       changeCardFlag(`isInFavorites`);
     });
 
@@ -139,33 +142,34 @@ export default class FilmCardController {
     this._filmDetailedCardComponent.setCommentEmojiChange();
   }
 
+  initRender(film) {
+    this._api.getComments(film.id)
+      .then((comments) => {
+        this._commentsModel.setComments(comments);
+      })
+      .then(this.render(film));
+  }
+
   render(film) {
+    this._film = film;
     const oldFilmCardComponent = this._filmCardComponent;
     this._filmCardComponent = new FilmCardComponent(film);
     this._filmCardComponent.setCardClickHandler(this._cardClickHandler);
 
     const oldFilmDetailedCardComponent = this._filmDetailedCardComponent;
 
-    // const api = new API(AUTHORIZATION);
+    this._filmDetailedCardComponent = new FilmDetailedCardComponent(
+        film,
+        this._commentsModel.getComments()
+    );
 
-    this._api.getComments(film.id)
-      .then((comments) => {
-        this._commentsModel.setComments(comments);
+    this._setPopupListeners();
 
-        this._filmDetailedCardComponent = new FilmDetailedCardComponent(
-            film,
-            this._commentsModel.getComments()
-        );
-
-        this._setPopupListeners();
-        this._onCardFlagChange(film);
-
-        if (oldFilmCardComponent && oldFilmDetailedCardComponent) {
-          replace(this._filmCardComponent, oldFilmCardComponent);
-          replace(this._filmDetailedCardComponent, oldFilmDetailedCardComponent);
-        } else {
-          render(this._filmCardComponent, this._container);
-        }
-      });
+    if (oldFilmCardComponent && oldFilmDetailedCardComponent) {
+      replace(this._filmCardComponent, oldFilmCardComponent);
+      replace(this._filmDetailedCardComponent, oldFilmDetailedCardComponent);
+    } else {
+      render(this._filmCardComponent, this._container);
+    }
   }
 }
