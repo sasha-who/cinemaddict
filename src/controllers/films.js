@@ -1,7 +1,6 @@
 import {INITIAL_FILMS_COUNT, ADDITIONAL_FILMS_COUNT, SortType} from "../const.js";
 import {getSortedFilms} from "../utils/common.js";
 import {render, remove} from "../utils/render.js";
-import SortComponent from "../components/sort.js";
 import EmptyFilmsComponent from "../components/empty-films.js";
 import FilmsComponent from "../components/films.js";
 import ShowMoreButtonComponent from "../components/show-more-button.js";
@@ -40,7 +39,7 @@ const getFilmsAfterSorting = (films, sortType) => {
 };
 
 export default class FilmsController {
-  constructor(api, container, filmsModel) {
+  constructor(api, container, filmsModel, sortComponent) {
     this._api = api;
     this._container = container;
     this._filmsModel = filmsModel;
@@ -49,7 +48,7 @@ export default class FilmsController {
     this._onViewChange = this._onViewChange.bind(this);
     this._currentFilmsCount = INITIAL_FILMS_COUNT;
     this._onDataChange = this._onDataChange.bind(this);
-    this._sortComponent = new SortComponent();
+    this._sortComponent = sortComponent;
     this._emptyFilmsComponent = new EmptyFilmsComponent();
     this._filmsComponent = new FilmsComponent();
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
@@ -194,9 +193,7 @@ export default class FilmsController {
 
   render() {
     const films = this._filmsModel.getFilms();
-    const mainElement = document.querySelector(`main`);
 
-    render(this._sortComponent, mainElement);
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
 
     if (films.length === 0) {
