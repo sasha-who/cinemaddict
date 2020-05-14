@@ -1,5 +1,5 @@
 import {Filters, FilterType, RenderPosition} from "../const.js";
-import {replace, render, remove} from "../utils/render.js";
+import {replace, render} from "../utils/render.js";
 import {getFilmsByFilter} from "../utils/filter.js";
 import FilterComponent from "../components/filter.js";
 
