@@ -47,4 +47,8 @@ export default class FilterController {
   _onDataChange() {
     this.render();
   }
+
+  removeDefaultView() {
+    this._filterComponent.getElement().remove();
+  }
 }

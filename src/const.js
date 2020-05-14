@@ -1,4 +1,3 @@
-export const MOCK_FILMS_COUNT = 20;
 export const INITIAL_FILMS_COUNT = 5;
 export const ADDITIONAL_FILMS_COUNT = 5;
 export const EXTRA_FILM_COUNT = 2;
@@ -9,6 +8,8 @@ export const HIDDEN_CLASS = `visually-hidden`;
 export const STATISTIC_HREF = `stats`;
 export const MINUTES_IN_HOUR = 60;
 export const RELEASE_DATE_FORMAT = `DD MMMM YYYY`;
+export const COMMENT_DATE_FORMAT = `YYYY/MM/DD HH:mm`;
+export const AUTHORIZATION = `Basic sjdkfjhskdjfhksjhfdkshf`;
 
 export const MONTHS = [
   `January`,
@@ -81,10 +82,7 @@ export const NAMES = [
   `James Miller`
 ];
 
-export const GENRES = [
-  `comedy`,
-  `drama`,
-  `melodrama`,
-  `horror`,
-  `thriller`
-];
+export const Status = {
+  SUCCESS: `200`,
+  REDIRECT: `300`
+};

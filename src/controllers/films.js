@@ -1,7 +1,6 @@
 import {INITIAL_FILMS_COUNT, ADDITIONAL_FILMS_COUNT, SortType} from "../const.js";
 import {getSortedFilms} from "../utils/common.js";
 import {render, remove} from "../utils/render.js";
-import SortComponent from "../components/sort.js";
 import EmptyFilmsComponent from "../components/empty-films.js";
 import FilmsComponent from "../components/films.js";
 import ShowMoreButtonComponent from "../components/show-more-button.js";
@@ -9,11 +8,11 @@ import TopRatedComponent from "../components/top-rated.js";
 import MostCommentedComponent from "../components/most-commented.js";
 import FilmCardController from "../controllers/film-card.js";
 
-const renderFilms = (films, container, onDataChange, onViewChange) => {
+const renderFilms = (api, films, container, onDataChange, onViewChange) => {
   return films.map((film) => {
-    const filmController = new FilmCardController(film, container, onDataChange, onViewChange);
+    const filmController = new FilmCardController(api, film, container, onDataChange, onViewChange);
 
-    filmController.render(film);
+    filmController.initRender(film);
 
     return filmController;
   });
@@ -40,7 +39,8 @@ const getFilmsAfterSorting = (films, sortType) => {
 };
 
 export default class FilmsController {
-  constructor(container, filmsModel) {
+  constructor(api, container, filmsModel, sortComponent) {
+    this._api = api;
     this._container = container;
     this._filmsModel = filmsModel;
     this._showedBasicFilmsControllers = [];
@@ -48,7 +48,7 @@ export default class FilmsController {
     this._onViewChange = this._onViewChange.bind(this);
     this._currentFilmsCount = INITIAL_FILMS_COUNT;
     this._onDataChange = this._onDataChange.bind(this);
-    this._sortComponent = new SortComponent();
+    this._sortComponent = sortComponent;
     this._emptyFilmsComponent = new EmptyFilmsComponent();
     this._filmsComponent = new FilmsComponent();
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
@@ -57,6 +57,7 @@ export default class FilmsController {
     this._filmsContainerElement = this._filmsListElement.querySelector(`.films-list__container`);
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
+
     this._filmsModel.setFilterChangeHandler(this._onFilterChange);
   }
 
@@ -73,6 +74,7 @@ export default class FilmsController {
         .slice(this._currentFilmsCount, addedFilmsCount);
 
       const newFilms = renderFilms(
+          this._api,
           sortedFilms,
           this._filmsContainerElement,
           this._onDataChange,
@@ -113,6 +115,7 @@ export default class FilmsController {
     const topRatedFilms = getSortedFilms(films, `rating`);
 
     const newFilms = renderFilms(
+        this._api,
         topRatedFilms,
         topRatedFilmsContainer,
         this._onDataChange,
@@ -133,6 +136,7 @@ export default class FilmsController {
     const mostCommentedFilms = getSortedFilms(films, `commentsCount`);
 
     const newFilms = renderFilms(
+        this._api,
         mostCommentedFilms,
         mostCommentedFilmsContainer,
         this._onDataChange,
@@ -143,11 +147,14 @@ export default class FilmsController {
   }
 
   _onDataChange(filmCardController, oldData, newData) {
-    const isSuccess = this._filmsModel.updateFilm(oldData.id, newData);
+    this._api.updateFilm(oldData.id, newData)
+      .then((filmModel) => {
+        const isSuccess = this._filmsModel.updateFilm(oldData.id, filmModel);
 
-    if (isSuccess) {
-      filmCardController.render(newData);
-    }
+        if (isSuccess) {
+          filmCardController.render(filmModel);
+        }
+      });
   }
 
   _onViewChange() {
@@ -162,6 +169,7 @@ export default class FilmsController {
 
   _renderFilms(films) {
     const newFilms = renderFilms(
+        this._api,
         films,
         this._filmsContainerElement,
         this._onDataChange,
@@ -185,9 +193,7 @@ export default class FilmsController {
 
   render() {
     const films = this._filmsModel.getFilms();
-    const mainElement = document.querySelector(`main`);
 
-    render(this._sortComponent, mainElement);
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
 
     if (films.length === 0) {

@@ -72,8 +72,8 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
 
     const filmsCharacteristics = [
       {name: `Director`, value: director},
-      {name: `Writers`, value: screenwriters},
-      {name: `Actors`, value: actors},
+      {name: `Writers`, value: screenwriters.join(`, `)},
+      {name: `Actors`, value: actors.join(`, `)},
       {name: `Release Date`, value: releaseDate},
       {name: `Runtime`, value: formatFilmDuration(duration)},
       {name: `Country`, value: country},
@@ -105,7 +105,7 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
             </div>
             <div class="film-details__info-wrap">
               <div class="film-details__poster">
-                <img class="film-details__poster-img" src="./images/posters/${poster}" alt="${name}">
+                <img class="film-details__poster-img" src="${poster}" alt="${name}">
 
                 <p class="film-details__age">${ageLimit}+</p>
               </div>

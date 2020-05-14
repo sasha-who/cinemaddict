@@ -1,14 +1,32 @@
-import {MINUTES_IN_HOUR, GENRES} from "../const.js";
+import {MINUTES_IN_HOUR} from "../const.js";
 import {getUserRang} from "../utils/common.js";
 import {getWatchedFilms} from "../utils/filter.js";
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import AbstractSmartComponent from "../components/abstract-smart-component.js";
 
-const getGenreCounter = (films) => {
+const Period = {
+  ALL: `all-time`,
+  TODAY: `today`,
+  WEEK: `week`,
+  MONTH: `month`,
+  YEAR: `year`
+};
+
+const getGenres = (films) => {
+  let genres = [];
+
+  for (const film of films) {
+    genres = genres.concat(film.genres);
+  }
+
+  return Array.from(new Set(genres));
+};
+
+const getGenreCounter = (films, genres) => {
   const counter = {};
 
-  for (const genre of GENRES) {
+  for (const genre of genres) {
     counter[genre] = 0;
   }
 
@@ -21,12 +39,28 @@ const getGenreCounter = (films) => {
   return counter;
 };
 
-const Period = {
-  ALL: `all-time`,
-  TODAY: `today`,
-  WEEK: `week`,
-  MONTH: `month`,
-  YEAR: `year`
+const getFilmsByPeriod = (films, period) => {
+  const date = new Date();
+
+  switch (period) {
+    case Period.ALL:
+      return films;
+
+    case Period.TODAY:
+      return films.filter((item) => item.date >= date.setDate(date.getDate() - 1));
+
+    case Period.WEEK:
+      return films.filter((item) => item.date >= date.setDate(date.getDate() - 7));
+
+    case Period.MONTH:
+      return films.filter((item) => item.date >= date.setMonth(date.getMonth() - 1));
+
+    case Period.YEAR:
+      return films.filter((item) => item.date >= date.setFullYear(date.getFullYear() - 1));
+
+    default:
+      return films;
+  }
 };
 
 export default class Statistic extends AbstractSmartComponent {
@@ -35,26 +69,31 @@ export default class Statistic extends AbstractSmartComponent {
 
     this._filmsModel = filmsModel;
     this._films = this._filmsModel.getFilms();
-    this._watchedFilms = getWatchedFilms(this._films);
+    this._watchedFilms = getWatchedFilms(this._filmsModel.getFilms());
+    this._filmsByPeriod = getFilmsByPeriod(this._watchedFilms, Period.ALL);
     this._period = Period.ALL;
+    this._genres = getGenres(this._watchedFilms);
+
     this.setPeriodChange();
   }
 
   getTemplate() {
-    const films = this._filmsModel.getFilms();
-    const watchedFilms = getWatchedFilms(films);
-    const summaryTime = watchedFilms.reduce((sum, current) => sum + current.duration, 0);
+    const summaryTime = this._filmsByPeriod.reduce((sum, current) => sum + current.duration, 0);
     const durationHours = Math.floor(summaryTime / MINUTES_IN_HOUR);
     const durationMinutes = Math.round(summaryTime % (durationHours * MINUTES_IN_HOUR));
-    const topGenre = Object.entries(getGenreCounter(watchedFilms))
-      .sort((a, b) => b[1] - a[1])[0][0];
+    const topGenre = Object.entries(getGenreCounter(this._filmsByPeriod, this._genres))
+      .sort((a, b) => b[1] - a[1])[0];
+
+    const durationHoursValue = durationHours ? durationHours : `0`;
+    const durationMinutesValue = durationMinutes ? durationMinutes : `0`;
+    const topGenreValue = topGenre[1] > 0 ? topGenre[0] : ``;
 
     return (
       `<section class="statistic">
         <p class="statistic__rank">
           Your rank
           <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-          <span class="statistic__rank-label">${getUserRang(films)}</span>
+          <span class="statistic__rank-label">${getUserRang(this._films)}</span>
         </p>
 
         <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
@@ -79,15 +118,15 @@ export default class Statistic extends AbstractSmartComponent {
         <ul class="statistic__text-list">
           <li class="statistic__text-item">
             <h4 class="statistic__item-title">You watched</h4>
-            <p class="statistic__item-text">${watchedFilms.length} <span class="statistic__item-description">movies</span></p>
+            <p class="statistic__item-text">${this._filmsByPeriod.length} <span class="statistic__item-description">movies</span></p>
           </li>
           <li class="statistic__text-item">
             <h4 class="statistic__item-title">Total duration</h4>
-            <p class="statistic__item-text">${durationHours} <span class="statistic__item-description">h</span> ${durationMinutes} <span class="statistic__item-description">m</span></p>
+            <p class="statistic__item-text">${durationHoursValue} <span class="statistic__item-description">h</span> ${durationMinutesValue} <span class="statistic__item-description">m</span></p>
           </li>
           <li class="statistic__text-item">
             <h4 class="statistic__item-title">Top genre</h4>
-            <p class="statistic__item-text">${topGenre}</p>
+            <p class="statistic__item-text">${topGenreValue}</p>
           </li>
         </ul>
 
@@ -109,9 +148,9 @@ export default class Statistic extends AbstractSmartComponent {
       plugins: [ChartDataLabels],
       type: `horizontalBar`,
       data: {
-        labels: GENRES,
+        labels: this._genres,
         datasets: [{
-          data: Object.values(getGenreCounter(films)),
+          data: Object.values(getGenreCounter(films, this._genres)),
           backgroundColor: `#ffe800`,
           hoverBackgroundColor: `#ffe800`,
           anchor: `start`
@@ -175,37 +214,15 @@ export default class Statistic extends AbstractSmartComponent {
       });
   }
 
-  _getFilmsByPeriod(films, period) {
-    const date = new Date();
-
-    switch (period) {
-      case Period.ALL:
-        return films;
-
-      case Period.TODAY:
-        return films.filter((item) => item.date >= date.setDate(date.getDate() - 1));
-
-      case Period.WEEK:
-        return films.filter((item) => item.date >= date.setDate(date.getDate() - 7));
-
-      case Period.MONTH:
-        return films.filter((item) => item.date >= date.setMonth(date.getMonth() - 1));
-
-      case Period.YEAR:
-        return films.filter((item) => item.date >= date.setFullYear(date.getFullYear() - 1));
-
-      default:
-        return films;
-    }
-  }
-
   _rerender() {
+    this._watchedFilms = getWatchedFilms(this._filmsModel.getFilms());
+    this._filmsByPeriod = getFilmsByPeriod(this._watchedFilms, this._period);
     super.rerender();
-
-    const watchedFilms = getWatchedFilms(this._filmsModel.getFilms());
-
     this.getElement().querySelector(`input[value="${this._period}"]`).checked = true;
-    this._renderChart(this._getFilmsByPeriod(watchedFilms, this._period));
+
+    if (this._filmsByPeriod.length > 0) {
+      this._renderChart(this._filmsByPeriod);
+    }
   }
 
   recoveryListeners() {
