@@ -4,6 +4,7 @@ import FilmModel from "../models/film.js";
 import CommentsModel from "../models/comments.js";
 import FilmCardComponent from "../components/film-card.js";
 import FilmDetailedCardComponent from "../components/film-details.js";
+import CommentsErrorComponent from "../components/comments-error.js";
 
 export default class FilmCardController {
   constructor(api, film, container, onDataChange, onViewChange) {
@@ -147,7 +148,24 @@ export default class FilmCardController {
       .then((comments) => {
         this._commentsModel.setComments(comments);
       })
-      .then(this.render(film));
+      .then(() => {
+        this.render(film);
+      })
+      .catch(() => {
+        this._commentsModel.setComments(0);
+
+        const filmWithoutComments = Object.assign(film, {
+          commentsCount: 0
+        });
+
+        this.render(filmWithoutComments);
+
+        const commentsErrorComponent = new CommentsErrorComponent();
+        const commentsElement = this._filmDetailedCardComponent.getElement()
+          .querySelector(`.film-details__comments-list`);
+
+        render(commentsErrorComponent, commentsElement);
+      });
   }
 
   render(film) {

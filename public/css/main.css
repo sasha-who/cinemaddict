@@ -799,6 +799,10 @@ button {
   list-style: none;
   margin-bottom: 30px;
 }
+.film-details__comments-error {
+  color: #ff0000;
+  font-size: 21px;
+}
 .film-details__comment-text {
   margin: 0;
   margin-bottom: 5px;
