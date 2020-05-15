@@ -65,21 +65,28 @@ export default class FilmCardController {
     });
   }
 
+  _getFilmsAfterCommentsChange(film) {
+    const newFilm = FilmModel.clone(film);
+
+    newFilm.commentsCount = this._commentsModel.getComments().length;
+    this._onDataChange(this, film, newFilm);
+    this._film = newFilm;
+  }
+
   _onCommentsChange(film, oldComment, newComment) {
     if (newComment === null) {
-      this._commentsModel.removeComment(oldComment.id);
+      this._api.deleteComment(oldComment.id)
+      .then(() => {
+        this._commentsModel.removeComment(oldComment.id);
+        this._getFilmsAfterCommentsChange(film);
+      });
     } else if (oldComment === null) {
       const comment = CommentModel.parseComment(newComment);
 
       this._api.createComment(film.id, comment)
         .then((comments) => {
           this._commentsModel.setComments(comments);
-
-          const newFilm = FilmModel.clone(film);
-
-          newFilm.commentsCount = this._commentsModel.getComments().length;
-          this._onDataChange(this, film, newFilm);
-          this._film = newFilm;
+          this._getFilmsAfterCommentsChange(film);
         });
     }
   }

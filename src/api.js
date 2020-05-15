@@ -70,4 +70,15 @@ export default class API {
         return Comment.parseComments(comments);
       });
   }
+
+  deleteComment(commentId) {
+    const headers = new Headers();
+    headers.append(`Authorization`, this._authorization);
+
+    return fetch(`https://11.ecmascript.pages.academy/cinemaddict/comments/${commentId}`,
+        {
+          method: `DELETE`,
+          headers,
+        });
+  }
 }
