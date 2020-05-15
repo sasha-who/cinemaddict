@@ -1,4 +1,11 @@
-import {RELEASE_DATE_FORMAT, COMMENT_DATE_FORMAT, Keys} from "../const.js";
+import {
+  RELEASE_DATE_FORMAT,
+  COMMENT_DATE_FORMAT,
+  ERROR_BORDER_CLASS,
+  SHAKE_CLASS,
+  SHAKE_TIMEOUT,
+  Keys
+} from "../const.js";
 import {formatFilmDuration} from "../utils/common.js";
 import {encode} from "he";
 import moment from "moment";
@@ -310,11 +317,11 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
     const form = this.getElement().querySelector(`.film-details__inner`);
     const textInput = this.getElement().querySelector(`.film-details__comment-input`);
 
-    textInput.classList.add(`error-border`);
-    form.classList.add(`shake`);
+    textInput.classList.add(ERROR_BORDER_CLASS);
+    form.classList.add(SHAKE_CLASS);
 
     setTimeout(() => {
-      form.classList.remove(`shake`);
-    }, 600);
+      form.classList.remove(SHAKE_CLASS);
+    }, SHAKE_TIMEOUT);
   }
 }
