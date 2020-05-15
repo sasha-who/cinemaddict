@@ -1,12 +1,14 @@
-import {MIN_ID_VALUE, MAX_ID_VALUE, RELEASE_DATE_FORMAT, NAMES, Keys} from "../const.js";
-import {getRandomIntegerNumber, getRandomArrayItem, formatFilmDuration} from "../utils/common.js";
+import {RELEASE_DATE_FORMAT, COMMENT_DATE_FORMAT, Keys} from "../const.js";
+import {formatFilmDuration} from "../utils/common.js";
 import {encode} from "he";
 import moment from "moment";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 
 const getCommentsMarkup = (comments) => {
   const commentMarkupElements = comments.map((item) => {
-    const {content, emotion, author, date} = item;
+    const {comment, emotion, author, date} = item;
+
+    const formatedDate = moment(date).format(COMMENT_DATE_FORMAT);
 
     return (
       `<li class="film-details__comment">
@@ -14,10 +16,10 @@ const getCommentsMarkup = (comments) => {
           <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
         </span>
         <div>
-          <p class="film-details__comment-text">${content}</p>
+          <p class="film-details__comment-text">${comment}</p>
           <p class="film-details__comment-info">
             <span class="film-details__comment-author">${author}</span>
-            <span class="film-details__comment-day">${date}</span>
+            <span class="film-details__comment-day">${formatedDate}</span>
             <button class="film-details__comment-delete">Delete</button>
           </p>
         </div>
@@ -255,11 +257,9 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
 
   _parseFormData(formData) {
     return {
-      id: getRandomIntegerNumber(MIN_ID_VALUE, MAX_ID_VALUE),
-      content: encode(formData.get(`comment`)),
+      comment: encode(formData.get(`comment`)),
       emotion: this._emojiType,
-      author: getRandomArrayItem(NAMES),
-      date: moment(new Date()).format(`YYYY/MM/DD HH:mm`)
+      date: new Date()
     };
   }
 

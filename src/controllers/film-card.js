@@ -1,6 +1,7 @@
 import {Keys, Mode} from "../const.js";
 import {render, appendChild, removeChild, replace, remove} from "../utils/render.js";
 import FilmModel from "../models/film.js";
+import CommentModel from "../models/comment.js";
 import CommentsModel from "../models/comments.js";
 import FilmCardComponent from "../components/film-card.js";
 import FilmDetailedCardComponent from "../components/film-details.js";
@@ -68,14 +69,19 @@ export default class FilmCardController {
     if (newComment === null) {
       this._commentsModel.removeComment(oldComment.id);
     } else if (oldComment === null) {
-      this._commentsModel.addComment(newComment);
+      const comment = CommentModel.parseComment(newComment);
+
+      this._api.createComment(film.id, comment)
+        .then((comments) => {
+          this._commentsModel.setComments(comments);
+
+          const newFilm = FilmModel.clone(film);
+
+          newFilm.commentsCount = this._commentsModel.getComments().length;
+          this._onDataChange(this, film, newFilm);
+          this._film = newFilm;
+        });
     }
-
-    const newFilm = Object.assign({}, film, {
-      commentsCount: this._commentsModel.getComments().length
-    });
-
-    this._onDataChange(this, film, newFilm);
   }
 
   _removePopup() {
@@ -107,7 +113,7 @@ export default class FilmCardController {
   _formSubmitHandler() {
     const data = this._filmDetailedCardComponent.getFormData();
 
-    if (data.content && data.emotion) {
+    if (data.comment && data.emotion) {
       this._onCommentsChange(this._film, null, data);
     }
   }
