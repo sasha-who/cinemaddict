@@ -270,27 +270,51 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
     this.setFavoriteButtonHandler(this._favoriteButtonHandler);
     this.setCommentsDelButtonClickHandler(this._commentsDelButtonClickHandler);
     this.setFormSubmitHandler(this._formSubmitHandler);
-    this._onCommentEmojiChange();
+    this.onCommentEmojiChange();
   }
 
   rerender() {
     super.rerender();
   }
 
-  _onCommentEmojiChange() {
+  onCommentEmojiChange() {
     const emojiLabels = this.getElement().querySelectorAll(`.film-details__emoji-label`);
     const emojiInputs = this.getElement().querySelectorAll(`.film-details__emoji-item`);
 
     emojiLabels.forEach((item, index) => {
       item.addEventListener(`click`, () => {
-        this._emojiType = emojiInputs[index].value;
+        const isInputDisabled = Array.from(emojiInputs).some((input) => input.disabled === true);
 
+        if (isInputDisabled) {
+          return;
+        }
+
+        this._emojiType = emojiInputs[index].value;
         this.rerender();
       });
     });
   }
 
-  setCommentEmojiChange() {
-    this._onCommentEmojiChange();
+  onFormChangeCondition(isDisabled) {
+    const textInput = this.getElement().querySelector(`.film-details__comment-input`);
+    const emojiInputs = this.getElement().querySelectorAll(`.film-details__emoji-item`);
+
+    textInput.disabled = isDisabled;
+
+    for (const input of emojiInputs) {
+      input.disabled = isDisabled;
+    }
+  }
+
+  onError() {
+    const form = this.getElement().querySelector(`.film-details__inner`);
+    const textInput = this.getElement().querySelector(`.film-details__comment-input`);
+
+    textInput.classList.add(`error-border`);
+    form.classList.add(`shake`);
+
+    setTimeout(() => {
+      form.classList.remove(`shake`);
+    }, 600);
   }
 }

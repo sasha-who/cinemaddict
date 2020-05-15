@@ -74,20 +74,30 @@ export default class FilmCardController {
   }
 
   _onCommentsChange(film, oldComment, newComment) {
-    if (newComment === null) {
-      this._api.deleteComment(oldComment.id)
-      .then(() => {
-        this._commentsModel.removeComment(oldComment.id);
-        this._getFilmsAfterCommentsChange(film);
-      });
-    } else if (oldComment === null) {
-      const comment = CommentModel.parseComment(newComment);
+    switch (true) {
+      case newComment === null:
+        this._api.deleteComment(oldComment.id)
+          .then(() => {
+            this._commentsModel.removeComment(oldComment.id);
+            this._getFilmsAfterCommentsChange(film);
+          });
+        break;
 
-      this._api.createComment(film.id, comment)
-        .then((comments) => {
-          this._commentsModel.setComments(comments);
-          this._getFilmsAfterCommentsChange(film);
-        });
+      case oldComment === null:
+        this._filmDetailedCardComponent.onFormChangeCondition(true);
+        const comment = CommentModel.parseComment(newComment);
+
+        this._api.createComment(film.id, comment)
+          .then((comments) => {
+            this._filmDetailedCardComponent.onFormChangeCondition(false);
+            this._commentsModel.setComments(comments);
+            this._getFilmsAfterCommentsChange(film);
+          })
+          .catch(() => {
+            this._filmDetailedCardComponent.onFormChangeCondition(false);
+            this._filmDetailedCardComponent.onError();
+          });
+        break;
     }
   }
 
@@ -153,7 +163,7 @@ export default class FilmCardController {
     this._filmDetailedCardComponent
       .setCommentsDelButtonClickHandler(this._commentsDelButtonClickHandler);
     this._onCardFlagChange(this._film);
-    this._filmDetailedCardComponent.setCommentEmojiChange();
+    this._filmDetailedCardComponent.onCommentEmojiChange();
   }
 
   initRender(film) {
