@@ -10,6 +10,9 @@ export const MINUTES_IN_HOUR = 60;
 export const RELEASE_DATE_FORMAT = `DD MMMM YYYY`;
 export const COMMENT_DATE_FORMAT = `YYYY/MM/DD HH:mm`;
 export const AUTHORIZATION = `Basic sjdkfjhskdjfhksjhfdkshf`;
+export const ERROR_BORDER_CLASS = `error-border`;
+export const SHAKE_CLASS = `shake`;
+export const SHAKE_TIMEOUT = 600;
 
 export const MONTHS = [
   `January`,
@@ -85,4 +88,9 @@ export const NAMES = [
 export const Status = {
   SUCCESS: `200`,
   REDIRECT: `300`
+};
+
+export const DeleteButtonText = {
+  DELETE: `Delete`,
+  DELETING: `Deleting…`
 };

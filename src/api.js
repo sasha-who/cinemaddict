@@ -46,8 +46,39 @@ export default class API {
           body: JSON.stringify(data.toRAW()),
           headers,
         })
-        .then(checkStatus)
-        .then((response) => response.json())
-        .then(Film.parseFilm);
+      .then(checkStatus)
+      .then((response) => response.json())
+      .then(Film.parseFilm);
+  }
+
+  createComment(filmId, comment) {
+    const headers = new Headers();
+    headers.append(`Authorization`, this._authorization);
+    headers.append(`Content-Type`, `application/json`);
+
+    return fetch(`https://11.ecmascript.pages.academy/cinemaddict/comments/${filmId}`,
+        {
+          method: `POST`,
+          body: JSON.stringify(comment.toRAW()),
+          headers,
+        })
+      .then(checkStatus)
+      .then((response) => response.json())
+      .then((response) => {
+        const comments = response.comments;
+
+        return Comment.parseComments(comments);
+      });
+  }
+
+  deleteComment(commentId) {
+    const headers = new Headers();
+    headers.append(`Authorization`, this._authorization);
+
+    return fetch(`https://11.ecmascript.pages.academy/cinemaddict/comments/${commentId}`,
+        {
+          method: `DELETE`,
+          headers,
+        });
   }
 }

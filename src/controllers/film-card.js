@@ -1,6 +1,7 @@
 import {Keys, Mode} from "../const.js";
 import {render, appendChild, removeChild, replace, remove} from "../utils/render.js";
 import FilmModel from "../models/film.js";
+import CommentModel from "../models/comment.js";
 import CommentsModel from "../models/comments.js";
 import FilmCardComponent from "../components/film-card.js";
 import FilmDetailedCardComponent from "../components/film-details.js";
@@ -64,18 +65,46 @@ export default class FilmCardController {
     });
   }
 
-  _onCommentsChange(film, oldComment, newComment) {
-    if (newComment === null) {
-      this._commentsModel.removeComment(oldComment.id);
-    } else if (oldComment === null) {
-      this._commentsModel.addComment(newComment);
-    }
+  _renderFilmsAfterCommentsChange(film) {
+    const newFilm = FilmModel.clone(film);
 
-    const newFilm = Object.assign({}, film, {
-      commentsCount: this._commentsModel.getComments().length
-    });
-
+    newFilm.commentsCount = this._commentsModel.getComments().length;
     this._onDataChange(this, film, newFilm);
+    this._film = newFilm;
+  }
+
+  _onCommentsChange(film, oldComment, newComment, evt) {
+    switch (true) {
+      case newComment === null:
+        this._filmDetailedCardComponent.onDelButtonChangeCondition(evt, true);
+
+        this._api.deleteComment(oldComment.id)
+          .then(() => {
+            this._commentsModel.removeComment(oldComment.id);
+            this._renderFilmsAfterCommentsChange(film);
+          })
+          .catch(() => {
+            this._filmDetailedCardComponent.onDelButtonChangeCondition(evt, false);
+            this._filmDetailedCardComponent.onDeletionError(evt);
+          });
+        break;
+
+      case oldComment === null:
+        this._filmDetailedCardComponent.onFormChangeCondition(true);
+        const comment = CommentModel.parseComment(newComment);
+
+        this._api.createComment(film.id, comment)
+          .then((comments) => {
+            this._filmDetailedCardComponent.onFormChangeCondition(false);
+            this._commentsModel.setComments(comments);
+            this._renderFilmsAfterCommentsChange(film);
+          })
+          .catch(() => {
+            this._filmDetailedCardComponent.onFormChangeCondition(false);
+            this._filmDetailedCardComponent.onCommentError();
+          });
+        break;
+    }
   }
 
   _removePopup() {
@@ -107,7 +136,7 @@ export default class FilmCardController {
   _formSubmitHandler() {
     const data = this._filmDetailedCardComponent.getFormData();
 
-    if (data.content && data.emotion) {
+    if (data.comment && data.emotion) {
       this._onCommentsChange(this._film, null, data);
     }
   }
@@ -130,7 +159,7 @@ export default class FilmCardController {
 
     const commentIndex = Array.from(buttons).findIndex((item) => item === evt.target);
     const deletedComment = this._commentsModel.getComments()[commentIndex];
-    this._onCommentsChange(this._film, deletedComment, null);
+    this._onCommentsChange(this._film, deletedComment, null, evt);
     this._comments = this._commentsModel.getComments();
   }
 
@@ -140,7 +169,7 @@ export default class FilmCardController {
     this._filmDetailedCardComponent
       .setCommentsDelButtonClickHandler(this._commentsDelButtonClickHandler);
     this._onCardFlagChange(this._film);
-    this._filmDetailedCardComponent.setCommentEmojiChange();
+    this._filmDetailedCardComponent.onCommentEmojiChange();
   }
 
   initRender(film) {
