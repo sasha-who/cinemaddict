@@ -1,4 +1,4 @@
-import {Status} from "./const.js";
+import {Status, RequestMethod} from "./const.js";
 import Film from "./models/film.js";
 import Comment from "./models/comment.js";
 
@@ -42,7 +42,7 @@ export default class API {
 
     return fetch(`https://11.ecmascript.pages.academy/cinemaddict/movies/${id}`,
         {
-          method: `PUT`,
+          method: RequestMethod.PUT,
           body: JSON.stringify(data.toRAW()),
           headers,
         })
@@ -58,7 +58,7 @@ export default class API {
 
     return fetch(`https://11.ecmascript.pages.academy/cinemaddict/comments/${filmId}`,
         {
-          method: `POST`,
+          method: RequestMethod.POST,
           body: JSON.stringify(comment.toRAW()),
           headers,
         })
@@ -77,7 +77,7 @@ export default class API {
 
     return fetch(`https://11.ecmascript.pages.academy/cinemaddict/comments/${commentId}`,
         {
-          method: `DELETE`,
+          method: RequestMethod.DELETE,
           headers,
         });
   }

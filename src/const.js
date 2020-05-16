@@ -85,6 +85,12 @@ export const NAMES = [
   `James Miller`
 ];
 
+export const RequestMethod = {
+  POST: `POST`,
+  PUT: `PUT`,
+  DELETE: `DELETE`
+};
+
 export const Status = {
   SUCCESS: `200`,
   REDIRECT: `300`
