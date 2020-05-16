@@ -1,6 +1,7 @@
 import API from "./api/index.js";
 import Provider from "./api/provider.js";
-import {STATISTIC_HREF, AUTHORIZATION} from "./const.js";
+import Store from "./api/store.js";
+import {STATISTIC_HREF, AUTHORIZATION, STORE_NAME} from "./const.js";
 import {render, remove, replace} from "./utils/render.js";
 import ProfileComponent from "./components/profile.js";
 import MainNavigationComponent from "./components/main-navigation.js";
@@ -20,7 +21,8 @@ const footerElement = bodyElement.querySelector(`.footer`);
 const filmsStatisticsElement = footerElement.querySelector(`.footer__statistics`);
 
 const api = new API(AUTHORIZATION);
-const apiWithProvider = new Provider(api);
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
 const filmsModel = new FilmsModel();
 
 filmsModel.setFilms(0);
