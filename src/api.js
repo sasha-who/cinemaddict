@@ -75,7 +75,7 @@ export default class API {
     const headers = new Headers();
     headers.append(`Authorization`, this._authorization);
 
-    return fetch(`https://11.ecmascript.pages.academy/cinemaddskjfkjsict/comments/${commentId}`,
+    return fetch(`https://11.ecmascript.pages.academy/cinemaddict/comments/${commentId}`,
         {
           method: `DELETE`,
           headers,
