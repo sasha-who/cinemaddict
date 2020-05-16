@@ -1,4 +1,5 @@
-import API from "./api.js";
+import API from "./api/index.js";
+import Provider from "./api/provider.js";
 import {STATISTIC_HREF, AUTHORIZATION} from "./const.js";
 import {render, remove, replace} from "./utils/render.js";
 import ProfileComponent from "./components/profile.js";
@@ -19,6 +20,7 @@ const footerElement = bodyElement.querySelector(`.footer`);
 const filmsStatisticsElement = footerElement.querySelector(`.footer__statistics`);
 
 const api = new API(AUTHORIZATION);
+const apiWithProvider = new Provider(api);
 const filmsModel = new FilmsModel();
 
 filmsModel.setFilms(0);
@@ -41,7 +43,7 @@ render(loadingFilmsComponent, mainElement);
 const defaultFilmsStatisticsComponent = new FilmsStatisticsComponent(filmsModel);
 render(defaultFilmsStatisticsComponent, filmsStatisticsElement);
 
-api.getFilms()
+apiWithProvider.getFilms()
   .then((films) => {
     remove(defaultProfileComponent);
     remove(defaultSortComponent);
@@ -62,7 +64,7 @@ api.getFilms()
     const sortComponent = new SortComponent();
     render(sortComponent, mainElement);
 
-    const filmsController = new FilmsController(api, mainElement, filmsModel, sortComponent);
+    const filmsController = new FilmsController(apiWithProvider, mainElement, filmsModel, sortComponent);
     filmsController.render();
 
     render(new FilmsStatisticsComponent(filmsModel), filmsStatisticsElement);

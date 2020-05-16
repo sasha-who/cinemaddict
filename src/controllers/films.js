@@ -8,9 +8,15 @@ import TopRatedComponent from "../components/top-rated.js";
 import MostCommentedComponent from "../components/most-commented.js";
 import FilmCardController from "../controllers/film-card.js";
 
-const renderFilms = (api, films, container, onDataChange, onViewChange) => {
+const renderFilms = (apiWithProvider, films, container, onDataChange, onViewChange) => {
   return films.map((film) => {
-    const filmController = new FilmCardController(api, film, container, onDataChange, onViewChange);
+    const filmController = new FilmCardController(
+        apiWithProvider,
+        film,
+        container,
+        onDataChange,
+        onViewChange
+    );
 
     filmController.initRender(film);
 
@@ -39,8 +45,8 @@ const getFilmsAfterSorting = (films, sortType) => {
 };
 
 export default class FilmsController {
-  constructor(api, container, filmsModel, sortComponent) {
-    this._api = api;
+  constructor(apiWithProvider, container, filmsModel, sortComponent) {
+    this._apiWithProvider = apiWithProvider;
     this._container = container;
     this._filmsModel = filmsModel;
     this._showedBasicFilmsControllers = [];
@@ -74,7 +80,7 @@ export default class FilmsController {
         .slice(this._currentFilmsCount, addedFilmsCount);
 
       const newFilms = renderFilms(
-          this._api,
+          this._apiWithProvider,
           sortedFilms,
           this._filmsContainerElement,
           this._onDataChange,
@@ -115,7 +121,7 @@ export default class FilmsController {
     const topRatedFilms = getSortedFilms(films, `rating`);
 
     const newFilms = renderFilms(
-        this._api,
+        this._apiWithProvider,
         topRatedFilms,
         topRatedFilmsContainer,
         this._onDataChange,
@@ -136,7 +142,7 @@ export default class FilmsController {
     const mostCommentedFilms = getSortedFilms(films, `commentsCount`);
 
     const newFilms = renderFilms(
-        this._api,
+        this._apiWithProvider,
         mostCommentedFilms,
         mostCommentedFilmsContainer,
         this._onDataChange,
@@ -147,7 +153,7 @@ export default class FilmsController {
   }
 
   _onDataChange(filmCardController, oldData, newData) {
-    this._api.updateFilm(oldData.id, newData)
+    this._apiWithProvider.updateFilm(oldData.id, newData)
       .then((filmModel) => {
         const isSuccess = this._filmsModel.updateFilm(oldData.id, filmModel);
 
@@ -169,7 +175,7 @@ export default class FilmsController {
 
   _renderFilms(films) {
     const newFilms = renderFilms(
-        this._api,
+        this._apiWithProvider,
         films,
         this._filmsContainerElement,
         this._onDataChange,

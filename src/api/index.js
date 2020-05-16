@@ -1,6 +1,6 @@
-import {Status, RequestMethod} from "./const.js";
-import Film from "./models/film.js";
-import Comment from "./models/comment.js";
+import {Status, RequestMethod} from "../const.js";
+import Film from "../models/film.js";
+import Comment from "../models/comment.js";
 
 const checkStatus = (response) => {
   if (response.status >= Status.SUCCESS && response.status < Status.REDIRECT) {
