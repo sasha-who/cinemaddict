@@ -65,7 +65,7 @@ export default class FilmCardController {
     });
   }
 
-  _getFilmsAfterCommentsChange(film) {
+  _renderFilmsAfterCommentsChange(film) {
     const newFilm = FilmModel.clone(film);
 
     newFilm.commentsCount = this._commentsModel.getComments().length;
@@ -73,13 +73,19 @@ export default class FilmCardController {
     this._film = newFilm;
   }
 
-  _onCommentsChange(film, oldComment, newComment) {
+  _onCommentsChange(film, oldComment, newComment, evt) {
     switch (true) {
       case newComment === null:
+        this._filmDetailedCardComponent.onDelButtonChangeCondition(evt, true);
+
         this._api.deleteComment(oldComment.id)
           .then(() => {
             this._commentsModel.removeComment(oldComment.id);
-            this._getFilmsAfterCommentsChange(film);
+            this._renderFilmsAfterCommentsChange(film);
+          })
+          .catch(() => {
+            this._filmDetailedCardComponent.onDelButtonChangeCondition(evt, false);
+            this._filmDetailedCardComponent.onDeletionError(evt);
           });
         break;
 
@@ -91,11 +97,11 @@ export default class FilmCardController {
           .then((comments) => {
             this._filmDetailedCardComponent.onFormChangeCondition(false);
             this._commentsModel.setComments(comments);
-            this._getFilmsAfterCommentsChange(film);
+            this._renderFilmsAfterCommentsChange(film);
           })
           .catch(() => {
             this._filmDetailedCardComponent.onFormChangeCondition(false);
-            this._filmDetailedCardComponent.onError();
+            this._filmDetailedCardComponent.onCommentError();
           });
         break;
     }
@@ -153,7 +159,7 @@ export default class FilmCardController {
 
     const commentIndex = Array.from(buttons).findIndex((item) => item === evt.target);
     const deletedComment = this._commentsModel.getComments()[commentIndex];
-    this._onCommentsChange(this._film, deletedComment, null);
+    this._onCommentsChange(this._film, deletedComment, null, evt);
     this._comments = this._commentsModel.getComments();
   }
 

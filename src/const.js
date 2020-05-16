@@ -89,3 +89,8 @@ export const Status = {
   SUCCESS: `200`,
   REDIRECT: `300`
 };
+
+export const DeleteButtonText = {
+  DELETE: `Delete`,
+  DELETING: `Deleting…`
+};

@@ -4,7 +4,8 @@ import {
   ERROR_BORDER_CLASS,
   SHAKE_CLASS,
   SHAKE_TIMEOUT,
-  Keys
+  Keys,
+  DeleteButtonText
 } from "../const.js";
 import {formatFilmDuration} from "../utils/common.js";
 import {encode} from "he";
@@ -302,6 +303,14 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
     });
   }
 
+  _shakeOnError(element) {
+    element.classList.add(SHAKE_CLASS);
+
+    setTimeout(() => {
+      element.classList.remove(SHAKE_CLASS);
+    }, SHAKE_TIMEOUT);
+  }
+
   onFormChangeCondition(isDisabled) {
     const textInput = this.getElement().querySelector(`.film-details__comment-input`);
     const emojiInputs = this.getElement().querySelectorAll(`.film-details__emoji-item`);
@@ -313,15 +322,35 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
     }
   }
 
-  onError() {
+  onCommentError() {
     const form = this.getElement().querySelector(`.film-details__inner`);
     const textInput = this.getElement().querySelector(`.film-details__comment-input`);
 
     textInput.classList.add(ERROR_BORDER_CLASS);
-    form.classList.add(SHAKE_CLASS);
+    this._shakeOnError(form);
+  }
 
-    setTimeout(() => {
-      form.classList.remove(SHAKE_CLASS);
-    }, SHAKE_TIMEOUT);
+  onDelButtonChangeCondition(evt, isDeleting) {
+    const deleteButton = evt.target;
+
+    if (isDeleting) {
+      deleteButton.disabled = true;
+      deleteButton.textContent = DeleteButtonText.DELETING;
+
+      return;
+    }
+
+    deleteButton.disabled = false;
+    deleteButton.textContent = DeleteButtonText.DELETE;
+  }
+
+  onDeletionError(evt) {
+    const commentsElements = this.getElement().querySelectorAll(`.film-details__comment`);
+
+    for (const comment of commentsElements) {
+      if (comment.contains(evt.target)) {
+        this._shakeOnError(comment);
+      }
+    }
   }
 }
