@@ -4,6 +4,14 @@ const isOnline = () => {
   return window.navigator.onLine;
 };
 
+const createStoreStructure = (items) => {
+  return items.reduce((acc, current) => {
+    return Object.assign({}, acc, {
+      [current.id]: current,
+    });
+  }, {});
+};
+
 export default class Provider {
   constructor(api, store) {
     this._api = api;
@@ -14,7 +22,9 @@ export default class Provider {
     if (isOnline()) {
       return this._api.getFilms()
         .then((films) => {
-          films.forEach((film) => this._store.setItem(film.id, film.toRAW()));
+          const items = createStoreStructure(films.map((film) => film.toRAW()));
+
+          this._store.setItems(items);
 
           return films;
         });
@@ -25,11 +35,9 @@ export default class Provider {
     return Promise.resolve(Film.parseFilms(storeFilms));
   }
 
-  // getComments(filmId) {
-  //   if (isOnline()) {
-  //     return this._api.getComments(filmId);
-  //   }
-  // }
+  getComments(filmId) {
+    return this._api.getComments(filmId);
+  }
 
   updateFilm(id, data) {
     if (isOnline()) {
@@ -49,14 +57,10 @@ export default class Provider {
   }
 
   createComment(filmId, comment) {
-    if (isOnline()) {
-      return this._api.createComment(filmId, comment);
-    }
+    return this._api.createComment(filmId, comment);
   }
 
   deleteComment(commentId) {
-    if (isOnline()) {
-      return this._api.deleteComment(commentId);
-    }
+    return this._api.deleteComment(commentId);
   }
 }
