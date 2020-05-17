@@ -4,6 +4,11 @@ const isOnline = () => {
   return window.navigator.onLine;
 };
 
+const getSyncedFilms = (items) => {
+  return items.filter(({success}) => success)
+    .map(({payload}) => payload.movie);
+};
+
 const createStoreStructure = (items) => {
   return items.reduce((acc, current) => {
     return Object.assign({}, acc, {
@@ -62,5 +67,21 @@ export default class Provider {
 
   deleteComment(commentId) {
     return this._api.deleteComment(commentId);
+  }
+
+  sync() {
+    if (isOnline()) {
+      const storeFilms = Object.values(this._store.getItems());
+
+      return this._api.sync(storeFilms)
+        .then((response) => {
+          const updatedFilms = getSyncedFilms(response.updated);
+          const items = createStoreStructure(updatedFilms);
+
+          this._store.setItems(items);
+        });
+    }
+
+    return Promise.reject(new Error(`Sync data failed`));
   }
 }

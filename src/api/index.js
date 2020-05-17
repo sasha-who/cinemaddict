@@ -22,7 +22,10 @@ export default class API {
     return fetch(`https://11.ecmascript.pages.academy/cinemaddict/movies`, {headers})
       .then(checkStatus)
       .then((response) => response.json())
-      .then(Film.parseFilms);
+      .then(Film.parseFilms)
+      .catch((error) => {
+        throw error;
+      });
   }
 
   getComments(filmId) {
@@ -32,7 +35,10 @@ export default class API {
     return fetch(`https://11.ecmascript.pages.academy/cinemaddict/comments/${filmId}`, {headers})
       .then(checkStatus)
       .then((response) => response.json())
-      .then(Comment.parseComments);
+      .then(Comment.parseComments)
+      .catch((error) => {
+        throw error;
+      });
   }
 
   updateFilm(id, data) {
@@ -48,7 +54,10 @@ export default class API {
         })
       .then(checkStatus)
       .then((response) => response.json())
-      .then(Film.parseFilm);
+      .then(Film.parseFilm)
+      .catch((error) => {
+        throw error;
+      });
   }
 
   createComment(filmId, comment) {
@@ -68,6 +77,9 @@ export default class API {
         const comments = response.comments;
 
         return Comment.parseComments(comments);
+      })
+      .catch((error) => {
+        throw error;
       });
   }
 
@@ -79,6 +91,27 @@ export default class API {
         {
           method: RequestMethod.DELETE,
           headers,
-        });
+        })
+      .catch((error) => {
+        throw error;
+      });
+  }
+
+  sync(data) {
+    const headers = new Headers();
+    headers.append(`Authorization`, this._authorization);
+    headers.append(`Content-Type`, `application/json`);
+
+    return fetch(`https://11.ecmascript.pages.academy/cinemaddict/movies/sync`,
+        {
+          method: RequestMethod.POST,
+          body: JSON.stringify(data),
+          headers,
+        })
+      .then(checkStatus)
+      .then((response) => response.json())
+      .catch((error) => {
+        throw error;
+      });
   }
 }
