@@ -1,6 +1,6 @@
 import {INITIAL_FILMS_COUNT, ADDITIONAL_FILMS_COUNT, SortType} from "../const.js";
 import {getSortedFilms} from "../utils/common.js";
-import {render, remove} from "../utils/render.js";
+import {render, remove, replace} from "../utils/render.js";
 import EmptyFilmsComponent from "../components/empty-films.js";
 import FilmsComponent from "../components/films.js";
 import ShowMoreButtonComponent from "../components/show-more-button.js";
@@ -58,6 +58,7 @@ export default class FilmsController {
     this._emptyFilmsComponent = new EmptyFilmsComponent();
     this._filmsComponent = new FilmsComponent();
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
+    this._mostCommentedComponent = null;
     this._filmsElement = this._filmsComponent.getElement();
     this._filmsListElement = this._filmsElement.querySelector(`.films-list`);
     this._filmsContainerElement = this._filmsListElement.querySelector(`.films-list__container`);
@@ -133,10 +134,17 @@ export default class FilmsController {
 
   _renderMostCommentedComponent() {
     const films = this._filmsModel.getFilms();
-    const mostCommentedComponent = new MostCommentedComponent(films);
-    render(mostCommentedComponent, this._filmsElement);
+    const oldMostCommentedComponent = this._mostCommentedComponent;
 
-    const mostCommentedFilmsContainer = mostCommentedComponent.getElement()
+    this._mostCommentedComponent = new MostCommentedComponent(films);
+
+    if (oldMostCommentedComponent) {
+      replace(this._mostCommentedComponent, oldMostCommentedComponent);
+    } else {
+      render(this._mostCommentedComponent, this._filmsElement);
+    }
+
+    const mostCommentedFilmsContainer = this._mostCommentedComponent.getElement()
       .querySelector(`.films-list__container`);
 
     const mostCommentedFilms = getSortedFilms(films, `commentsCount`);
@@ -159,6 +167,10 @@ export default class FilmsController {
 
         if (isSuccess) {
           filmCardController.render(filmModel);
+
+          if (oldData.commentsCount !== newData.commentsCount) {
+            this._renderMostCommentedComponent();
+          }
         }
       });
   }

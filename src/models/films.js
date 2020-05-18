@@ -1,5 +1,6 @@
 import {getFilmsByFilter} from "../utils/filter.js";
 import {FilterType} from "../const.js";
+import FilmModel from "../models/film.js";
 
 export default class Films {
   constructor() {
@@ -34,7 +35,7 @@ export default class Films {
       return false;
     }
 
-    this._films[index] = Object.assign({}, film);
+    this._films[index] = FilmModel.clone(film);
     this._callHandlers(this._dataChangeHandlers);
 
     return true;
