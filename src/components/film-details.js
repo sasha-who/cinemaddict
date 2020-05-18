@@ -16,7 +16,7 @@ const getCommentsMarkup = (comments) => {
   const commentMarkupElements = comments.map((item) => {
     const {comment, emotion, author, date} = item;
 
-    const formatedDate = moment(date).format(COMMENT_DATE_FORMAT);
+    const formatedDate = moment(date).fromNow();
 
     return (
       `<li class="film-details__comment">
