@@ -1,6 +1,6 @@
-import {Status} from "./const.js";
-import Film from "./models/film.js";
-import Comment from "./models/comment.js";
+import {Status, RequestMethod} from "../const.js";
+import Film from "../models/film.js";
+import Comment from "../models/comment.js";
 
 const checkStatus = (response) => {
   if (response.status >= Status.SUCCESS && response.status < Status.REDIRECT) {
@@ -22,7 +22,10 @@ export default class API {
     return fetch(`https://11.ecmascript.pages.academy/cinemaddict/movies`, {headers})
       .then(checkStatus)
       .then((response) => response.json())
-      .then(Film.parseFilms);
+      .then(Film.parseFilms)
+      .catch((error) => {
+        throw error;
+      });
   }
 
   getComments(filmId) {
@@ -32,7 +35,10 @@ export default class API {
     return fetch(`https://11.ecmascript.pages.academy/cinemaddict/comments/${filmId}`, {headers})
       .then(checkStatus)
       .then((response) => response.json())
-      .then(Comment.parseComments);
+      .then(Comment.parseComments)
+      .catch((error) => {
+        throw error;
+      });
   }
 
   updateFilm(id, data) {
@@ -42,13 +48,16 @@ export default class API {
 
     return fetch(`https://11.ecmascript.pages.academy/cinemaddict/movies/${id}`,
         {
-          method: `PUT`,
+          method: RequestMethod.PUT,
           body: JSON.stringify(data.toRAW()),
           headers,
         })
       .then(checkStatus)
       .then((response) => response.json())
-      .then(Film.parseFilm);
+      .then(Film.parseFilm)
+      .catch((error) => {
+        throw error;
+      });
   }
 
   createComment(filmId, comment) {
@@ -58,7 +67,7 @@ export default class API {
 
     return fetch(`https://11.ecmascript.pages.academy/cinemaddict/comments/${filmId}`,
         {
-          method: `POST`,
+          method: RequestMethod.POST,
           body: JSON.stringify(comment.toRAW()),
           headers,
         })
@@ -68,6 +77,9 @@ export default class API {
         const comments = response.comments;
 
         return Comment.parseComments(comments);
+      })
+      .catch((error) => {
+        throw error;
       });
   }
 
@@ -77,8 +89,29 @@ export default class API {
 
     return fetch(`https://11.ecmascript.pages.academy/cinemaddict/comments/${commentId}`,
         {
-          method: `DELETE`,
+          method: RequestMethod.DELETE,
           headers,
-        });
+        })
+      .catch((error) => {
+        throw error;
+      });
+  }
+
+  sync(data) {
+    const headers = new Headers();
+    headers.append(`Authorization`, this._authorization);
+    headers.append(`Content-Type`, `application/json`);
+
+    return fetch(`https://11.ecmascript.pages.academy/cinemaddict/movies/sync`,
+        {
+          method: RequestMethod.POST,
+          body: JSON.stringify(data),
+          headers,
+        })
+      .then(checkStatus)
+      .then((response) => response.json())
+      .catch((error) => {
+        throw error;
+      });
   }
 }

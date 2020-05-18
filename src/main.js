@@ -1,5 +1,7 @@
-import API from "./api.js";
-import {STATISTIC_HREF, AUTHORIZATION} from "./const.js";
+import API from "./api/index.js";
+import Provider from "./api/provider.js";
+import Store from "./api/store.js";
+import {STATISTIC_HREF, AUTHORIZATION, STORE_NAME} from "./const.js";
 import {render, remove, replace} from "./utils/render.js";
 import ProfileComponent from "./components/profile.js";
 import MainNavigationComponent from "./components/main-navigation.js";
@@ -19,6 +21,8 @@ const footerElement = bodyElement.querySelector(`.footer`);
 const filmsStatisticsElement = footerElement.querySelector(`.footer__statistics`);
 
 const api = new API(AUTHORIZATION);
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
 const filmsModel = new FilmsModel();
 
 filmsModel.setFilms(0);
@@ -41,7 +45,7 @@ render(loadingFilmsComponent, mainElement);
 const defaultFilmsStatisticsComponent = new FilmsStatisticsComponent(filmsModel);
 render(defaultFilmsStatisticsComponent, filmsStatisticsElement);
 
-api.getFilms()
+apiWithProvider.getFilms()
   .then((films) => {
     remove(defaultProfileComponent);
     remove(defaultSortComponent);
@@ -62,7 +66,7 @@ api.getFilms()
     const sortComponent = new SortComponent();
     render(sortComponent, mainElement);
 
-    const filmsController = new FilmsController(api, mainElement, filmsModel, sortComponent);
+    const filmsController = new FilmsController(apiWithProvider, mainElement, filmsModel, sortComponent);
     filmsController.render();
 
     render(new FilmsStatisticsComponent(filmsModel), filmsStatisticsElement);
@@ -86,3 +90,19 @@ api.getFilms()
 
     replace(emptyFilmsComponent, loadingFilmsComponent);
   });
+
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`)
+    .then(() => {})
+    .catch(() => {});
+});
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+
+  apiWithProvider.sync();
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
+});

@@ -90,17 +90,17 @@ export default class FilmCardController {
         break;
 
       case oldComment === null:
-        this._filmDetailedCardComponent.onFormChangeCondition(true);
+        this._filmDetailedCardComponent.onNewCommentChangeCondition(true);
         const comment = CommentModel.parseComment(newComment);
 
         this._api.createComment(film.id, comment)
           .then((comments) => {
-            this._filmDetailedCardComponent.onFormChangeCondition(false);
+            this._filmDetailedCardComponent.onNewCommentChangeCondition(false);
             this._commentsModel.setComments(comments);
             this._renderFilmsAfterCommentsChange(film);
           })
           .catch(() => {
-            this._filmDetailedCardComponent.onFormChangeCondition(false);
+            this._filmDetailedCardComponent.onNewCommentChangeCondition(false);
             this._filmDetailedCardComponent.onCommentError();
           });
         break;
@@ -169,7 +169,18 @@ export default class FilmCardController {
     this._filmDetailedCardComponent
       .setCommentsDelButtonClickHandler(this._commentsDelButtonClickHandler);
     this._onCardFlagChange(this._film);
+    this._onNetworkConditionChange();
     this._filmDetailedCardComponent.onCommentEmojiChange();
+  }
+
+  _onNetworkConditionChange() {
+    window.addEventListener(`online`, () => {
+      this._filmDetailedCardComponent.onFormChangeCondition(false);
+    });
+
+    window.addEventListener(`offline`, () => {
+      this._filmDetailedCardComponent.onFormChangeCondition(true);
+    });
   }
 
   initRender(film) {

@@ -13,6 +13,9 @@ export const AUTHORIZATION = `Basic sjdkfjhskdjfhksjhfdkshf`;
 export const ERROR_BORDER_CLASS = `error-border`;
 export const SHAKE_CLASS = `shake`;
 export const SHAKE_TIMEOUT = 600;
+export const STORE_PREFIX = `cinemaddict-localstorage`;
+export const STORE_VER = `v1`;
+export const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
 export const MONTHS = [
   `January`,
@@ -84,6 +87,12 @@ export const NAMES = [
   `Lily Evans`,
   `James Miller`
 ];
+
+export const RequestMethod = {
+  POST: `POST`,
+  PUT: `PUT`,
+  DELETE: `DELETE`
+};
 
 export const Status = {
   SUCCESS: `200`,

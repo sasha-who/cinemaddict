@@ -311,7 +311,7 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
     }, SHAKE_TIMEOUT);
   }
 
-  onFormChangeCondition(isDisabled) {
+  onNewCommentChangeCondition(isDisabled) {
     const textInput = this.getElement().querySelector(`.film-details__comment-input`);
     const emojiInputs = this.getElement().querySelectorAll(`.film-details__emoji-item`);
 
@@ -319,6 +319,17 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
 
     for (const input of emojiInputs) {
       input.disabled = isDisabled;
+    }
+  }
+
+  onFormChangeCondition(isDisabled) {
+    this.onNewCommentChangeCondition(isDisabled);
+
+    const deleteButtonsElements = this.getElement()
+      .querySelectorAll(`.film-details__comment-delete`);
+
+    for (const button of deleteButtonsElements) {
+      button.disabled = isDisabled;
     }
   }
 
