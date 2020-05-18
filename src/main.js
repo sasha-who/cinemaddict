@@ -91,6 +91,12 @@ apiWithProvider.getFilms()
     replace(emptyFilmsComponent, loadingFilmsComponent);
   });
 
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`)
+    .then(() => {})
+    .catch(() => {});
+});
+
 window.addEventListener(`online`, () => {
   document.title = document.title.replace(` [offline]`, ``);
 
