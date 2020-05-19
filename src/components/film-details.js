@@ -247,7 +247,10 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
     const form = this.getElement().querySelector(`.film-details__inner`);
 
     form.addEventListener(`keydown`, (evt) => {
-      if (event.ctrlKey && evt.code === Keys.ENTER) {
+      const windowsKeysCombo = event.ctrlKey && evt.code === Keys.ENTER;
+      const macKeysCombo = evt.metaKey && evt.code === Keys.ENTER;
+
+      if (windowsKeysCombo || macKeysCombo) {
         handler();
       }
     });
