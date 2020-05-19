@@ -1,5 +1,5 @@
 import {Keys, Mode} from "../const.js";
-import {render, appendChild, removeChild, replace, remove} from "../utils/render.js";
+import {render, appendElementBefore, removeChild, replace, remove} from "../utils/render.js";
 import FilmModel from "../models/film.js";
 import CommentModel from "../models/comment.js";
 import CommentsModel from "../models/comments.js";
@@ -19,6 +19,7 @@ export default class FilmCardController {
     this._filmCardComponent = null;
     this._filmDetailedCardComponent = null;
     this._bodyElement = document.querySelector(`body`);
+    this._footerElement = this._bodyElement.querySelector(`.footer`);
     this._escapeKeydownHandler = this._escapeKeydownHandler.bind(this);
     this._closeButtonClickHandler = this._closeButtonClickHandler.bind(this);
     this._cardClickHandler = this._cardClickHandler.bind(this);
@@ -126,7 +127,7 @@ export default class FilmCardController {
 
   _cardClickHandler() {
     this._onViewChange();
-    appendChild(this._filmDetailedCardComponent, this._bodyElement);
+    appendElementBefore(this._filmDetailedCardComponent, this._footerElement);
     this._mode = Mode.OPEN;
     this._setPopupListeners();
 

@@ -17,8 +17,8 @@ export const remove = (component) => {
   component.removeElement();
 };
 
-export const appendChild = (component, parent) => {
-  parent.appendChild(component.getElement());
+export const appendElementBefore = (component, previousElement) => {
+  previousElement.after(component.getElement());
 };
 
 export const removeChild = (component, parent) => {
