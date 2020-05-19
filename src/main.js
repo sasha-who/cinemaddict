@@ -54,7 +54,6 @@ apiWithProvider.getFilms()
     defaultFilterController.removeDefaultView();
 
     filmsModel.setFilms(films);
-    render(new ProfileComponent(filmsModel), headerElement);
 
     const statisticComponent = new StatisticComponent(filmsModel);
     render(statisticComponent, mainElement);

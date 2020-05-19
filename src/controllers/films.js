@@ -6,6 +6,7 @@ import FilmsComponent from "../components/films.js";
 import ShowMoreButtonComponent from "../components/show-more-button.js";
 import TopRatedComponent from "../components/top-rated.js";
 import MostCommentedComponent from "../components/most-commented.js";
+import ProfileComponent from "../components/profile.js";
 import FilmCardController from "../controllers/film-card.js";
 
 const renderFilms = (apiWithProvider, films, container, onDataChange, onViewChange) => {
@@ -59,6 +60,7 @@ export default class FilmsController {
     this._filmsComponent = new FilmsComponent();
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
     this._mostCommentedComponent = null;
+    this._profileComponent = null;
     this._filmsElement = this._filmsComponent.getElement();
     this._filmsListElement = this._filmsElement.querySelector(`.films-list`);
     this._filmsContainerElement = this._filmsListElement.querySelector(`.films-list__container`);
@@ -160,6 +162,19 @@ export default class FilmsController {
     this._showedAddFilmsControllers = this._showedAddFilmsControllers.concat(newFilms);
   }
 
+  _renderProfileComponent() {
+    const headerElement = document.querySelector(`.header`);
+    const oldProfileComponent = this._profileComponent;
+
+    this._profileComponent = new ProfileComponent(this._filmsModel);
+
+    if (oldProfileComponent) {
+      replace(this._profileComponent, oldProfileComponent);
+    } else {
+      render(this._profileComponent, headerElement);
+    }
+  }
+
   _onDataChange(filmCardController, oldData, newData) {
     this._apiWithProvider.updateFilm(oldData.id, newData)
       .then((filmModel) => {
@@ -170,6 +185,10 @@ export default class FilmsController {
 
           if (oldData.commentsCount !== newData.commentsCount) {
             this._renderMostCommentedComponent();
+          }
+
+          if (oldData.isWatched !== newData.isWatched) {
+            this._renderProfileComponent(this._filmsModel.getFilms());
           }
         }
       });
@@ -212,6 +231,7 @@ export default class FilmsController {
   render() {
     const films = this._filmsModel.getFilms();
 
+    this._renderProfileComponent(this._filmsModel);
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
 
     if (films.length === 0) {
