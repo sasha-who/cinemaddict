@@ -86,7 +86,7 @@ export default class Statistic extends AbstractSmartComponent {
 
     const durationHoursValue = durationHours ? durationHours : `0`;
     const durationMinutesValue = durationMinutes ? durationMinutes : `0`;
-    const topGenreValue = topGenre[1] > 0 ? topGenre[0] : ``;
+    const topGenreValue = topGenre && topGenre[1] > 0 ? topGenre[0] : ``;
 
     return (
       `<section class="statistic">
