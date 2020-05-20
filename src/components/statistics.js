@@ -144,11 +144,11 @@ export default class Statistic extends AbstractSmartComponent {
 
   _renderChart(films) {
     const BAR_HEIGHT = 50;
-    const statisticCtx = document.querySelector(`.statistic__chart`);
+    const statisticCtxElement = document.querySelector(`.statistic__chart`);
 
-    statisticCtx.height = BAR_HEIGHT * 5;
+    statisticCtxElement.height = BAR_HEIGHT * 5;
 
-    return new Chart(statisticCtx, {
+    return new Chart(statisticCtxElement, {
       plugins: [ChartDataLabels],
       type: `horizontalBar`,
       data: {

@@ -121,7 +121,7 @@ export default class FilmsController {
     const topRatedComponent = new TopRatedComponent(films);
     render(topRatedComponent, this._filmsElement);
 
-    const topRatedFilmsContainer = topRatedComponent.getElement()
+    const topRatedFilmsContainerElement = topRatedComponent.getElement()
       .querySelector(`.films-list__container`);
 
     const topRatedFilms = getSortedFilms(films, `rating`);
@@ -129,7 +129,7 @@ export default class FilmsController {
     const newFilms = renderFilms(
         this._apiWithProvider,
         topRatedFilms,
-        topRatedFilmsContainer,
+        topRatedFilmsContainerElement,
         this._onDataChange,
         this._onViewChange
     );
@@ -149,7 +149,7 @@ export default class FilmsController {
       render(this._mostCommentedComponent, this._filmsElement);
     }
 
-    const mostCommentedFilmsContainer = this._mostCommentedComponent.getElement()
+    const mostCommentedFilmsContainerElement = this._mostCommentedComponent.getElement()
       .querySelector(`.films-list__container`);
 
     const mostCommentedFilms = getSortedFilms(films, `commentsCount`);
@@ -157,7 +157,7 @@ export default class FilmsController {
     const newFilms = renderFilms(
         this._apiWithProvider,
         mostCommentedFilms,
-        mostCommentedFilmsContainer,
+        mostCommentedFilmsContainerElement,
         this._onDataChange,
         this._onViewChange
     );

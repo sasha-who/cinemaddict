@@ -321,12 +321,12 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
   }
 
   onNewCommentChangeCondition(isDisabled) {
-    const textInput = this.getElement().querySelector(`.film-details__comment-input`);
-    const emojiInputs = this.getElement().querySelectorAll(`.film-details__emoji-item`);
+    const textInputElement = this.getElement().querySelector(`.film-details__comment-input`);
+    const emojiInputElements = this.getElement().querySelectorAll(`.film-details__emoji-item`);
 
-    textInput.disabled = isDisabled;
+    textInputElement.disabled = isDisabled;
 
-    for (const input of emojiInputs) {
+    for (const input of emojiInputElements) {
       input.disabled = isDisabled;
     }
   }
@@ -334,20 +334,20 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
   onFormChangeCondition(isDisabled) {
     this.onNewCommentChangeCondition(isDisabled);
 
-    const deleteButtonsElements = this.getElement()
+    const deleteButtonElements = this.getElement()
       .querySelectorAll(`.film-details__comment-delete`);
 
-    for (const button of deleteButtonsElements) {
+    for (const button of deleteButtonElements) {
       button.disabled = isDisabled;
     }
   }
 
   onCommentError() {
-    const form = this.getElement().querySelector(`.film-details__inner`);
-    const textInput = this.getElement().querySelector(`.film-details__comment-input`);
+    const formElement = this.getElement().querySelector(`.film-details__inner`);
+    const textInputElement = this.getElement().querySelector(`.film-details__comment-input`);
 
-    textInput.classList.add(ERROR_BORDER_CLASS);
-    this._shakeOnError(form);
+    textInputElement.classList.add(ERROR_BORDER_CLASS);
+    this._shakeOnError(formElement);
   }
 
   onDelButtonChangeCondition(evt, isDeleting) {
