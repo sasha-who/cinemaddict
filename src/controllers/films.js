@@ -70,10 +70,13 @@ export default class FilmsController {
     this._filmsModel.setFilterChangeHandler(this._onFilterChange);
   }
 
-  _renderShowMoreButtonComponent() {
-    const films = this._filmsModel.getFilms();
-
+  _renderShowMoreButtonComponent(films) {
     remove(this._showMoreButtonComponent);
+
+    if (this._currentFilmsCount < INITIAL_FILMS_COUNT) {
+      return;
+    }
+
     render(this._showMoreButtonComponent, this._filmsListElement);
 
     this._showMoreButtonComponent.setClickHandler(() => {
@@ -110,7 +113,7 @@ export default class FilmsController {
       .slice(0, INITIAL_FILMS_COUNT);
 
     this._renderFilms(sortedFilms);
-    this._renderShowMoreButtonComponent();
+    this._renderShowMoreButtonComponent(this._filmsModel.getFilms());
   }
 
   _renderTopRatedComponent() {
@@ -223,9 +226,12 @@ export default class FilmsController {
   }
 
   _updateFilms(count) {
+    const films = this._filmsModel.getFilteredFilms();
+
+    this._currentFilmsCount = films.length;
     this._removeFilms();
-    this._renderFilms(this._filmsModel.getFilteredFilms().slice(0, count));
-    this._renderShowMoreButtonComponent();
+    this._renderFilms(films.slice(0, count));
+    this._renderShowMoreButtonComponent(films);
   }
 
   render() {
@@ -243,7 +249,7 @@ export default class FilmsController {
     render(this._filmsComponent, this._container);
     this._renderFilms(films.slice(0, INITIAL_FILMS_COUNT));
 
-    this._renderShowMoreButtonComponent();
+    this._renderShowMoreButtonComponent(this._filmsModel.getFilms());
     this._renderTopRatedComponent();
     this._renderMostCommentedComponent();
   }

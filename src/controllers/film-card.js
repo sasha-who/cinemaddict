@@ -45,6 +45,7 @@ export default class FilmCardController {
 
     this._filmCardComponent.setWatchedButtonHandler((evt) => {
       evt.preventDefault();
+      film.watchedDate = new Date();
       changeCardFlag(`isWatched`);
     });
 

@@ -42,21 +42,25 @@ const getGenreCounter = (films, genres) => {
 const getFilmsByPeriod = (films, period) => {
   const date = new Date();
 
+  const getFilteredFilms = (limitDate) => {
+    return films.filter((item) => item.watchingDate && item.watchingDate.getTime() >= limitDate);
+  };
+
   switch (period) {
     case Period.ALL:
       return films;
 
     case Period.TODAY:
-      return films.filter((item) => item.date >= date.setDate(date.getDate() - 1));
+      return getFilteredFilms(date.setDate(date.getDate() - 1));
 
     case Period.WEEK:
-      return films.filter((item) => item.date >= date.setDate(date.getDate() - 7));
+      return getFilteredFilms(date.setDate(date.getDate() - 7));
 
     case Period.MONTH:
-      return films.filter((item) => item.date >= date.setMonth(date.getMonth() - 1));
+      return getFilteredFilms(date.setMonth(date.getMonth() - 1));
 
     case Period.YEAR:
-      return films.filter((item) => item.date >= date.setFullYear(date.getFullYear() - 1));
+      return getFilteredFilms(date.setFullYear(date.getFullYear() - 1));
 
     default:
       return films;
@@ -70,7 +74,6 @@ export default class Statistic extends AbstractSmartComponent {
     this._filmsModel = filmsModel;
     this._films = this._filmsModel.getFilms();
     this._watchedFilms = getWatchedFilms(this._filmsModel.getFilms());
-    console.log(this._watchedFilms);
     this._filmsByPeriod = getFilmsByPeriod(this._watchedFilms, Period.ALL);
     this._period = Period.ALL;
     this._genres = getGenres(this._watchedFilms);
@@ -217,7 +220,6 @@ export default class Statistic extends AbstractSmartComponent {
 
   _rerender() {
     this._watchedFilms = getWatchedFilms(this._filmsModel.getFilms());
-    console.log(this._filmsModel.getFilms());
     this._filmsByPeriod = getFilmsByPeriod(this._watchedFilms, this._period);
     super.rerender();
     this.getElement().querySelector(`input[value="${this._period}"]`).checked = true;
