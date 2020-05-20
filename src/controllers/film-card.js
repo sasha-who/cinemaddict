@@ -25,6 +25,7 @@ export default class FilmCardController {
     this._cardClickHandler = this._cardClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._commentsDelButtonClickHandler = this._commentsDelButtonClickHandler.bind(this);
+    this._isCommentsLoadError = false;
 
     this._commentsModel = new CommentsModel();
   }
@@ -227,22 +228,32 @@ export default class FilmCardController {
       })
       .catch(() => {
         this._commentsModel.setComments(0);
+        this._isCommentsLoadError = true;
 
-        const filmWithoutComments = Object.assign(film, {
-          commentsCount: 0
-        });
-
-        this.render(filmWithoutComments);
-
-        const commentsErrorComponent = new CommentsErrorComponent();
-        const commentsElement = this._filmDetailedCardComponent.getElement()
-          .querySelector(`.film-details__comments-list`);
-
-        render(commentsErrorComponent, commentsElement);
+        this.render(film);
       });
   }
 
   render(film) {
+    if (this._isCommentsLoadError) {
+      const filmWithoutComments = Object.assign(film, {
+        comments: [],
+        commentsCount: 0
+      });
+
+      this._renderCard(filmWithoutComments);
+      this._renderPopup(filmWithoutComments);
+      this._filmDetailedCardComponent.onNewCommentChangeCondition(true);
+
+      const commentsErrorComponent = new CommentsErrorComponent();
+      const commentsElement = this._filmDetailedCardComponent.getElement()
+        .querySelector(`.film-details__comments-list`);
+
+      render(commentsErrorComponent, commentsElement);
+
+      return;
+    }
+
     this._renderCard(film);
     this._renderPopup(film);
   }
