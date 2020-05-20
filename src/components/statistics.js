@@ -142,6 +142,30 @@ export default class Statistic extends AbstractSmartComponent {
     );
   }
 
+  recoveryListeners() {
+    this.setPeriodChange();
+  }
+
+  show() {
+    super.show();
+
+    this._period = Period.ALL;
+    this._rerender();
+    this.recoveryListeners();
+  }
+
+  setPeriodChange() {
+    this.getElement().querySelector(`.statistic__filters`)
+      .addEventListener(`change`, (evt) => {
+        if (evt.target.tagName !== `INPUT`) {
+          return;
+        }
+
+        this._period = evt.target.value;
+        this._rerender();
+      });
+  }
+
   _renderChart(films) {
     const BAR_HEIGHT = 50;
     const statisticCtxElement = document.querySelector(`.statistic__chart`);
@@ -206,18 +230,6 @@ export default class Statistic extends AbstractSmartComponent {
     });
   }
 
-  setPeriodChange() {
-    this.getElement().querySelector(`.statistic__filters`)
-      .addEventListener(`change`, (evt) => {
-        if (evt.target.tagName !== `INPUT`) {
-          return;
-        }
-
-        this._period = evt.target.value;
-        this._rerender();
-      });
-  }
-
   _rerender() {
     this._watchedFilms = getWatchedFilms(this._filmsModel.getFilms());
     this._filmsByPeriod = getFilmsByPeriod(this._watchedFilms, this._period);
@@ -227,17 +239,5 @@ export default class Statistic extends AbstractSmartComponent {
     if (this._filmsByPeriod.length > 0) {
       this._renderChart(this._filmsByPeriod);
     }
-  }
-
-  recoveryListeners() {
-    this.setPeriodChange();
-  }
-
-  show() {
-    super.show();
-
-    this._period = Period.ALL;
-    this._rerender();
-    this.recoveryListeners();
   }
 }

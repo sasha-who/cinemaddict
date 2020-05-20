@@ -197,6 +197,106 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
     );
   }
 
+  recoveryListeners() {
+    this.setCloseButtonClickHandler(this._closeButtonClickHandler);
+    this.setWatchlistButtonHandler(this._watchlistButtonHandler);
+    this.setWatchedButtonHandler(this._watchedButtonHandler);
+    this.setFavoriteButtonHandler(this._favoriteButtonHandler);
+    this.setCommentsDelButtonClickHandler(this._commentsDelButtonClickHandler);
+    this.setFormSubmitHandler(this._formSubmitHandler);
+    this.onCommentEmojiChange();
+  }
+
+  getFormData() {
+    const form = this.getElement().querySelector(`.film-details__inner`);
+    const formData = new FormData(form);
+
+    return this._parseFormData(formData);
+  }
+
+  onFormChangeCondition(isDisabled) {
+    this.onNewCommentChangeCondition(isDisabled);
+
+    const deleteButtonElements = this.getElement()
+      .querySelectorAll(`.film-details__comment-delete`);
+
+    for (const button of deleteButtonElements) {
+      button.disabled = isDisabled;
+    }
+  }
+
+  onCommentEmojiChange() {
+    const emojiLabelElements = this.getElement().querySelectorAll(`.film-details__emoji-label`);
+    const emojiInputElements = this.getElement().querySelectorAll(`.film-details__emoji-item`);
+    const getCommentInputElement = () => {
+      return this.getElement().querySelector(`.film-details__comment-input`);
+    };
+
+    emojiLabelElements.forEach((item, index) => {
+      item.addEventListener(`click`, () => {
+        const isInputDisabled = Array.from(emojiInputElements)
+          .some((input) => input.disabled === true);
+
+        if (isInputDisabled) {
+          return;
+        }
+
+        const commentValue = getCommentInputElement().value;
+
+        this._emojiType = emojiInputElements[index].value;
+        this.rerender();
+        getCommentInputElement().value = commentValue;
+      });
+    });
+  }
+
+  clearCommentEmoji() {
+    this._emojiType = null;
+  }
+
+  onNewCommentChangeCondition(isDisabled) {
+    const textInputElement = this.getElement().querySelector(`.film-details__comment-input`);
+    const emojiInputElements = this.getElement().querySelectorAll(`.film-details__emoji-item`);
+
+    textInputElement.disabled = isDisabled;
+
+    for (const input of emojiInputElements) {
+      input.disabled = isDisabled;
+    }
+  }
+
+  onCommentError() {
+    const formElement = this.getElement().querySelector(`.film-details__inner`);
+    const textInputElement = this.getElement().querySelector(`.film-details__comment-input`);
+
+    textInputElement.classList.add(ERROR_BORDER_CLASS);
+    this._shakeOnError(formElement);
+  }
+
+  onDelButtonChangeCondition(evt, isDeleting) {
+    const deleteButton = evt.target;
+
+    if (isDeleting) {
+      deleteButton.disabled = true;
+      deleteButton.textContent = DeleteButtonText.DELETING;
+
+      return;
+    }
+
+    deleteButton.disabled = false;
+    deleteButton.textContent = DeleteButtonText.DELETE;
+  }
+
+  onDeletionError(evt) {
+    const commentsElements = this.getElement().querySelectorAll(`.film-details__comment`);
+
+    for (const comment of commentsElements) {
+      if (comment.contains(evt.target)) {
+        this._shakeOnError(comment);
+      }
+    }
+  }
+
   setCloseButtonClickHandler(handler) {
     this.getElement()
     .querySelector(`.film-details__close-btn`)
@@ -258,13 +358,6 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
     this._formSubmitHandler = handler;
   }
 
-  getFormData() {
-    const form = this.getElement().querySelector(`.film-details__inner`);
-    const formData = new FormData(form);
-
-    return this._parseFormData(formData);
-  }
-
   _parseFormData(formData) {
     return {
       comment: encode(formData.get(`comment`)),
@@ -273,104 +366,11 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
     };
   }
 
-  recoveryListeners() {
-    this.setCloseButtonClickHandler(this._closeButtonClickHandler);
-    this.setWatchlistButtonHandler(this._watchlistButtonHandler);
-    this.setWatchedButtonHandler(this._watchedButtonHandler);
-    this.setFavoriteButtonHandler(this._favoriteButtonHandler);
-    this.setCommentsDelButtonClickHandler(this._commentsDelButtonClickHandler);
-    this.setFormSubmitHandler(this._formSubmitHandler);
-    this.onCommentEmojiChange();
-  }
-
-  onCommentEmojiChange() {
-    const emojiLabelElements = this.getElement().querySelectorAll(`.film-details__emoji-label`);
-    const emojiInputElements = this.getElement().querySelectorAll(`.film-details__emoji-item`);
-    const getCommentInputElement = () => {
-      return this.getElement().querySelector(`.film-details__comment-input`);
-    };
-
-    emojiLabelElements.forEach((item, index) => {
-      item.addEventListener(`click`, () => {
-        const isInputDisabled = Array.from(emojiInputElements)
-          .some((input) => input.disabled === true);
-
-        if (isInputDisabled) {
-          return;
-        }
-
-        const commentValue = getCommentInputElement().value;
-
-        this._emojiType = emojiInputElements[index].value;
-        this.rerender();
-        getCommentInputElement().value = commentValue;
-      });
-    });
-  }
-
-  clearCommentEmoji() {
-    this._emojiType = null;
-  }
-
   _shakeOnError(element) {
     element.classList.add(SHAKE_CLASS);
 
     setTimeout(() => {
       element.classList.remove(SHAKE_CLASS);
     }, SHAKE_TIMEOUT);
-  }
-
-  onNewCommentChangeCondition(isDisabled) {
-    const textInputElement = this.getElement().querySelector(`.film-details__comment-input`);
-    const emojiInputElements = this.getElement().querySelectorAll(`.film-details__emoji-item`);
-
-    textInputElement.disabled = isDisabled;
-
-    for (const input of emojiInputElements) {
-      input.disabled = isDisabled;
-    }
-  }
-
-  onFormChangeCondition(isDisabled) {
-    this.onNewCommentChangeCondition(isDisabled);
-
-    const deleteButtonElements = this.getElement()
-      .querySelectorAll(`.film-details__comment-delete`);
-
-    for (const button of deleteButtonElements) {
-      button.disabled = isDisabled;
-    }
-  }
-
-  onCommentError() {
-    const formElement = this.getElement().querySelector(`.film-details__inner`);
-    const textInputElement = this.getElement().querySelector(`.film-details__comment-input`);
-
-    textInputElement.classList.add(ERROR_BORDER_CLASS);
-    this._shakeOnError(formElement);
-  }
-
-  onDelButtonChangeCondition(evt, isDeleting) {
-    const deleteButton = evt.target;
-
-    if (isDeleting) {
-      deleteButton.disabled = true;
-      deleteButton.textContent = DeleteButtonText.DELETING;
-
-      return;
-    }
-
-    deleteButton.disabled = false;
-    deleteButton.textContent = DeleteButtonText.DELETE;
-  }
-
-  onDeletionError(evt) {
-    const commentsElements = this.getElement().querySelectorAll(`.film-details__comment`);
-
-    for (const comment of commentsElements) {
-      if (comment.contains(evt.target)) {
-        this._shakeOnError(comment);
-      }
-    }
   }
 }

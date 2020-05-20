@@ -30,6 +30,115 @@ export default class FilmCardController {
     this._commentsModel = new CommentsModel();
   }
 
+  render(film) {
+    if (this._isCommentsLoadError) {
+      const filmWithoutComments = Object.assign(film, {
+        comments: [],
+        commentsCount: 0
+      });
+
+      this._renderCard(filmWithoutComments);
+      this._renderPopup(filmWithoutComments);
+      this._filmDetailedCardComponent.onNewCommentChangeCondition(true);
+
+      const commentsErrorComponent = new CommentsErrorComponent();
+      const commentsElement = this._filmDetailedCardComponent.getElement()
+        .querySelector(`.film-details__comments-list`);
+
+      render(commentsErrorComponent, commentsElement);
+
+      return;
+    }
+
+    this._renderCard(film);
+    this._renderPopup(film);
+  }
+
+  initRender(film) {
+    this._renderCard(film);
+
+    this._api.getComments(film.id)
+      .then((comments) => {
+        this._commentsModel.setComments(comments);
+      })
+      .then(() => {
+        this._renderPopup(film);
+      })
+      .catch(() => {
+        this._commentsModel.setComments(0);
+        this._isCommentsLoadError = true;
+
+        this.render(film);
+      });
+  }
+
+  destroy() {
+    remove(this._filmCardComponent);
+    remove(this._filmDetailedCardComponent);
+    document.removeEventListener(`keydown`, this.__escapeKeydownHandler);
+  }
+
+  setDefaultView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._removePopup();
+    }
+  }
+
+  _renderFilmsAfterCommentsChange(film) {
+    const newFilm = FilmModel.clone(film);
+
+    newFilm.commentsCount = this._commentsModel.getComments().length;
+    this._onDataChange(this, film, newFilm);
+    this._film = newFilm;
+  }
+
+  _removePopup() {
+    removeChild(this._filmDetailedCardComponent, this._bodyElement);
+    this._mode = Mode.DEFAULT;
+    this._filmDetailedCardComponent.clearCommentEmoji();
+
+    document.removeEventListener(`keydown`, this._escapeKeydownHandler);
+  }
+
+  _renderPopup(film) {
+    const oldFilmDetailedCardComponent = this._filmDetailedCardComponent;
+
+    this._filmDetailedCardComponent = new FilmDetailedCardComponent(
+        film,
+        this._commentsModel.getComments()
+    );
+
+    this._setPopupListeners();
+
+    if (oldFilmDetailedCardComponent) {
+      replace(this._filmDetailedCardComponent, oldFilmDetailedCardComponent);
+    }
+  }
+
+  _renderCard(film) {
+    this._film = film;
+
+    const oldFilmCardComponent = this._filmCardComponent;
+    this._filmCardComponent = new FilmCardComponent(film);
+    this._filmCardComponent.setCardClickHandler(this._cardClickHandler);
+
+    if (oldFilmCardComponent) {
+      replace(this._filmCardComponent, oldFilmCardComponent);
+    } else {
+      render(this._filmCardComponent, this._container);
+    }
+  }
+
+  _setPopupListeners() {
+    this._filmDetailedCardComponent.setCloseButtonClickHandler(this._closeButtonClickHandler);
+    this._filmDetailedCardComponent.setFormSubmitHandler(this._formSubmitHandler);
+    this._filmDetailedCardComponent
+      .setCommentsDelButtonClickHandler(this._commentsDelButtonClickHandler);
+    this._onCardFlagChange(this._film);
+    this._onNetworkConditionChange();
+    this._filmDetailedCardComponent.onCommentEmojiChange();
+  }
+
   _onCardFlagChange(film) {
     const changeCardFlag = (flag) => {
       const newFilm = FilmModel.clone(film);
@@ -68,14 +177,6 @@ export default class FilmCardController {
     });
   }
 
-  _renderFilmsAfterCommentsChange(film) {
-    const newFilm = FilmModel.clone(film);
-
-    newFilm.commentsCount = this._commentsModel.getComments().length;
-    this._onDataChange(this, film, newFilm);
-    this._film = newFilm;
-  }
-
   _onCommentsChange(film, oldComment, newComment, evt) {
     switch (true) {
       case newComment === null:
@@ -110,12 +211,14 @@ export default class FilmCardController {
     }
   }
 
-  _removePopup() {
-    removeChild(this._filmDetailedCardComponent, this._bodyElement);
-    this._mode = Mode.DEFAULT;
-    this._filmDetailedCardComponent.clearCommentEmoji();
+  _onNetworkConditionChange() {
+    window.addEventListener(`online`, () => {
+      this._filmDetailedCardComponent.onFormChangeCondition(false);
+    });
 
-    document.removeEventListener(`keydown`, this._escapeKeydownHandler);
+    window.addEventListener(`offline`, () => {
+      this._filmDetailedCardComponent.onFormChangeCondition(true);
+    });
   }
 
   _escapeKeydownHandler(evt) {
@@ -145,18 +248,6 @@ export default class FilmCardController {
     }
   }
 
-  setDefaultView() {
-    if (this._mode !== Mode.DEFAULT) {
-      this._removePopup();
-    }
-  }
-
-  destroy() {
-    remove(this._filmCardComponent);
-    remove(this._filmDetailedCardComponent);
-    document.removeEventListener(`keydown`, this.__escapeKeydownHandler);
-  }
-
   _commentsDelButtonClickHandler(evt) {
     const buttonElements = this._filmDetailedCardComponent.getElement()
       .querySelectorAll(`.film-details__comment-delete`);
@@ -165,96 +256,5 @@ export default class FilmCardController {
     const deletedComment = this._commentsModel.getComments()[commentIndex];
     this._onCommentsChange(this._film, deletedComment, null, evt);
     this._comments = this._commentsModel.getComments();
-  }
-
-  _setPopupListeners() {
-    this._filmDetailedCardComponent.setCloseButtonClickHandler(this._closeButtonClickHandler);
-    this._filmDetailedCardComponent.setFormSubmitHandler(this._formSubmitHandler);
-    this._filmDetailedCardComponent
-      .setCommentsDelButtonClickHandler(this._commentsDelButtonClickHandler);
-    this._onCardFlagChange(this._film);
-    this._onNetworkConditionChange();
-    this._filmDetailedCardComponent.onCommentEmojiChange();
-  }
-
-  _onNetworkConditionChange() {
-    window.addEventListener(`online`, () => {
-      this._filmDetailedCardComponent.onFormChangeCondition(false);
-    });
-
-    window.addEventListener(`offline`, () => {
-      this._filmDetailedCardComponent.onFormChangeCondition(true);
-    });
-  }
-
-  _renderPopup(film) {
-    const oldFilmDetailedCardComponent = this._filmDetailedCardComponent;
-
-    this._filmDetailedCardComponent = new FilmDetailedCardComponent(
-        film,
-        this._commentsModel.getComments()
-    );
-
-    this._setPopupListeners();
-
-    if (oldFilmDetailedCardComponent) {
-      replace(this._filmDetailedCardComponent, oldFilmDetailedCardComponent);
-    }
-  }
-
-  _renderCard(film) {
-    this._film = film;
-
-    const oldFilmCardComponent = this._filmCardComponent;
-    this._filmCardComponent = new FilmCardComponent(film);
-    this._filmCardComponent.setCardClickHandler(this._cardClickHandler);
-
-    if (oldFilmCardComponent) {
-      replace(this._filmCardComponent, oldFilmCardComponent);
-    } else {
-      render(this._filmCardComponent, this._container);
-    }
-  }
-
-  initRender(film) {
-    this._renderCard(film);
-
-    this._api.getComments(film.id)
-      .then((comments) => {
-        this._commentsModel.setComments(comments);
-      })
-      .then(() => {
-        this._renderPopup(film);
-      })
-      .catch(() => {
-        this._commentsModel.setComments(0);
-        this._isCommentsLoadError = true;
-
-        this.render(film);
-      });
-  }
-
-  render(film) {
-    if (this._isCommentsLoadError) {
-      const filmWithoutComments = Object.assign(film, {
-        comments: [],
-        commentsCount: 0
-      });
-
-      this._renderCard(filmWithoutComments);
-      this._renderPopup(filmWithoutComments);
-      this._filmDetailedCardComponent.onNewCommentChangeCondition(true);
-
-      const commentsErrorComponent = new CommentsErrorComponent();
-      const commentsElement = this._filmDetailedCardComponent.getElement()
-        .querySelector(`.film-details__comments-list`);
-
-      render(commentsErrorComponent, commentsElement);
-
-      return;
-    }
-
-    this._renderCard(film);
-    this._renderPopup(film);
   }
 }
