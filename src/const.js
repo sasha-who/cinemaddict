@@ -43,6 +43,12 @@ export const Rang = {
   MOVIE_BUFF: `movie buff`
 };
 
+export const RangValue = {
+  MIN: 1,
+  MEDIUM: 10,
+  MAX: 20
+};
+
 export const RenderPosition = {
   BEFOREEND: `beforeend`,
   AFTERBEGIN: `afterbegin`

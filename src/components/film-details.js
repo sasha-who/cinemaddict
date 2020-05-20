@@ -74,7 +74,7 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
     } = this._film;
 
     const releaseDate = moment(date).format(RELEASE_DATE_FORMAT);
-    const genresWithEnding = (genres.length === 1) ? `Genre` : `Genres`;
+    const genresWithEnding = (genres.length <= 1) ? `Genre` : `Genres`;
     const genresMarkup = genres
       .map((item) => `<span class="film-details__genre">${item}</span>`)
       .join(`\n`);
@@ -283,26 +283,33 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
     this.onCommentEmojiChange();
   }
 
-  rerender() {
-    super.rerender();
-  }
-
   onCommentEmojiChange() {
-    const emojiLabels = this.getElement().querySelectorAll(`.film-details__emoji-label`);
-    const emojiInputs = this.getElement().querySelectorAll(`.film-details__emoji-item`);
+    const emojiLabelElements = this.getElement().querySelectorAll(`.film-details__emoji-label`);
+    const emojiInputElements = this.getElement().querySelectorAll(`.film-details__emoji-item`);
+    const getCommentInputElement = () => {
+      return this.getElement().querySelector(`.film-details__comment-input`);
+    };
 
-    emojiLabels.forEach((item, index) => {
+    emojiLabelElements.forEach((item, index) => {
       item.addEventListener(`click`, () => {
-        const isInputDisabled = Array.from(emojiInputs).some((input) => input.disabled === true);
+        const isInputDisabled = Array.from(emojiInputElements)
+          .some((input) => input.disabled === true);
 
         if (isInputDisabled) {
           return;
         }
 
-        this._emojiType = emojiInputs[index].value;
+        const commentValue = getCommentInputElement().value;
+
+        this._emojiType = emojiInputElements[index].value;
         this.rerender();
+        getCommentInputElement().value = commentValue;
       });
     });
+  }
+
+  clearCommentEmoji() {
+    this._emojiType = null;
   }
 
   _shakeOnError(element) {

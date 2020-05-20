@@ -111,6 +111,7 @@ export default class FilmCardController {
   _removePopup() {
     removeChild(this._filmDetailedCardComponent, this._bodyElement);
     this._mode = Mode.DEFAULT;
+    this._filmDetailedCardComponent.clearCommentEmoji();
 
     document.removeEventListener(`keydown`, this._escapeKeydownHandler);
   }

@@ -1,5 +1,5 @@
 import {EXTRA_FILM_COUNT} from "../const.js";
-import {Rang} from "../const.js";
+import {Rang, RangValue} from "../const.js";
 import {getWatchedFilms} from "../utils/filter.js";
 import moment from "moment";
 
@@ -76,13 +76,13 @@ export const getUserRang = (films) => {
   const watchedFilmsCount = getWatchedFilms(films).length;
 
   switch (true) {
-    case (watchedFilmsCount >= 1 && watchedFilmsCount <= 10):
+    case (watchedFilmsCount >= RangValue.MIN && watchedFilmsCount <= RangValue.MEDIUM):
       return Rang.NOVICE;
 
-    case (watchedFilmsCount >= 11 && watchedFilmsCount <= 20):
+    case (watchedFilmsCount > RangValue.MEDIUM && watchedFilmsCount <= RangValue.MAX):
       return Rang.FAN;
 
-    case (watchedFilmsCount >= 21):
+    case (watchedFilmsCount > RangValue.MAX):
       return Rang.MOVIE_BUFF;
 
     default:
