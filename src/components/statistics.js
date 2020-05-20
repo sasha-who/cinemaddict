@@ -42,21 +42,25 @@ const getGenreCounter = (films, genres) => {
 const getFilmsByPeriod = (films, period) => {
   const date = new Date();
 
+  const getFilteredFilms = (limitDate) => {
+    return films.filter((item) => item.watchingDate && item.watchingDate.getTime() >= limitDate);
+  };
+
   switch (period) {
     case Period.ALL:
       return films;
 
     case Period.TODAY:
-      return films.filter((item) => item.date >= date.setDate(date.getDate() - 1));
+      return getFilteredFilms(date.setDate(date.getDate() - 1));
 
     case Period.WEEK:
-      return films.filter((item) => item.date >= date.setDate(date.getDate() - 7));
+      return getFilteredFilms(date.setDate(date.getDate() - 7));
 
     case Period.MONTH:
-      return films.filter((item) => item.date >= date.setMonth(date.getMonth() - 1));
+      return getFilteredFilms(date.setMonth(date.getMonth() - 1));
 
     case Period.YEAR:
-      return films.filter((item) => item.date >= date.setFullYear(date.getFullYear() - 1));
+      return getFilteredFilms(date.setFullYear(date.getFullYear() - 1));
 
     default:
       return films;
@@ -86,7 +90,7 @@ export default class Statistic extends AbstractSmartComponent {
 
     const durationHoursValue = durationHours ? durationHours : `0`;
     const durationMinutesValue = durationMinutes ? durationMinutes : `0`;
-    const topGenreValue = topGenre[1] > 0 ? topGenre[0] : ``;
+    const topGenreValue = topGenre && topGenre[1] > 0 ? topGenre[0] : ``;
 
     return (
       `<section class="statistic">
@@ -138,13 +142,37 @@ export default class Statistic extends AbstractSmartComponent {
     );
   }
 
+  recoveryListeners() {
+    this.setPeriodChange();
+  }
+
+  show() {
+    super.show();
+
+    this._period = Period.ALL;
+    this._rerender();
+    this.recoveryListeners();
+  }
+
+  setPeriodChange() {
+    this.getElement().querySelector(`.statistic__filters`)
+      .addEventListener(`change`, (evt) => {
+        if (evt.target.tagName !== `INPUT`) {
+          return;
+        }
+
+        this._period = evt.target.value;
+        this._rerender();
+      });
+  }
+
   _renderChart(films) {
     const BAR_HEIGHT = 50;
-    const statisticCtx = document.querySelector(`.statistic__chart`);
+    const statisticCtxElement = document.querySelector(`.statistic__chart`);
 
-    statisticCtx.height = BAR_HEIGHT * 5;
+    statisticCtxElement.height = BAR_HEIGHT * 5;
 
-    return new Chart(statisticCtx, {
+    return new Chart(statisticCtxElement, {
       plugins: [ChartDataLabels],
       type: `horizontalBar`,
       data: {
@@ -202,18 +230,6 @@ export default class Statistic extends AbstractSmartComponent {
     });
   }
 
-  setPeriodChange() {
-    this.getElement().querySelector(`.statistic__filters`)
-      .addEventListener(`change`, (evt) => {
-        if (evt.target.tagName !== `INPUT`) {
-          return;
-        }
-
-        this._period = evt.target.value;
-        this._rerender();
-      });
-  }
-
   _rerender() {
     this._watchedFilms = getWatchedFilms(this._filmsModel.getFilms());
     this._filmsByPeriod = getFilmsByPeriod(this._watchedFilms, this._period);
@@ -223,16 +239,5 @@ export default class Statistic extends AbstractSmartComponent {
     if (this._filmsByPeriod.length > 0) {
       this._renderChart(this._filmsByPeriod);
     }
-  }
-
-  recoveryListeners() {
-    this.setPeriodChange();
-  }
-
-  show() {
-    super.show();
-
-    this._period = Period.ALL;
-    this._rerender();
   }
 }

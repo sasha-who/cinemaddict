@@ -45,16 +45,20 @@ render(loadingFilmsComponent, mainElement);
 const defaultFilmsStatisticsComponent = new FilmsStatisticsComponent(filmsModel);
 render(defaultFilmsStatisticsComponent, filmsStatisticsElement);
 
+const defaultStatisticComponent = new StatisticComponent(filmsModel);
+render(defaultStatisticComponent, mainElement);
+defaultStatisticComponent.hide();
+
 apiWithProvider.getFilms()
   .then((films) => {
     remove(defaultProfileComponent);
     remove(defaultSortComponent);
     remove(loadingFilmsComponent);
     remove(defaultFilmsStatisticsComponent);
+    remove(defaultStatisticComponent);
     defaultFilterController.removeDefaultView();
 
     filmsModel.setFilms(films);
-    render(new ProfileComponent(filmsModel), headerElement);
 
     const statisticComponent = new StatisticComponent(filmsModel);
     render(statisticComponent, mainElement);
@@ -89,6 +93,22 @@ apiWithProvider.getFilms()
     const emptyFilmsComponent = new EmptyFilmsComponent();
 
     replace(emptyFilmsComponent, loadingFilmsComponent);
+
+    mainNavigationComponent.setOnViewChange((menuItem) => {
+      switch (menuItem) {
+        case STATISTIC_HREF:
+          defaultStatisticComponent.show();
+          emptyFilmsComponent.hide();
+          defaultSortComponent.hide();
+          break;
+
+        default:
+          defaultStatisticComponent.hide();
+          emptyFilmsComponent.show();
+          defaultSortComponent.hide();
+          break;
+      }
+    });
   });
 
 window.addEventListener(`load`, () => {

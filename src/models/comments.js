@@ -32,11 +32,11 @@ export default class Comments {
     this._callHandlers(this._dataChangeHandlers);
   }
 
-  setDataChangeHandler(handler) {
-    this._dataChangeHandlers.push(handler);
-  }
-
   _callHandlers(handlers) {
     handlers.forEach((handler) => handler());
+  }
+
+  setDataChangeHandler(handler) {
+    this._dataChangeHandlers.push(handler);
   }
 }

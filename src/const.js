@@ -8,7 +8,6 @@ export const HIDDEN_CLASS = `visually-hidden`;
 export const STATISTIC_HREF = `stats`;
 export const MINUTES_IN_HOUR = 60;
 export const RELEASE_DATE_FORMAT = `DD MMMM YYYY`;
-export const COMMENT_DATE_FORMAT = `YYYY/MM/DD HH:mm`;
 export const AUTHORIZATION = `Basic sjdkfjhskdjfhksjhfdkshf`;
 export const ERROR_BORDER_CLASS = `error-border`;
 export const SHAKE_CLASS = `shake`;
@@ -42,6 +41,12 @@ export const Rang = {
   NOVICE: `novice`,
   FAN: `fan`,
   MOVIE_BUFF: `movie buff`
+};
+
+export const RangValue = {
+  MIN: 1,
+  MEDIUM: 10,
+  MAX: 20
 };
 
 export const RenderPosition = {

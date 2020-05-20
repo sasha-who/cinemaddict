@@ -9,18 +9,6 @@ export default class Sort extends AbstractComponent {
     this._sortingElements = this.getElement().querySelectorAll(`.sort__button`);
   }
 
-  getTemplate() {
-    return (
-      `<ul class="sort">
-        <li><a href="#"
-            class="sort__button sort__button--active"
-            data-sort-type="default">Sort by default</a></li>
-        <li><a href="#" class="sort__button" data-sort-type="date">Sort by date</a></li>
-        <li><a href="#" class="sort__button" data-sort-type="rating">Sort by rating</a></li>
-      </ul>`
-    );
-  }
-
   getSortType() {
     return this._currentSortType;
   }
@@ -32,14 +20,16 @@ export default class Sort extends AbstractComponent {
     this._currentSortType = SortType.DEFAULT;
   }
 
-  _checkActiveClass(element) {
-    for (const item of this._sortingElements) {
-      if (item.classList.contains(`sort__button--active`)) {
-        item.classList.remove(`sort__button--active`);
-      }
-    }
-
-    element.classList.add(`sort__button--active`);
+  getTemplate() {
+    return (
+      `<ul class="sort">
+        <li><a href="#"
+            class="sort__button sort__button--active"
+            data-sort-type="default">Sort by default</a></li>
+        <li><a href="#" class="sort__button" data-sort-type="date">Sort by date</a></li>
+        <li><a href="#" class="sort__button" data-sort-type="rating">Sort by rating</a></li>
+      </ul>`
+    );
   }
 
   setSortTypeChangeHandler(handler) {
@@ -58,5 +48,15 @@ export default class Sort extends AbstractComponent {
         handler(this._currentSortType);
       });
     }
+  }
+
+  _checkActiveClass(element) {
+    for (const item of this._sortingElements) {
+      if (item.classList.contains(`sort__button--active`)) {
+        item.classList.remove(`sort__button--active`);
+      }
+    }
+
+    element.classList.add(`sort__button--active`);
   }
 }

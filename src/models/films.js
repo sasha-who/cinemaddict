@@ -1,5 +1,6 @@
 import {getFilmsByFilter} from "../utils/filter.js";
 import {FilterType} from "../const.js";
+import FilmModel from "../models/film.js";
 
 export default class Films {
   constructor() {
@@ -7,14 +8,6 @@ export default class Films {
     this._activeFilterType = FilterType.ALL;
     this._dataChangeHandlers = [];
     this._filterChangeHandlers = [];
-  }
-
-  getFilms() {
-    return getFilmsByFilter(this._films, this._activeFilterType);
-  }
-
-  getAllFilms() {
-    return this._films;
   }
 
   setFilms(films) {
@@ -27,6 +20,14 @@ export default class Films {
     this._callHandlers(this._filterChangeHandlers);
   }
 
+  getFilms() {
+    return this._films;
+  }
+
+  getFilteredFilms() {
+    return getFilmsByFilter(this._films, this._activeFilterType);
+  }
+
   updateFilm(id, film) {
     const index = this._films.findIndex((it) => it.id === id);
 
@@ -34,10 +35,14 @@ export default class Films {
       return false;
     }
 
-    this._films[index] = Object.assign({}, film);
+    this._films[index] = FilmModel.clone(film);
     this._callHandlers(this._dataChangeHandlers);
 
     return true;
+  }
+
+  _callHandlers(handlers) {
+    handlers.forEach((handler) => handler());
   }
 
   setDataChangeHandler(handler) {
@@ -46,9 +51,5 @@ export default class Films {
 
   setFilterChangeHandler(handler) {
     this._filterChangeHandlers.push(handler);
-  }
-
-  _callHandlers(handlers) {
-    handlers.forEach((handler) => handler());
   }
 }
