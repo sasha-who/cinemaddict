@@ -185,13 +185,44 @@ export default class FilmCardController {
     });
   }
 
+  _renderPopup(film) {
+    const oldFilmDetailedCardComponent = this._filmDetailedCardComponent;
+
+    this._filmDetailedCardComponent = new FilmDetailedCardComponent(
+        film,
+        this._commentsModel.getComments()
+    );
+
+    this._setPopupListeners();
+
+    if (oldFilmDetailedCardComponent) {
+      replace(this._filmDetailedCardComponent, oldFilmDetailedCardComponent);
+    }
+  }
+
+  _renderCard(film) {
+    this._film = film;
+
+    const oldFilmCardComponent = this._filmCardComponent;
+    this._filmCardComponent = new FilmCardComponent(film);
+    this._filmCardComponent.setCardClickHandler(this._cardClickHandler);
+
+    if (oldFilmCardComponent) {
+      replace(this._filmCardComponent, oldFilmCardComponent);
+    } else {
+      render(this._filmCardComponent, this._container);
+    }
+  }
+
   initRender(film) {
+    this._renderCard(film);
+
     this._api.getComments(film.id)
       .then((comments) => {
         this._commentsModel.setComments(comments);
       })
       .then(() => {
-        this.render(film);
+        this._renderPopup(film);
       })
       .catch(() => {
         this._commentsModel.setComments(0);
@@ -211,25 +242,7 @@ export default class FilmCardController {
   }
 
   render(film) {
-    this._film = film;
-    const oldFilmCardComponent = this._filmCardComponent;
-    this._filmCardComponent = new FilmCardComponent(film);
-    this._filmCardComponent.setCardClickHandler(this._cardClickHandler);
-
-    const oldFilmDetailedCardComponent = this._filmDetailedCardComponent;
-
-    this._filmDetailedCardComponent = new FilmDetailedCardComponent(
-        film,
-        this._commentsModel.getComments()
-    );
-
-    this._setPopupListeners();
-
-    if (oldFilmCardComponent && oldFilmDetailedCardComponent) {
-      replace(this._filmCardComponent, oldFilmCardComponent);
-      replace(this._filmDetailedCardComponent, oldFilmDetailedCardComponent);
-    } else {
-      render(this._filmCardComponent, this._container);
-    }
+    this._renderCard(film);
+    this._renderPopup(film);
   }
 }

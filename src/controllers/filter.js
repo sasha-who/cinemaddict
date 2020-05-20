@@ -19,7 +19,7 @@ export default class FilterController {
 
   render() {
     const container = this._container;
-    const allFilms = this._filmsModel.getAllFilms();
+    const allFilms = this._filmsModel.getFilms();
     const filters = Filters.map((filterType) => {
       return Object.assign(filterType, {
         count: getFilmsByFilter(allFilms, filterType.value).length,

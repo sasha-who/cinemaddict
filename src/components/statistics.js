@@ -70,6 +70,7 @@ export default class Statistic extends AbstractSmartComponent {
     this._filmsModel = filmsModel;
     this._films = this._filmsModel.getFilms();
     this._watchedFilms = getWatchedFilms(this._filmsModel.getFilms());
+    console.log(this._watchedFilms);
     this._filmsByPeriod = getFilmsByPeriod(this._watchedFilms, Period.ALL);
     this._period = Period.ALL;
     this._genres = getGenres(this._watchedFilms);
@@ -216,6 +217,7 @@ export default class Statistic extends AbstractSmartComponent {
 
   _rerender() {
     this._watchedFilms = getWatchedFilms(this._filmsModel.getFilms());
+    console.log(this._filmsModel.getFilms());
     this._filmsByPeriod = getFilmsByPeriod(this._watchedFilms, this._period);
     super.rerender();
     this.getElement().querySelector(`input[value="${this._period}"]`).checked = true;
@@ -234,5 +236,6 @@ export default class Statistic extends AbstractSmartComponent {
 
     this._period = Period.ALL;
     this._rerender();
+    this.recoveryListeners();
   }
 }

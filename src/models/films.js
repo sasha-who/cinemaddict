@@ -10,11 +10,11 @@ export default class Films {
     this._filterChangeHandlers = [];
   }
 
-  getFilms() {
+  getFilteredFilms() {
     return getFilmsByFilter(this._films, this._activeFilterType);
   }
 
-  getAllFilms() {
+  getFilms() {
     return this._films;
   }
 

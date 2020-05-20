@@ -224,7 +224,7 @@ export default class FilmsController {
 
   _updateFilms(count) {
     this._removeFilms();
-    this._renderFilms(this._filmsModel.getFilms().slice(0, count));
+    this._renderFilms(this._filmsModel.getFilteredFilms().slice(0, count));
     this._renderShowMoreButtonComponent();
   }
 
