@@ -15,6 +15,8 @@ export const SHAKE_TIMEOUT = 600;
 export const STORE_PREFIX = `cinemaddict-localstorage`;
 export const STORE_VER = `v1`;
 export const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
+export const BAR_HEIGHT = 50;
+export const MAIN_URL = `https://11.ecmascript.pages.academy/cinemaddict/`;
 
 export const MONTHS = [
   `January`,
@@ -54,7 +56,7 @@ export const RenderPosition = {
   AFTERBEGIN: `afterbegin`
 };
 
-export const Keys = {
+export const Key = {
   ESCAPE: `Escape`,
   ENTER: `Enter`
 };
@@ -78,10 +80,10 @@ export const FilterType = {
 };
 
 export const Filters = [
-  {name: `All movies`, value: `all`},
-  {name: `Watchlist`, value: `watchlist`},
-  {name: `History`, value: `history`},
-  {name: `Favorites`, value: `favorites`}
+  {name: `All movies`, value: FilterType.ALL},
+  {name: `Watchlist`, value: FilterType.WATCHLIST},
+  {name: `History`, value: FilterType.HISTORY},
+  {name: `Favorites`, value: FilterType.FAVORITES}
 ];
 
 export const NAMES = [
@@ -99,12 +101,28 @@ export const RequestMethod = {
   DELETE: `DELETE`
 };
 
-export const Status = {
-  SUCCESS: `200`,
-  REDIRECT: `300`
+export const HttpStatus = {
+  SUCCESS: 200,
+  REDIRECT: 300
 };
 
 export const DeleteButtonText = {
   DELETE: `Delete`,
   DELETING: `Deleting…`
 };
+
+export const StatisticPeriod = {
+  ALL: `all-time`,
+  TODAY: `today`,
+  WEEK: `week`,
+  MONTH: `month`,
+  YEAR: `year`
+};
+
+export const StatisticFilters = [
+  {name: `All time`, value: StatisticPeriod.ALL, isChecked: true},
+  {name: `Today`, value: StatisticPeriod.TODAY, isChecked: false},
+  {name: `Week`, value: StatisticPeriod.WEEK, isChecked: false},
+  {name: `Month`, value: StatisticPeriod.MONTH, isChecked: false},
+  {name: `Year`, value: StatisticPeriod.YEAR, isChecked: false},
+];

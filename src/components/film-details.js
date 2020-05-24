@@ -1,14 +1,14 @@
+import {encode} from "he";
+import moment from "moment";
 import {
   RELEASE_DATE_FORMAT,
   ERROR_BORDER_CLASS,
   SHAKE_CLASS,
   SHAKE_TIMEOUT,
-  Keys,
+  Key,
   DeleteButtonText
 } from "../const.js";
 import {formatFilmDuration} from "../utils/common.js";
-import {encode} from "he";
-import moment from "moment";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 
 const getCommentsMarkup = (comments) => {
@@ -347,8 +347,8 @@ export default class FilmDetailedCard extends AbstractSmartComponent {
     const form = this.getElement().querySelector(`.film-details__inner`);
 
     form.addEventListener(`keydown`, (evt) => {
-      const windowsKeysCombo = event.ctrlKey && evt.code === Keys.ENTER;
-      const macKeysCombo = evt.metaKey && evt.code === Keys.ENTER;
+      const windowsKeysCombo = evt.ctrlKey && evt.code === Key.ENTER;
+      const macKeysCombo = evt.metaKey && evt.code === Key.ENTER;
 
       if (windowsKeysCombo || macKeysCombo) {
         handler();
