@@ -1,9 +1,9 @@
-import {Status, RequestMethod} from "../const.js";
+import {MAIN_URL, HttpStatus, RequestMethod} from "../const.js";
 import Film from "../models/film.js";
 import Comment from "../models/comment.js";
 
 const checkStatus = (response) => {
-  if (response.status >= Status.SUCCESS && response.status < Status.REDIRECT) {
+  if (response.status >= HttpStatus.SUCCESS && response.status < HttpStatus.REDIRECT) {
     return response;
   } else {
     throw new Error(`${response.status}: ${response.statusText}`);
@@ -19,7 +19,7 @@ export default class API {
     const headers = new Headers();
     headers.append(`Authorization`, this._authorization);
 
-    return fetch(`https://11.ecmascript.pages.academy/cinemaddict/movies`, {headers})
+    return fetch(`${MAIN_URL}movies`, {headers})
       .then(checkStatus)
       .then((response) => response.json())
       .then(Film.parseFilms)
@@ -32,7 +32,7 @@ export default class API {
     const headers = new Headers();
     headers.append(`Authorization`, this._authorization);
 
-    return fetch(`https://11.ecmascript.pages.academy/cinemaddict/comments/${filmId}`, {headers})
+    return fetch(`${MAIN_URL}comments/${filmId}`, {headers})
       .then(checkStatus)
       .then((response) => response.json())
       .then(Comment.parseComments)
@@ -46,7 +46,7 @@ export default class API {
     headers.append(`Authorization`, this._authorization);
     headers.append(`Content-Type`, `application/json`);
 
-    return fetch(`https://11.ecmascript.pages.academy/cinemaddict/movies/${id}`,
+    return fetch(`${MAIN_URL}movies/${id}`,
         {
           method: RequestMethod.PUT,
           body: JSON.stringify(data.toRAW()),
@@ -65,7 +65,7 @@ export default class API {
     headers.append(`Authorization`, this._authorization);
     headers.append(`Content-Type`, `application/json`);
 
-    return fetch(`https://11.ecmascript.pages.academy/cinemaddict/comments/${filmId}`,
+    return fetch(`${MAIN_URL}comments/${filmId}`,
         {
           method: RequestMethod.POST,
           body: JSON.stringify(comment.toRAW()),
@@ -87,7 +87,7 @@ export default class API {
     const headers = new Headers();
     headers.append(`Authorization`, this._authorization);
 
-    return fetch(`https://11.ecmascript.pages.academy/cinemaddict/comments/${commentId}`,
+    return fetch(`${MAIN_URL}comments/${commentId}`,
         {
           method: RequestMethod.DELETE,
           headers,
@@ -102,7 +102,7 @@ export default class API {
     headers.append(`Authorization`, this._authorization);
     headers.append(`Content-Type`, `application/json`);
 
-    return fetch(`https://11.ecmascript.pages.academy/cinemaddict/movies/sync`,
+    return fetch(`${MAIN_URL}movies/sync`,
         {
           method: RequestMethod.POST,
           body: JSON.stringify(data),

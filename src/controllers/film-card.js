@@ -1,4 +1,4 @@
-import {Keys, Mode} from "../const.js";
+import {Key, Mode} from "../const.js";
 import {render, appendElementBefore, removeChild, replace, remove} from "../utils/render.js";
 import FilmModel from "../models/film.js";
 import CommentModel from "../models/comment.js";
@@ -155,7 +155,7 @@ export default class FilmCardController {
 
     this._filmCardComponent.setWatchedButtonHandler((evt) => {
       evt.preventDefault();
-      film.watchedDate = new Date();
+      film.watchingDate = new Date();
       changeCardFlag(`isWatched`);
     });
 
@@ -169,6 +169,7 @@ export default class FilmCardController {
     });
 
     this._filmDetailedCardComponent.setWatchedButtonHandler(() => {
+      film.watchingDate = new Date();
       changeCardFlag(`isWatched`);
     });
 
@@ -222,7 +223,7 @@ export default class FilmCardController {
   }
 
   _escapeKeydownHandler(evt) {
-    if (evt.key === Keys.ESCAPE) {
+    if (evt.key === Key.ESCAPE) {
       this._removePopup();
     }
   }

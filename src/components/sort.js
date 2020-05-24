@@ -51,12 +51,9 @@ export default class Sort extends AbstractComponent {
   }
 
   _checkActiveClass(element) {
-    for (const item of this._sortingElements) {
-      if (item.classList.contains(`sort__button--active`)) {
-        item.classList.remove(`sort__button--active`);
-      }
-    }
+    const activeButtonElement = this.getElement().querySelector(`.sort__button--active`);
 
+    activeButtonElement.classList.remove(`sort__button--active`);
     element.classList.add(`sort__button--active`);
   }
 }
