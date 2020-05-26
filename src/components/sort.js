@@ -16,7 +16,7 @@ export default class Sort extends AbstractComponent {
   resetSortType() {
     const [defaultSortElement] = this._sortingElements;
 
-    this._checkActiveClass(defaultSortElement);
+    this._toggleActiveClass(defaultSortElement);
     this._currentSortType = SortType.DEFAULT;
   }
 
@@ -43,14 +43,14 @@ export default class Sort extends AbstractComponent {
           return;
         }
 
-        this._checkActiveClass(element);
+        this._toggleActiveClass(element);
         this._currentSortType = sortType;
         handler(this._currentSortType);
       });
     }
   }
 
-  _checkActiveClass(element) {
+  _toggleActiveClass(element) {
     const activeButtonElement = this.getElement().querySelector(`.sort__button--active`);
 
     activeButtonElement.classList.remove(`sort__button--active`);

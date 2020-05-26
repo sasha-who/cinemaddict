@@ -23,7 +23,7 @@ export default class FilterController {
     const filters = Filters.map((filterType) => {
       return Object.assign(filterType, {
         count: getFilmsByFilter(allFilms, filterType.value).length,
-        checked: filterType === this._activeFilterType,
+        checked: filterType.value === this._activeFilterType,
       });
     });
 

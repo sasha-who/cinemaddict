@@ -59,13 +59,13 @@ export default class FilmCardController {
 
     this._api.getComments(film.id)
       .then((comments) => {
-        this._commentsModel.setComments(comments);
+        this._commentsModel.set(comments);
       })
       .then(() => {
         this._renderPopup(film);
       })
       .catch(() => {
-        this._commentsModel.setComments(0);
+        this._commentsModel.set(0);
         this._isCommentsLoadError = true;
 
         this.render(film);
@@ -87,7 +87,7 @@ export default class FilmCardController {
   _renderFilmsAfterCommentsChange(film) {
     const newFilm = FilmModel.clone(film);
 
-    newFilm.commentsCount = this._commentsModel.getComments().length;
+    newFilm.commentsCount = this._commentsModel.get().length;
     this._onDataChange(this, film, newFilm);
     this._film = newFilm;
   }
@@ -105,7 +105,7 @@ export default class FilmCardController {
 
     this._filmDetailedCardComponent = new FilmDetailedCardComponent(
         film,
-        this._commentsModel.getComments()
+        this._commentsModel.get()
     );
 
     this._setPopupListeners();
@@ -185,7 +185,7 @@ export default class FilmCardController {
 
         this._api.deleteComment(oldComment.id)
           .then(() => {
-            this._commentsModel.removeComment(oldComment.id);
+            this._commentsModel.remove(oldComment.id);
             this._renderFilmsAfterCommentsChange(film);
           })
           .catch(() => {
@@ -201,7 +201,7 @@ export default class FilmCardController {
         this._api.createComment(film.id, comment)
           .then((comments) => {
             this._filmDetailedCardComponent.onNewCommentChangeCondition(false);
-            this._commentsModel.setComments(comments);
+            this._commentsModel.set(comments);
             this._renderFilmsAfterCommentsChange(film);
           })
           .catch(() => {
@@ -254,8 +254,8 @@ export default class FilmCardController {
       .querySelectorAll(`.film-details__comment-delete`);
 
     const commentIndex = Array.from(buttonElements).findIndex((item) => item === evt.target);
-    const deletedComment = this._commentsModel.getComments()[commentIndex];
+    const deletedComment = this._commentsModel.get()[commentIndex];
     this._onCommentsChange(this._film, deletedComment, null, evt);
-    this._comments = this._commentsModel.getComments();
+    this._comments = this._commentsModel.get();
   }
 }

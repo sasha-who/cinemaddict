@@ -25,7 +25,7 @@ const store = new Store(STORE_NAME, window.localStorage);
 const apiWithProvider = new Provider(api, store);
 const filmsModel = new FilmsModel();
 
-filmsModel.setFilms(0);
+filmsModel.set(0);
 
 const defaultProfileComponent = new ProfileComponent(filmsModel);
 render(defaultProfileComponent, headerElement);
@@ -58,7 +58,7 @@ apiWithProvider.getFilms()
     remove(defaultStatisticComponent);
     defaultFilterController.removeDefaultView();
 
-    filmsModel.setFilms(films);
+    filmsModel.set(films);
 
     const statisticComponent = new StatisticComponent(filmsModel);
     render(statisticComponent, mainElement);

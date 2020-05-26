@@ -5,16 +5,16 @@ export default class Comments {
     this._dataChangeHandlers = [];
   }
 
-  getComments() {
+  get() {
     return this._comments;
   }
 
-  setComments(comments) {
+  set(comments) {
     this._comments = Array.from(comments);
     this._callHandlers(this._dataChangeHandlers);
   }
 
-  removeComment(id) {
+  remove(id) {
     const index = this._comments.findIndex((it) => it.id === id);
 
     if (index === -1) {
@@ -27,16 +27,11 @@ export default class Comments {
     return true;
   }
 
-  addComment(comment) {
-    this._comments = [].concat(this._comments, comment);
-    this._callHandlers(this._dataChangeHandlers);
+  setDataChangeHandler(handler) {
+    this._dataChangeHandlers.push(handler);
   }
 
   _callHandlers(handlers) {
     handlers.forEach((handler) => handler());
-  }
-
-  setDataChangeHandler(handler) {
-    this._dataChangeHandlers.push(handler);
   }
 }
