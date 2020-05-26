@@ -103,7 +103,7 @@ export default class FilmsController {
   _renderShowMoreButtonComponent(films) {
     remove(this._showMoreButtonComponent);
 
-    if (this._currentFilmsCount < INITIAL_FILMS_COUNT) {
+    if (films.length <= INITIAL_FILMS_COUNT) {
       return;
     }
 
@@ -137,10 +137,16 @@ export default class FilmsController {
     const topRatedComponent = new TopRatedComponent(films);
     render(topRatedComponent, this._filmsElement);
 
-    const topRatedFilmsContainerElement = topRatedComponent.getElement()
-      .querySelector(`.films-list__container`);
-
     const topRatedFilms = getSortedFilms(films, `rating`);
+    const [topRatedFilm] = topRatedFilms;
+    const isAnyRatedFilm = topRatedFilm.rating > 0;
+
+    if (!isAnyRatedFilm) {
+      return;
+    }
+
+    const topRatedFilmsContainerElement = topRatedComponent.getElement()
+    .querySelector(`.films-list__container`);
 
     const newFilms = renderFilms(
         this._apiWithProvider,
@@ -165,10 +171,16 @@ export default class FilmsController {
       render(this._mostCommentedComponent, this._filmsElement);
     }
 
-    const mostCommentedFilmsContainerElement = this._mostCommentedComponent.getElement()
-      .querySelector(`.films-list__container`);
-
     const mostCommentedFilms = getSortedFilms(films, `commentsCount`);
+    const [mostCommentedFilm] = mostCommentedFilms;
+    const isAnyCommentedFilm = mostCommentedFilm.commentsCount > 0;
+
+    if (!isAnyCommentedFilm) {
+      return;
+    }
+
+    const mostCommentedFilmsContainerElement = this._mostCommentedComponent.getElement()
+    .querySelector(`.films-list__container`);
 
     const newFilms = renderFilms(
         this._apiWithProvider,
@@ -224,10 +236,15 @@ export default class FilmsController {
   _onDataChange(filmCardController, oldData, newData) {
     this._apiWithProvider.updateFilm(oldData.id, newData)
       .then((filmModel) => {
-        const isSuccess = this._filmsModel.updateFilm(oldData.id, filmModel);
+        const oldFilms = this._filmsModel.getFilteredFilms();
+        const isSuccess = this._filmsModel.update(oldData.id, filmModel);
 
         if (isSuccess) {
-          filmCardController.render(filmModel);
+          if (oldFilms.length === this._filmsModel.getFilteredFilms().length) {
+            filmCardController.render(filmModel);
+          } else {
+            this._updateFilms(INITIAL_FILMS_COUNT);
+          }
 
           if (oldData.commentsCount !== newData.commentsCount) {
             this._renderMostCommentedComponent();

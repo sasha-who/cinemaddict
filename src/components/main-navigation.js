@@ -12,9 +12,13 @@ export default class MainNavigation extends AbstractComponent {
 
   setOnViewChange(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
-      const menuItem = getElementNameByHref(evt.target.href);
+      const currentLink = evt.target.closest(`a`);
 
-      handler(menuItem);
+      if (currentLink) {
+        const menuItem = getElementNameByHref(currentLink.href);
+
+        handler(menuItem);
+      }
     });
   }
 }

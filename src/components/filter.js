@@ -29,8 +29,21 @@ export default class Filter extends AbstractComponent {
 
   setFilterChangeHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
-      const filterValue = getElementNameByHref(evt.target.href);
-      handler(filterValue);
+      const currentFilter = evt.target.closest(`a`);
+
+      if (currentFilter) {
+        const filterValue = getElementNameByHref(currentFilter.href);
+
+        this._toggleActiveClass(currentFilter);
+        handler(filterValue);
+      }
     });
+  }
+
+  _toggleActiveClass(element) {
+    const activeFilterElement = this.getElement().querySelector(`.main-navigation__item--active`);
+
+    activeFilterElement.classList.remove(`main-navigation__item--active`);
+    element.classList.add(`main-navigation__item--active`);
   }
 }
