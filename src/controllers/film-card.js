@@ -30,6 +30,10 @@ export default class FilmCardController {
     this._commentsModel = new CommentsModel();
   }
 
+  getId() {
+    return this._film.id;
+  }
+
   render(film) {
     if (this._isCommentsLoadError) {
       const filmWithoutComments = Object.assign(film, {
@@ -108,10 +112,12 @@ export default class FilmCardController {
         this._commentsModel.get()
     );
 
-    this._setPopupListeners();
-
     if (oldFilmDetailedCardComponent) {
       replace(this._filmDetailedCardComponent, oldFilmDetailedCardComponent);
+
+      if (this._mode === Mode.OPEN) {
+        this._setPopupListeners();
+      }
     }
   }
 
@@ -127,6 +133,8 @@ export default class FilmCardController {
     } else {
       render(this._filmCardComponent, this._container);
     }
+
+    this._onCardFlagChange(this._film);
   }
 
   _setPopupListeners() {
@@ -134,47 +142,50 @@ export default class FilmCardController {
     this._filmDetailedCardComponent.setFormSubmitHandler(this._formSubmitHandler);
     this._filmDetailedCardComponent
       .setCommentsDelButtonClickHandler(this._commentsDelButtonClickHandler);
-    this._onCardFlagChange(this._film);
+    this._onDetailedCardFlagChange(this._film);
     this._onNetworkConditionChange();
     this._filmDetailedCardComponent.onCommentEmojiChange();
   }
 
+  _changeCardFlag(film, flag) {
+    const newFilm = FilmModel.clone(film);
+
+    newFilm[flag] = !newFilm[flag];
+    this._onDataChange(this, film, newFilm);
+    this._film = newFilm;
+  }
+
   _onCardFlagChange(film) {
-    const changeCardFlag = (flag) => {
-      const newFilm = FilmModel.clone(film);
-
-      newFilm[flag] = !newFilm[flag];
-      this._onDataChange(this, film, newFilm);
-      this._film = newFilm;
-    };
-
     this._filmCardComponent.setWatchlistButtonHandler((evt) => {
       evt.preventDefault();
-      changeCardFlag(`isInWatchlist`);
+      this._changeCardFlag(film, `isInWatchlist`);
     });
 
     this._filmCardComponent.setWatchedButtonHandler((evt) => {
       evt.preventDefault();
       film.watchingDate = new Date();
-      changeCardFlag(`isWatched`);
+      this._changeCardFlag(film, `isWatched`);
     });
 
     this._filmCardComponent.setFavoriteButtonHandler((evt) => {
       evt.preventDefault();
-      changeCardFlag(`isInFavorites`);
+      this._changeCardFlag(film, `isInFavorites`);
     });
 
+  }
+
+  _onDetailedCardFlagChange(film) {
     this._filmDetailedCardComponent.setWatchlistButtonHandler(() => {
-      changeCardFlag(`isInWatchlist`);
+      this._changeCardFlag(film, `isInWatchlist`);
     });
 
     this._filmDetailedCardComponent.setWatchedButtonHandler(() => {
       film.watchingDate = new Date();
-      changeCardFlag(`isWatched`);
+      this._changeCardFlag(film, `isWatched`);
     });
 
     this._filmDetailedCardComponent.setFavoriteButtonHandler(() => {
-      changeCardFlag(`isInFavorites`);
+      this._changeCardFlag(film, `isInFavorites`);
     });
   }
 
@@ -256,6 +267,5 @@ export default class FilmCardController {
     const commentIndex = Array.from(buttonElements).findIndex((item) => item === evt.target);
     const deletedComment = this._commentsModel.get()[commentIndex];
     this._onCommentsChange(this._film, deletedComment, null, evt);
-    this._comments = this._commentsModel.get();
   }
 }

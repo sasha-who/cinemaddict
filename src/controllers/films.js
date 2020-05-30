@@ -233,6 +233,17 @@ export default class FilmsController {
     this._renderShowMoreButtonComponent(films);
   }
 
+  _checkFilmCopy(film) {
+    const allFilmControllers = this._showedBasicFilmsControllers
+      .concat(this._showedAddFilmsControllers);
+
+    for (const filmController of allFilmControllers) {
+      if (filmController.getId() === film.id) {
+        filmController.initRender(film);
+      }
+    }
+  }
+
   _onDataChange(filmCardController, oldData, newData) {
     this._apiWithProvider.updateFilm(oldData.id, newData)
       .then((filmModel) => {
@@ -253,6 +264,8 @@ export default class FilmsController {
           if (oldData.isWatched !== newData.isWatched) {
             this._renderProfileComponent(this._filmsModel.getFilms());
           }
+
+          this._checkFilmCopy(filmModel);
         }
       });
   }
